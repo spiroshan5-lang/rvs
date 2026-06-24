@@ -301,11 +301,11 @@ export default function SocialCards({ cards }: SocialCardsProps) {
         }
         @media (max-w: 640px) {
           .fan-layout {
-            height: 60vw;
+            height: 120vw;
           }
           .fan-card {
-            width: 80vw;
-            height: 45vw;
+            width: 85vw;
+            height: 110vw;
             border-radius: 1rem;
           }
         }

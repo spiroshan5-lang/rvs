@@ -37,10 +37,10 @@ const services: Service[] = [
   },
   {
     index: '04',
-    title: 'Turnkey Execution',
-    description: 'Flawless realization of designs. We manage full procurement, contractor coordination, and site supervision with exact precision.',
-    details: ['Project Management', 'Contractor Coordination', 'Site Quality Audits'],
-    image: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=800&auto=format&fit=crop',
+    title: 'Modular Kitchens',
+    description: 'Sleek, highly functional, and custom-tailored kitchen designs that seamlessly integrate with your lifestyle and home aesthetics.',
+    details: ['Smart Storage Solutions', 'Premium Material Finishes', 'Ergonomic Workflow Design'],
+    image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=800&auto=format&fit=crop',
   },
   {
     index: '05',
@@ -51,10 +51,10 @@ const services: Service[] = [
   },
   {
     index: '06',
-    title: 'Spatial Consultation',
-    description: 'Strategic layout reviews focusing on spatial flow, acoustic treatments, lighting pathways, and volume composition.',
-    details: ['Lighting Architecture', 'Acoustic Assessments', 'Flow & Layout Auditing'],
-    image: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?q=80&w=800&auto=format&fit=crop',
+    title: 'Custom Designing & Furniture',
+    description: 'Bespoke furniture and custom architectural elements crafted specifically for your spatial identity and functional needs.',
+    details: ['Bespoke Cabinetry', 'Signature Seating', 'Artisan Woodwork'],
+    image: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?q=80&w=800&auto=format&fit=crop',
   },
 ];
 
@@ -149,7 +149,7 @@ export default function Services() {
               </div>
 
               {/* Service Image (Enlarged) */}
-              <div className="relative w-full h-48 md:h-56 mb-6 overflow-hidden rounded-[1.5rem] bg-[#1f1005]">
+              <div className="relative w-full h-[75vw] md:h-72 mb-6 overflow-hidden rounded-[1.5rem] bg-[#1f1005]">
                 <Image
                   src={service.image}
                   alt={service.title}
