@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import React, { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -23,23 +23,18 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => { setMounted(true) }, [])
-
-  // Close drawer automatically when route changes
   useEffect(() => { setIsOpen(false) }, [pathname])
 
   if (!mounted) return null;
 
   return (
     <>
-      {/* ═══════════════════════════════════════════════
-         DESKTOP NAV PILL (visible on desktop only)
-         ═══════════════════════════════════════════════ */}
+      {/* ─── DESKTOP NAV PILL ─── */}
       <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 hidden md:block">
         <div
           style={{ background: 'var(--nav-bg)', borderColor: 'var(--nav-border)' }}
           className="flex items-center gap-1 backdrop-blur-md border py-1.5 px-1.5 rounded-full shadow-2xl transition-all duration-300"
         >
-          {/* Theme toggle */}
           <motion.button
             onClick={toggleTheme}
             whileHover={{ scale: 1.08 }}
@@ -58,7 +53,6 @@ export default function Navbar() {
             </motion.span>
           </motion.button>
 
-          {/* Divider */}
           <div style={{ background: 'var(--nav-border)' }} className="w-px h-5 mx-1 rounded-full" />
 
           {navItems.map((item) => {
@@ -90,37 +84,39 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ═══════════════════════════════════════════════
-         MOBILE HEADER (visible on mobile only)
-         ═══════════════════════════════════════════════ */}
+      {/* ─── MOBILE HEADER — theme-aware glassmorphism ─── */}
       <header
-        style={{ background: 'rgba(11, 11, 11, 0.85)', borderColor: 'var(--gold-border)' }}
-        className="fixed top-0 left-0 right-0 h-20 px-6 z-40 flex items-center justify-between backdrop-blur-md border-b md:hidden transition-all duration-300"
+        style={{
+          background: theme === 'light'
+            ? 'rgba(247, 244, 239, 0.72)'
+            : 'rgba(11, 11, 11, 0.72)',
+          borderColor: 'var(--gold-border)',
+          backdropFilter: 'blur(20px) saturate(1.6)',
+          WebkitBackdropFilter: 'blur(20px) saturate(1.6)',
+        }}
+        className="fixed top-0 left-0 right-0 h-20 px-6 z-40 flex items-center justify-between border-b md:hidden transition-all duration-300"
       >
         <Link href="/" className="flex items-center gap-3">
-          <div className="relative w-10 h-10 rounded-full overflow-hidden border flex-shrink-0" style={{ borderColor: 'var(--gold-border)', background: '#0B0B0B' }}>
+          <div className="relative w-10 h-10 rounded-full overflow-hidden border flex-shrink-0" style={{ borderColor: 'var(--gold-border)', background: 'var(--bg-card)' }}>
             <Image src="/new-logo.jpeg" alt="RVS Crafted Interiors Logo" fill className="object-cover" />
           </div>
           <div className="flex flex-col">
-            <span className="font-serif text-sm tracking-wider leading-none text-[#F5F5F0] whitespace-nowrap">RVS Crafted Interiors</span>
-            <span className="font-sans text-[7px] tracking-[0.2em] uppercase mt-1 text-[var(--gold)] whitespace-nowrap">Spatial Architecture Studio</span>
+            <span className="font-serif text-sm tracking-wider leading-none whitespace-nowrap" style={{ color: 'var(--fg)' }}>RVS Crafted Interiors</span>
+            <span className="font-sans text-[7px] tracking-[0.2em] uppercase mt-1 whitespace-nowrap" style={{ color: 'var(--gold)' }}>Spatial Architecture Studio</span>
           </div>
         </Link>
 
-        {/* Hamburger Toggle Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle Navigation Menu"
           className="p-2 cursor-pointer focus:outline-none transition-colors duration-200 hover:text-[var(--gold)]"
-          style={{ color: '#F5F5F0' }}
+          style={{ color: 'var(--fg)' }}
         >
           <Menu size={24} />
         </button>
       </header>
 
-      {/* ═══════════════════════════════════════════════
-         MOBILE MENU OVERLAY DRAWER
-         ═══════════════════════════════════════════════ */}
+      {/* ─── MOBILE DRAWER — glassmorphism overlay ─── */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -129,25 +125,30 @@ export default function Navbar() {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="fixed inset-0 z-50 flex flex-col md:hidden"
-            style={{ background: 'rgba(11, 11, 11, 0.98)' }}
+            style={{
+              background: theme === 'light'
+                ? 'rgba(247, 244, 239, 0.92)'
+                : 'rgba(11, 11, 11, 0.95)',
+              backdropFilter: 'blur(32px) saturate(1.8)',
+              WebkitBackdropFilter: 'blur(32px) saturate(1.8)',
+            }}
           >
             {/* Drawer Header */}
             <div className="h-20 px-6 flex items-center justify-between border-b" style={{ borderColor: 'var(--gold-border)' }}>
               <div className="flex items-center gap-3">
-                <div className="relative w-10 h-10 rounded-full overflow-hidden border flex-shrink-0" style={{ borderColor: 'var(--gold-border)', background: '#0B0B0B' }}>
+                <div className="relative w-10 h-10 rounded-full overflow-hidden border flex-shrink-0" style={{ borderColor: 'var(--gold-border)', background: 'var(--bg-card)' }}>
                   <Image src="/new-logo.jpeg" alt="RVS Crafted Interiors Logo" fill className="object-cover" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-serif text-sm tracking-wider leading-none text-[#F5F5F0] whitespace-nowrap">RVS Crafted Interiors</span>
-                  <span className="font-sans text-[7px] tracking-[0.2em] uppercase mt-1 text-[var(--gold)] whitespace-nowrap">Spatial Architecture Studio</span>
+                  <span className="font-serif text-sm tracking-wider leading-none whitespace-nowrap" style={{ color: 'var(--fg)' }}>RVS Crafted Interiors</span>
+                  <span className="font-sans text-[7px] tracking-[0.2em] uppercase mt-1 whitespace-nowrap" style={{ color: 'var(--gold)' }}>Spatial Architecture Studio</span>
                 </div>
               </div>
-
               <button
                 onClick={() => setIsOpen(false)}
                 aria-label="Close Navigation Menu"
                 className="p-2 cursor-pointer focus:outline-none transition-colors duration-200 hover:text-[var(--gold)]"
-                style={{ color: '#F5F5F0' }}
+                style={{ color: 'var(--fg)' }}
               >
                 <X size={24} />
               </button>
@@ -184,7 +185,6 @@ export default function Navbar() {
                 })}
               </nav>
 
-              {/* Book Now Button */}
               <motion.div
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -205,7 +205,7 @@ export default function Navbar() {
 
             {/* Drawer Footer / Theme Toggle */}
             <div className="p-8 border-t flex justify-between items-center" style={{ borderColor: 'var(--gold-border)' }}>
-              <span className="font-sans text-[10px] tracking-widest uppercase text-[var(--fg)]/40">Theme Curation</span>
+              <span className="font-sans text-[10px] tracking-widest uppercase" style={{ color: 'var(--fg)', opacity: 0.4 }}>Theme Curation</span>
               <motion.button
                 onClick={toggleTheme}
                 whileTap={{ scale: 0.95 }}

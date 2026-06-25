@@ -35,105 +35,136 @@ function getXOffset(width: number, slot: number) {
 const ARROW_CLASSES =
   "relative flex items-center justify-center rounded-full border-[1.5px] border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 backdrop-blur-[16px] text-black/40 dark:text-white/55 cursor-pointer shrink-0 z-30 outline-none shadow-[0_4px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.4)] hover:border-black/25 dark:hover:border-white/25 hover:text-black/70 dark:hover:text-white/80 active:opacity-70 transition-colors duration-300";
 
-/* ─── Mobile Slider ─── */
-function MobileSlider({
-  cards, centerIndex, cycle, needsPagination, handleDragStart, handleDragMove, handleDragEnd,
-}: {
-  cards: CardItem[];
-  centerIndex: number;
-  cycle: (dir: "left" | "right") => void;
-  needsPagination: boolean;
-  handleDragStart: (e: React.TouchEvent | React.MouseEvent) => void;
-  handleDragMove: (e: React.TouchEvent | React.MouseEvent) => void;
-  handleDragEnd: () => void;
-}) {
-  const card = cards[centerIndex];
+/* ─── Mobile Horizontal Scroll Gallery ─── */
+function MobileScrollGallery({ cards }: { cards: CardItem[] }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [showHint, setShowHint] = useState(true);
+
+  // Track scroll to determine active card
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const onScroll = () => {
+      const scrollLeft = el.scrollLeft;
+      const cardWidth = el.firstElementChild?.getBoundingClientRect().width || 300;
+      const gap = 14;
+      const idx = Math.round(scrollLeft / (cardWidth + gap));
+      setActiveIndex(Math.min(Math.max(idx, 0), cards.length - 1));
+
+      // Hide hint after first scroll
+      if (scrollLeft > 20 && showHint) setShowHint(false);
+    };
+
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [cards.length, showHint]);
+
+  // Auto-dismiss hint after 3 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => setShowHint(false), 4000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: 0 }}>
 
-      {/* ── Main Image with overlaid arrows ── */}
+      {/* Horizontally scrollable image strip */}
       <div
-        style={{ position: "relative", width: "92vw", maxWidth: 480, margin: "0 auto" }}
-        onTouchStart={handleDragStart}
-        onTouchMove={handleDragMove}
-        onTouchEnd={handleDragEnd}
-        onMouseDown={handleDragStart}
-        onMouseMove={handleDragMove}
-        onMouseUp={handleDragEnd}
-        onMouseLeave={handleDragEnd}
-      >
-        {/* Image frame */}
-        <div style={{
-          position: "relative",
+        ref={scrollRef}
+        style={{
           width: "100%",
-          aspectRatio: "4/3",
-          borderRadius: "1.25rem",
-          overflow: "hidden",
-          boxShadow: "0 28px 72px rgba(0,0,0,0.52), 0 2px 8px rgba(0,0,0,0.28)",
-          border: "1px solid rgba(201,168,106,0.22)",
-          background: "#111",
-        }}>
-          {card && (
+          display: "flex",
+          gap: "14px",
+          overflowX: "auto",
+          scrollSnapType: "x mandatory",
+          WebkitOverflowScrolling: "touch",
+          paddingLeft: "4vw",
+          paddingRight: "4vw",
+          paddingBottom: "4px",
+          /* Hide scrollbar */
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+        }}
+        className="mobile-scroll-hide"
+      >
+        {cards.map((card, i) => (
+          <div
+            key={i}
+            style={{
+              flexShrink: 0,
+              width: "88vw",
+              maxWidth: 440,
+              aspectRatio: "4/3",
+              borderRadius: "1.15rem",
+              overflow: "hidden",
+              boxShadow: "0 20px 56px rgba(0,0,0,0.40), 0 2px 6px rgba(0,0,0,0.22)",
+              border: "1px solid rgba(201,168,106,0.2)",
+              background: "#111",
+              scrollSnapAlign: "center",
+              position: "relative",
+            }}
+          >
             <img
-              key={centerIndex}
               src={card.imgUrl}
-              alt={card.alt || `Gallery ${centerIndex + 1}`}
+              alt={card.alt || `Gallery ${i + 1}`}
               draggable={false}
               loading="lazy"
-              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
             />
-          )}
-          {/* Edge gradient for arrow legibility */}
-          <div style={{
-            position: "absolute", inset: 0, pointerEvents: "none",
-            background: "linear-gradient(to right,rgba(0,0,0,0.28) 0%,transparent 22%,transparent 78%,rgba(0,0,0,0.28) 100%)",
-          }} />
-
-          {/* Overlaid prev/next */}
-          {needsPagination && (
-            <>
-              <button onClick={() => cycle("left")} aria-label="Previous image" style={{
-                position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
-                zIndex: 20, width: 44, height: 44, borderRadius: "50%",
-                border: "1.5px solid rgba(255,255,255,0.3)",
-                background: "rgba(0,0,0,0.42)", backdropFilter: "blur(12px)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                cursor: "pointer", outline: "none",
-              }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="15 18 9 12 15 6" />
-                </svg>
-              </button>
-              <button onClick={() => cycle("right")} aria-label="Next image" style={{
-                position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)",
-                zIndex: 20, width: 44, height: 44, borderRadius: "50%",
-                border: "1.5px solid rgba(255,255,255,0.3)",
-                background: "rgba(0,0,0,0.42)", backdropFilter: "blur(12px)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                cursor: "pointer", outline: "none",
-              }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="9 18 15 12 9 6" />
-                </svg>
-              </button>
-            </>
-          )}
-        </div>
+          </div>
+        ))}
       </div>
 
-      {/* ── Caption + counter + dots ── */}
+      {/* Scroll hint indicator — animated arrow + text */}
+      {showHint && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            marginTop: "14px",
+            opacity: 0.55,
+            animation: "scrollHintPulse 1.8s ease-in-out infinite",
+          }}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold, #c9a86a)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="13 17 18 12 13 7" />
+            <polyline points="6 17 11 12 6 7" />
+          </svg>
+          <span style={{
+            fontFamily: "var(--font-sans, sans-serif)",
+            fontSize: "10px",
+            fontWeight: 400,
+            letterSpacing: "0.2em",
+            textTransform: "uppercase" as const,
+            color: "var(--gold, #c9a86a)",
+          }}>
+            Swipe to explore
+          </span>
+        </div>
+      )}
+
+      {/* Caption + counter + dots */}
       <div style={{
-        width: "92vw", maxWidth: 480,
+        width: "88vw", maxWidth: 440,
         display: "flex", alignItems: "center", justifyContent: "space-between",
-        marginTop: 14, padding: "0 4px",
+        marginTop: showHint ? "10px" : "14px", padding: "0 4px",
+        transition: "margin-top 0.3s ease",
       }}>
         <span style={{
           fontFamily: "var(--font-serif,serif)", fontSize: 12, fontWeight: 300,
           letterSpacing: "0.06em", color: "var(--fg,#F5F5F0)", opacity: 0.6,
           whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "52%",
         }}>
-          {card?.alt || `Space ${centerIndex + 1}`}
+          {cards[activeIndex]?.alt || `Space ${activeIndex + 1}`}
         </span>
 
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -141,24 +172,31 @@ function MobileSlider({
             fontFamily: "var(--font-sans,sans-serif)", fontSize: 10, fontWeight: 300,
             letterSpacing: "0.18em", color: "var(--gold,#c9a86a)", opacity: 0.85,
           }}>
-            {String(centerIndex + 1).padStart(2,"0")} / {String(cards.length).padStart(2,"0")}
+            {String(activeIndex + 1).padStart(2,"0")} / {String(cards.length).padStart(2,"0")}
           </span>
 
-          {needsPagination && (
-            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-              {cards.map((_,i) => (
-                <span key={i} style={{
-                  display: "block",
-                  width: i === centerIndex ? 18 : 6,
-                  height: 6, borderRadius: 3,
-                  background: i === centerIndex ? "var(--gold,#c9a86a)" : "rgba(245,245,240,0.22)",
-                  transition: "all 0.35s cubic-bezier(0.4,0,0.2,1)",
-                }} />
-              ))}
-            </div>
-          )}
+          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            {cards.map((_,i) => (
+              <span key={i} style={{
+                display: "block",
+                width: i === activeIndex ? 18 : 6,
+                height: 6, borderRadius: 3,
+                background: i === activeIndex ? "var(--gold,#c9a86a)" : "rgba(245,245,240,0.22)",
+                transition: "all 0.35s cubic-bezier(0.4,0,0.2,1)",
+              }} />
+            ))}
+          </div>
         </div>
       </div>
+
+      {/* Inline keyframes + scrollbar hide */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .mobile-scroll-hide::-webkit-scrollbar { display: none; }
+        @keyframes scrollHintPulse {
+          0%, 100% { opacity: 0.55; transform: translateX(0); }
+          50% { opacity: 0.9; transform: translateX(6px); }
+        }
+      `}} />
     </div>
   );
 }
@@ -330,19 +368,11 @@ export default function SocialCards({ cards }: SocialCardsProps) {
     </svg>
   );
 
-  /* ── Mobile path ── */
+  /* ── Mobile: horizontal scroll gallery ── */
   if (isMobile) {
     return (
       <section style={{ display:"flex", flexDirection:"column", alignItems:"center", width:"100%", paddingTop:8, paddingBottom:8, position:"relative", zIndex:20 }}>
-        <MobileSlider
-          cards={cards}
-          centerIndex={centerIndex}
-          cycle={cycle}
-          needsPagination={needsPagination}
-          handleDragStart={handleDragStart}
-          handleDragMove={handleDragMove}
-          handleDragEnd={handleDragEnd}
-        />
+        <MobileScrollGallery cards={cards} />
       </section>
     );
   }
