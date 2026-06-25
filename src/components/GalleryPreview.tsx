@@ -37,19 +37,19 @@ export default function GalleryPreview() {
   return (
     <section 
       id="gallery"
-      className="bg-[#0B0B0B] text-[#F5F5F0] py-24 md:py-36 px-6 md:px-12 relative overflow-hidden"
-    >
+      className=" text-[var(--fg)] py-24 md:py-36 px-6 md:px-12 relative overflow-hidden transition-colors duration-300"
+     style={{ background: 'var(--bg)', color: 'var(--fg)' }}>
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 md:mb-28">
           <div className="max-w-xl">
-            <span className="text-[10px] tracking-[0.3em] uppercase font-light text-[#c9a86a] mb-4 block">
+            <span className="text-[10px] tracking-[0.3em] uppercase font-light text-[var(--gold)] mb-4 block">
               Curated Spaces
             </span>
             <h2 className="font-serif text-3xl md:text-5xl font-light tracking-wide leading-tight">
               Spatial Anthology
             </h2>
           </div>
-          <p className="text-xs md:text-sm font-light text-[#F5F5F0]/50 tracking-wider max-w-xs mt-4 md:mt-0 leading-relaxed">
+          <p className="text-xs md:text-sm font-light text-[var(--fg)]/50 tracking-wider max-w-xs mt-4 md:mt-0 leading-relaxed">
             A visual directory of residential details, lighting composition, and tactile material setups.
           </p>
         </div>
@@ -64,19 +64,19 @@ export default function GalleryPreview() {
               viewport={{ once: true, margin: '-100px' }}
               transition={{ duration: 0.8 }}
             >
-              <div className={`relative ${item.aspect} w-full overflow-hidden bg-[#1f1005]`}>
+              <div className={`relative ${item.aspect} w-full overflow-hidden bg-[var(--gold-muted)]`}>
                 <img
                   src={item.imgUrl}
                   alt={item.alt || item.title}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 scale-100 group-hover:scale-105 filter brightness-[0.8] hover:brightness-[0.9]"
                 />
-                <div className="absolute inset-0 border border-[#F5F5F0]/5 group-hover:border-[#c9a86a]/30 transition-colors duration-500" />
+                <div className="absolute inset-0 border border-[#F5F5F0]/5 group-hover:border-[var(--gold-border)] transition-colors duration-500" />
               </div>
               <div className="flex justify-between items-center px-1">
-                <span className="font-serif text-sm font-light tracking-wide text-[#F5F5F0]/80 group-hover:text-[#F5F5F0] transition-colors duration-300">
+                <span className="font-serif text-sm font-light tracking-wide text-[var(--fg)]/80 group-hover:text-[var(--fg)] transition-colors duration-300">
                   {item.alt || item.title}
                 </span>
-                <span className="text-[9px] tracking-widest uppercase font-light text-[#F5F5F0]/30 group-hover:text-[#c9a86a] transition-colors duration-300">
+                <span className="text-[9px] tracking-widest uppercase font-light text-[var(--fg)]/30 group-hover:text-[var(--gold)] transition-colors duration-300">
                   View Frame
                 </span>
               </div>

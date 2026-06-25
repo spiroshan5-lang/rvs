@@ -6,7 +6,7 @@ import Footer from '@/components/Footer';
 
 export default function ServicesPage() {
   return (
-    <div className="bg-[#0B0B0B] min-h-screen text-[#F5F5F0]">
+    <div className=" min-h-screen text-[var(--fg)] transition-colors duration-300" style={{ background: 'var(--bg)', color: 'var(--fg)' }}>
       <Navbar />
       <main className="pt-24">
         <Services />

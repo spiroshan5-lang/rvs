@@ -63,20 +63,20 @@ export default function MaterialMood() {
   return (
     <section 
       id="materials"
-      className="bg-[#0B0B0B] text-[#F5F5F0] py-24 md:py-36 px-6 md:px-12 relative overflow-hidden"
+      className="py-24 transition-colors duration-300" style={{ background: 'var(--bg)', color: 'var(--fg)' }} md:py-36 px-6 md:px-12 relative overflow-hidden"
     >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-16 md:mb-24">
           <div className="max-w-xl">
-            <span className="text-[10px] tracking-[0.3em] uppercase font-light text-[#c9a86a] mb-4 block">
+            <span className="text-[10px] tracking-[0.3em] uppercase font-light text-[var(--gold)] mb-4 block">
               Tactile Studies
             </span>
             <h2 className="font-serif text-3xl md:text-5xl font-light tracking-wide leading-tight">
               Material Mood Board
             </h2>
           </div>
-          <p className="text-xs md:text-sm font-light text-[#F5F5F0]/60 tracking-wider max-w-xs mt-4 lg:mt-0 leading-relaxed">
+          <p className="text-xs md:text-sm font-light text-[var(--fg)]/60 tracking-wider max-w-xs mt-4 lg:mt-0 leading-relaxed">
             Interact with our primary palette. Hover over a tile to expand its grain details and tactile composition.
           </p>
         </div>
@@ -86,7 +86,7 @@ export default function MaterialMood() {
           {materials.map((mat) => (
             <motion.div
               key={mat.id}
-              className="relative aspect-square overflow-hidden bg-[#1f1005] group cursor-pointer"
+              className="relative aspect-square overflow-hidden bg-[var(--gold-muted)] group cursor-pointer"
               onMouseEnter={() => setHoveredId(mat.id)}
               onMouseLeave={() => setHoveredId(null)}
               initial={{ opacity: 0, scale: 0.96 }}
@@ -112,10 +112,10 @@ export default function MaterialMood() {
               <div className="absolute inset-0 p-8 flex flex-col justify-between z-10">
                 {/* Top: Name & Tag */}
                 <div className="flex justify-between items-start">
-                  <span className="font-serif text-xl md:text-2xl text-[#F5F5F0] font-light tracking-wide">
+                  <span className="font-serif text-xl md:text-2xl text-[var(--fg)] font-light tracking-wide">
                     {mat.name}
                   </span>
-                  <span className="text-[9px] tracking-[0.2em] uppercase font-light text-[#c9a86a] border border-[#c9a86a]/40 px-2 py-0.5">
+                  <span className="text-[9px] tracking-[0.2em] uppercase font-light text-[var(--gold)] border border-[var(--gold-border)] px-2 py-0.5">
                     {mat.type}
                   </span>
                 </div>
@@ -123,7 +123,7 @@ export default function MaterialMood() {
                 {/* Bottom: Description revealing on hover */}
                 <div className="overflow-hidden">
                   <motion.p 
-                    className="text-xs text-[#F5F5F0]/95 font-light leading-relaxed tracking-wide mt-2 block"
+                    className="text-xs text-[var(--fg)]/95 font-light leading-relaxed tracking-wide mt-2 block"
                     initial={{ y: 50, opacity: 0 }}
                     animate={{ 
                       y: hoveredId === mat.id ? 0 : 40,
@@ -137,7 +137,7 @@ export default function MaterialMood() {
               </div>
 
               {/* Inner border frame highlight */}
-              <div className="absolute inset-0 border border-[#F5F5F0]/10 group-hover:border-[#c9a86a]/60 transition-colors duration-500 pointer-events-none" />
+              <div className="absolute inset-0 border border-[var(--border)] group-hover:border-[var(--gold)] transition-colors duration-500 pointer-events-none" />
             </motion.div>
           ))}
         </div>

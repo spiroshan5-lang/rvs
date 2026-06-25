@@ -69,18 +69,18 @@ export default function DesignProcess() {
   return (
     <section
       id="process"
-      className="bg-[#0B0B0B] text-[#F5F5F0] py-24 md:py-36 px-6 md:px-12 relative overflow-hidden"
-    >
+      className=" text-[var(--fg)] py-24 md:py-36 px-6 md:px-12 relative overflow-hidden transition-colors duration-300"
+     style={{ background: 'var(--bg)', color: 'var(--fg)' }}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col items-center text-center mb-20 md:mb-32">
-          <span className="text-[10px] tracking-[0.3em] uppercase font-light text-[#c9a86a] mb-4 block">
+          <span className="text-[10px] tracking-[0.3em] uppercase font-light text-[var(--gold)] mb-4 block">
             The Path
           </span>
           <h2 className="font-serif text-3xl md:text-5xl font-light tracking-wide leading-tight mb-6">
             Design Process
           </h2>
-          <p className="text-xs md:text-sm font-light text-[#F5F5F0]/50 tracking-wider max-w-lg leading-relaxed">
+          <p className="text-xs md:text-sm font-light text-[var(--fg)]/50 tracking-wider max-w-lg leading-relaxed">
             Our sequential, structural methodology designed to carry concepts from vision to immaculate realization.
           </p>
         </div>
@@ -109,11 +109,11 @@ export default function DesignProcess() {
                     whileInView={{ scale: 1 }}
                     viewport={{ once: true, margin: '-20%' }}
                     transition={{ duration: 0.5, delay: 0.2 }}
-                    className="absolute left-4 md:left-1/2 w-4 h-4 rounded-full border-2 border-[#c9a86a] bg-[#0B0B0B] md:-translate-x-1/2 z-10"
+                    className="absolute left-4 md:left-1/2 w-4 h-4 rounded-full border-2 border-[#c9a86a] bg-[var(--bg)] md:-translate-x-1/2 z-10"
                   />
 
                   {/* Left Side (Text for Even, Image for Odd) */}
-                  <div className={`w-full md:w-1/2 pl-12 md:pl-0 flex ${isEven ? 'md:justify-end' : 'md:justify-start'} ${!isEven ? 'md:order-2' : ''}`}>
+                  <div className={`w-full md:w-1/2 pl-8 md:pl-0 flex ${isEven ? 'md:justify-end' : 'md:justify-start'} ${!isEven ? 'md:order-2' : ''}`}>
                     {isEven ? (
                       <motion.div 
                         initial={{ opacity: 0, x: -50 }}
@@ -122,16 +122,16 @@ export default function DesignProcess() {
                         transition={{ duration: 0.8 }}
                         className="flex flex-col items-start md:items-end text-left md:text-right max-w-md md:pr-12"
                       >
-                        <div className="mb-4 inline-block px-3 py-1 border border-[#c9a86a]/30 rounded-full text-[9px] tracking-[0.2em] uppercase font-light text-[#c9a86a]">
+                        <div className="mb-4 inline-block px-3 py-1 border border-[var(--gold-border)] rounded-full text-[9px] tracking-[0.2em] uppercase font-light text-[var(--gold)]">
                           Phase {step.num}
                         </div>
-                        <h3 className="font-serif text-2xl md:text-3xl font-light tracking-wide text-[#F5F5F0] mb-2">
+                        <h3 className="font-serif text-2xl md:text-3xl font-light tracking-wide text-[var(--fg)] mb-2">
                           {step.title}
                         </h3>
-                        <span className="text-xs font-light text-[#c9a86a]/80 mb-6 uppercase tracking-widest block">
+                        <span className="text-xs font-light text-[var(--gold)]/80 mb-6 uppercase tracking-widest block">
                           {step.subtitle}
                         </span>
-                        <p className="text-sm font-light leading-relaxed text-[#F5F5F0]/70 tracking-wide">
+                        <p className="text-sm font-light leading-relaxed text-[var(--fg)]/70 tracking-wide">
                           {step.description}
                         </p>
                       </motion.div>
@@ -141,7 +141,7 @@ export default function DesignProcess() {
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true, margin: '-20%' }}
                         transition={{ duration: 0.8 }}
-                        className="w-full relative aspect-[4/3] rounded-[1.5rem] overflow-hidden border border-[#c9a86a]/20 md:ml-12"
+                        className="w-full relative aspect-[4/3] rounded-[1.5rem] overflow-hidden border border-[var(--gold-border)] ml-8 md:ml-12"
                       >
                         <Image
                           src={step.image}
@@ -155,14 +155,14 @@ export default function DesignProcess() {
                   </div>
 
                   {/* Right Side (Image for Even, Text for Odd) */}
-                  <div className={`w-full md:w-1/2 pl-12 md:pl-0 flex ${isEven ? 'md:justify-start' : 'md:justify-end'} ${!isEven ? 'md:order-1' : ''}`}>
+                  <div className={`w-full md:w-1/2 pl-8 md:pl-0 flex ${isEven ? 'md:justify-start' : 'md:justify-end'} ${!isEven ? 'md:order-1' : ''}`}>
                     {isEven ? (
                       <motion.div 
                         initial={{ opacity: 0, x: 50 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true, margin: '-20%' }}
                         transition={{ duration: 0.8 }}
-                        className="w-full relative aspect-[4/3] rounded-[1.5rem] overflow-hidden border border-[#c9a86a]/20 md:ml-12"
+                        className="w-full relative aspect-[4/3] rounded-[1.5rem] overflow-hidden border border-[var(--gold-border)] ml-8 md:ml-12"
                       >
                         <Image
                           src={step.image}
@@ -180,16 +180,16 @@ export default function DesignProcess() {
                         transition={{ duration: 0.8 }}
                         className="flex flex-col items-start md:items-end text-left md:text-right max-w-md md:pr-12"
                       >
-                        <div className="mb-4 inline-block px-3 py-1 border border-[#c9a86a]/30 rounded-full text-[9px] tracking-[0.2em] uppercase font-light text-[#c9a86a]">
+                        <div className="mb-4 inline-block px-3 py-1 border border-[var(--gold-border)] rounded-full text-[9px] tracking-[0.2em] uppercase font-light text-[var(--gold)]">
                           Phase {step.num}
                         </div>
-                        <h3 className="font-serif text-2xl md:text-3xl font-light tracking-wide text-[#F5F5F0] mb-2">
+                        <h3 className="font-serif text-2xl md:text-3xl font-light tracking-wide text-[var(--fg)] mb-2">
                           {step.title}
                         </h3>
-                        <span className="text-xs font-light text-[#c9a86a]/80 mb-6 uppercase tracking-widest block">
+                        <span className="text-xs font-light text-[var(--gold)]/80 mb-6 uppercase tracking-widest block">
                           {step.subtitle}
                         </span>
-                        <p className="text-sm font-light leading-relaxed text-[#F5F5F0]/70 tracking-wide">
+                        <p className="text-sm font-light leading-relaxed text-[var(--fg)]/70 tracking-wide">
                           {step.description}
                         </p>
                       </motion.div>

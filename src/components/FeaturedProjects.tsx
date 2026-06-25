@@ -63,8 +63,8 @@ export default function FeaturedProjects() {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       id="projects"
-      className="bg-[#0B0B0B] text-[#F5F5F0] py-24 md:py-36 px-6 md:px-12 relative overflow-hidden cursor-none" // Hide default cursor here
-    >
+      className=" text-[var(--fg)] py-24 md:py-36 px-6 md:px-12 relative overflow-hidden cursor-none transition-colors duration-300" // Hide default cursor here
+     style={{ background: 'var(--bg)', color: 'var(--fg)' }}>
       {/* 1. Magnetic Custom Cursor Follower (only visible on desktop) */}
       <motion.div
         className="hidden md:flex absolute w-24 h-24 bg-[#c9a86a]/95 rounded-full z-40 pointer-events-none items-center justify-center text-[#0B0B0B] font-serif text-[10px] tracking-[0.25em] uppercase shadow-lg select-none"
@@ -83,14 +83,14 @@ export default function FeaturedProjects() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 md:mb-24">
           <div className="max-w-xl">
-            <span className="text-[10px] tracking-[0.3em] uppercase font-light text-[#c9a86a] mb-4 block">
+            <span className="text-[10px] tracking-[0.3em] uppercase font-light text-[var(--gold)] mb-4 block">
               Portfolio
             </span>
             <h2 className="font-serif text-3xl md:text-5xl font-light tracking-wide leading-tight">
               Selected Creations
             </h2>
           </div>
-          <p className="text-xs md:text-sm font-light text-[#F5F5F0]/50 tracking-wider max-w-xs mt-4 md:mt-0 leading-relaxed">
+          <p className="text-xs md:text-sm font-light text-[var(--fg)]/50 tracking-wider max-w-xs mt-4 md:mt-0 leading-relaxed">
             A curated showcase of spatial structures balancing atmosphere, architecture, and luxury craftsmanship.
           </p>
         </div>
@@ -109,7 +109,7 @@ export default function FeaturedProjects() {
               transition={{ duration: 0.8 }}
             >
               {/* Image Frame */}
-              <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#1f1005]">
+              <div className="relative aspect-[4/5] md:aspect-[3/4] w-full overflow-hidden bg-[var(--gold-muted)]">
                 {/* Parallax Hover Image */}
                 <motion.div
                   className="relative w-full h-full"
@@ -129,7 +129,7 @@ export default function FeaturedProjects() {
                 </motion.div>
 
                 {/* Index badge */}
-                <div className="absolute top-6 left-6 font-serif text-xs text-[#F5F5F0]/60 select-none">
+                <div className="absolute top-6 left-6 font-serif text-xs text-[var(--fg)]/60 select-none">
                   {`0${project.id.replace('project-', '')}`}
                 </div>
               </div>
@@ -137,17 +137,17 @@ export default function FeaturedProjects() {
               {/* Text Info */}
               <div className="flex justify-between items-start pt-2">
                 <div className="flex flex-col space-y-1">
-                  <h3 className="font-serif text-xl md:text-2xl font-light tracking-wide group-hover:text-[#c9a86a] transition-colors duration-300">
+                  <h3 className="font-serif text-xl md:text-2xl font-light tracking-wide group-hover:text-[var(--gold)] transition-colors duration-300">
                     {project.name}
                   </h3>
-                  <div className="flex items-center space-x-2 text-[10px] tracking-[0.15em] uppercase font-light text-[#F5F5F0]/60">
+                  <div className="flex items-center space-x-2 text-[10px] tracking-[0.15em] uppercase font-light text-[var(--fg)]/60">
                     <span>{project.location}</span>
                     <span className="w-1 h-1 bg-[#c9a86a] rounded-full" />
                     <span>{project.type}</span>
                   </div>
                 </div>
 
-                <div className="border border-[#c9a86a]/20 hover:border-[#c9a86a] bg-transparent text-[#F5F5F0] rounded-full p-2.5 transition-all duration-300 group-hover:rotate-45">
+                <div className="border border-[var(--gold-border)] hover:border-[#c9a86a] bg-transparent text-[var(--fg)] rounded-full p-2.5 transition-all duration-300 group-hover:rotate-45">
                   <ArrowUpRight className="w-4 h-4" />
                 </div>
               </div>

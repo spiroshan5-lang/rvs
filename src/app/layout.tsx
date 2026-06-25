@@ -16,21 +16,23 @@ export const metadata: Metadata = {
   }
 };
 
+import { ThemeProvider } from '@/context/ThemeContext';
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
+      <body className="transition-colors duration-300" style={{ backgroundColor: "var(--bg)", color: "var(--fg)" }} style={{ backgroundColor: "var(--background)", color: "var(--foreground)" }}>
         
         {/* Subtle, expensive paper texture overlay */}
         <div className="noise-overlay" />
         
         {/* Lenis smooth scrolling container */}
         <SmoothScroll>
-          {children}
+          <ThemeProvider>{children}</ThemeProvider>
         </SmoothScroll>
       </body>
     </html>

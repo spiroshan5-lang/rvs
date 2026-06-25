@@ -41,40 +41,40 @@ export default function WhyChooseUs() {
   return (
     <section
       id="why-choose-us"
-      className="bg-[#0B0B0B] text-[#F5F5F0] py-24 md:py-36 px-6 md:px-12 relative overflow-hidden"
-    >
+      className=" text-[var(--fg)] py-24 md:py-36 px-6 md:px-12 relative overflow-hidden transition-colors duration-300"
+     style={{ background: 'var(--bg)', color: 'var(--fg)' }}>
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
         {/* Left Side: Header and Stats */}
         <div className="lg:col-span-5 flex flex-col justify-between space-y-12">
           <div>
-            <span className="text-[10px] tracking-[0.3em] uppercase font-light text-[#c9a86a] mb-4 block">
+            <span className="text-[10px] tracking-[0.3em] uppercase font-light text-[var(--gold)] mb-4 block">
               Atelier Value
             </span>
             <h2 className="font-serif text-4xl md:text-5xl font-light tracking-wide leading-tight mb-6">
               Why Choose Us?
             </h2>
-            <p className="text-sm font-light text-[#F5F5F0]/70 tracking-wider leading-relaxed">
+            <p className="text-sm font-light text-[var(--fg)]/70 tracking-wider leading-relaxed">
               Four structural pillars that define our commitment to premium spatial architecture, client trust, and luxury craftsmanship.
             </p>
           </div>
 
           {/* Numbers Don't Lie Stats Section */}
-          <div className="pt-8 border-t border-[#c9a86a]/15">
-            <h3 className="font-serif text-2xl font-light italic text-[#c9a86a] mb-8">
+          <div className="pt-8 border-t border-[var(--gold-border)]">
+            <h3 className="font-serif text-2xl font-light italic text-[var(--gold)] mb-8">
               Numbers Don't Lie
             </h3>
             <div className="grid grid-cols-3 gap-x-6 gap-y-10">
               <div>
-                <h4 className="font-serif text-3xl md:text-4xl text-[#F5F5F0] font-light">98%</h4>
-                <p className="text-[8px] md:text-[9px] tracking-[0.2em] uppercase font-light text-[#F5F5F0]/50 mt-1">Client Satisfaction</p>
+                <h4 className="font-serif text-3xl md:text-4xl text-[var(--fg)] font-light">98%</h4>
+                <p className="text-[8px] md:text-[9px] tracking-[0.2em] uppercase font-light text-[var(--fg)]/50 mt-1">Client Satisfaction</p>
               </div>
               <div>
-                <h4 className="font-serif text-3xl md:text-4xl text-[#F5F5F0] font-light">180+</h4>
-                <p className="text-[8px] md:text-[9px] tracking-[0.2em] uppercase font-light text-[#F5F5F0]/50 mt-1">Sanctuaries Built</p>
+                <h4 className="font-serif text-3xl md:text-4xl text-[var(--fg)] font-light">180+</h4>
+                <p className="text-[8px] md:text-[9px] tracking-[0.2em] uppercase font-light text-[var(--fg)]/50 mt-1">Sanctuaries Built</p>
               </div>
               <div>
-                <h4 className="font-serif text-3xl md:text-4xl text-[#F5F5F0] font-light">12+</h4>
-                <p className="text-[8px] md:text-[9px] tracking-[0.2em] uppercase font-light text-[#F5F5F0]/50 mt-1">Years of Craft</p>
+                <h4 className="font-serif text-3xl md:text-4xl text-[var(--fg)] font-light">12+</h4>
+                <p className="text-[8px] md:text-[9px] tracking-[0.2em] uppercase font-light text-[var(--fg)]/50 mt-1">Years of Craft</p>
               </div>
             </div>
           </div>
@@ -91,24 +91,24 @@ export default function WhyChooseUs() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="flex flex-col md:flex-row md:space-x-6 space-y-4 md:space-y-0 p-6 border border-[#c9a86a]/15 rounded-[1.5rem] bg-[#111111]/30 backdrop-blur-sm hover:bg-[#3d2410]/30 transition-colors duration-500 relative group overflow-hidden"
+                className="flex flex-col md:flex-row md:space-x-6 space-y-4 md:space-y-0 p-6 border border-[var(--gold-border)] rounded-[1.5rem] bg-[var(--bg-alt)]/30 backdrop-blur-sm hover:bg-[var(--gold-muted)]/30 transition-colors duration-500 relative group overflow-hidden"
               >
                 {/* Icon wrapper */}
-                <div className="w-12 h-12 rounded-full border border-[#c9a86a]/30 flex items-center justify-center flex-shrink-0 bg-[#0B0B0B] group-hover:bg-[#c9a86a]/10 transition-colors duration-500">
-                  <Icon className="w-5 h-5 text-[#c9a86a]" />
+                <div className="w-12 h-12 rounded-full border border-[var(--gold-border)] flex items-center justify-center flex-shrink-0 bg-[var(--bg)] group-hover:bg-[#c9a86a]/10 transition-colors duration-500">
+                  <Icon className="w-5 h-5 text-[var(--gold)]" />
                 </div>
 
                 {/* Content */}
                 <div className="flex-grow flex flex-col justify-center space-y-2">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-serif text-lg md:text-xl font-light tracking-wide text-[#F5F5F0] group-hover:text-[#c9a86a] transition-colors duration-300">
+                    <h3 className="font-serif text-lg md:text-xl font-light tracking-wide text-[var(--fg)] group-hover:text-[var(--gold)] transition-colors duration-300">
                       {reason.title}
                     </h3>
-                    <span className="font-serif text-xs text-[#c9a86a]/50 font-light select-none group-hover:text-[#c9a86a] transition-colors duration-300">
+                    <span className="font-serif text-xs text-[var(--gold)]/50 font-light select-none group-hover:text-[var(--gold)] transition-colors duration-300">
                       {reason.num}
                     </span>
                   </div>
-                  <p className="text-xs font-light text-[#F5F5F0]/70 leading-relaxed tracking-wide">
+                  <p className="text-xs font-light text-[var(--fg)]/70 leading-relaxed tracking-wide">
                     {reason.description}
                   </p>
                 </div>
