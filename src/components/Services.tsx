@@ -183,7 +183,7 @@ export default function Services() {
                       key={detail}
                       className="text-[9px] tracking-wider uppercase font-light text-[var(--fg-subtle)] hover:text-[var(--gold)] transition-colors duration-300"
                     >
-                      â€¢ {detail}
+                      {detail}
                     </span>
                   ))}
                 </div>
