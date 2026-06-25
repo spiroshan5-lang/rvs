@@ -74,7 +74,7 @@ export default function Footer({ showCTA = true }: FooterProps) {
           <div className="flex flex-col space-y-4">
             <span className="text-[10px] tracking-[0.2em] uppercase font-medium" style={{ color: 'var(--gold)' }}>Directory</span>
             <div className="grid grid-cols-2 gap-2 text-xs font-light">
-              {[{ name: 'Home', url: '/' }, { name: 'Gallery', url: '/gallery' }, { name: 'Services', url: '/services' }, { name: 'Contact', url: '/contact' }].map((item) => (
+              {[{ name: 'Home', url: '/' }, { name: 'Gallery', url: '/gallery' }, { name: 'Services', url: '/services' }, { name: 'Contact', url: '/contact' }, { name: 'Socials', url: '/social' }].map((item) => (
                 <Link key={item.name} href={item.url} className="transition-colors duration-300 py-0.5 hover:opacity-70" style={{ color: 'var(--fg)' }}>
                   {item.name}
                 </Link>
