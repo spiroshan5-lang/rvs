@@ -176,17 +176,7 @@ export default function Services() {
                   {service.description}
                 </p>
                 
-                {/* Expand details on hover */}
-                <div className="pt-4 border-t border-[var(--gold-border)] opacity-0 group-hover:opacity-100 h-0 group-hover:h-auto overflow-hidden transition-all duration-500 flex flex-col space-y-1">
-                  {service.details.map((detail) => (
-                    <span 
-                      key={detail}
-                      className="text-[9px] tracking-wider uppercase font-light text-[var(--fg-subtle)] hover:text-[var(--gold)] transition-colors duration-300"
-                    >
-                      {detail}
-                    </span>
-                  ))}
-                </div>
+
               </div>
 
               {/* Hover bottom line accent */}
