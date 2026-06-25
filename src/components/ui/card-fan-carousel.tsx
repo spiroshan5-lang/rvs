@@ -33,7 +33,7 @@ function getXOffset(width: number, slot: number) {
 }
 
 const ARROW_CLASSES =
-  "relative flex items-center justify-center rounded-full border-[1.5px] border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 backdrop-blur-[16px] text-black/40 dark:text-white/55 cursor-pointer shrink-0 z-30 outline-none shadow-[0_4px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.4)] hover:border-black/25 dark:hover:border-white/25 hover:text-black/70 dark:hover:text-white/80 active:opacity-70 transition-colors duration-300";
+  "relative flex items-center justify-center rounded-full border-[1.5px] border-[var(--border-strong)] bg-[var(--bg-card)] backdrop-blur-[16px] text-[var(--fg)] opacity-70 cursor-pointer shrink-0 z-30 outline-none shadow-[0_4px_20px_rgba(0,0,0,0.12)] hover:opacity-100 hover:border-[var(--gold-border)] active:opacity-60 transition-all duration-300";
 
 /* ─── Mobile Horizontal Scroll Gallery ─── */
 function MobileScrollGallery({ cards }: { cards: CardItem[] }) {
@@ -365,7 +365,7 @@ export default function SocialCards({ cards }: SocialCardsProps) {
   if (!totalCards) return null;
 
   const chevron = (direction: "left"|"right") => (
-    <svg className="relative z-[2] w-4 h-4 md:w-5 md:h-5 text-[#FAF9F6]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg className="relative z-[2] w-4 h-4 md:w-5 md:h-5" style={{ color: "var(--fg)" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
       <polyline points={direction==="left"?"15 18 9 12 15 6":"9 18 15 12 9 6"} />
     </svg>
   );
@@ -384,7 +384,7 @@ export default function SocialCards({ cards }: SocialCardsProps) {
     <section className="flex flex-col items-center w-full py-4 lg:py-8 relative z-20 overflow-hidden">
       <style dangerouslySetInnerHTML={{__html:`
         .fan-layout{width:100%;position:relative;height:38vw;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-top:2rem;}
-        .fan-card{position:absolute;width:50vw;height:28.125vw;border-radius:2rem;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,0.6);border:1px solid rgba(201,168,106,0.25);background:#111;cursor:grab;user-select:none;}
+        .fan-card{position:absolute;width:50vw;height:28.125vw;border-radius:2rem;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,0.6);border:1px solid var(--gold-border);background:var(--bg-card);cursor:grab;user-select:none;}
         .fan-card:active{cursor:grabbing;}
         @media(max-width:1024px){.fan-layout{height:48vw;}.fan-card{width:65vw;height:36.5625vw;border-radius:1.5rem;}}
       `}} />
@@ -413,7 +413,7 @@ export default function SocialCards({ cards }: SocialCardsProps) {
           <button className={`${ARROW_CLASSES} w-10 h-10 md:w-12 md:h-12`} onClick={() => cycle("left")} aria-label="Previous">{chevron("left")}</button>
           <div className="flex items-center gap-2">
             {cards.map((_,i) => (
-              <span key={i} className={`w-2 h-2 rounded-full transition-all duration-300 ${i===centerIndex?"bg-[#c9a86a] scale-[1.3]":"bg-white/15"}`} />
+              <span key={i} className={`w-2 h-2 rounded-full transition-all duration-300 ${i===centerIndex?"bg-[var(--gold)] scale-[1.3]":"bg-[var(--fg)] opacity-15"}`} />
             ))}
           </div>
           <button className={`${ARROW_CLASSES} w-10 h-10 md:w-12 md:h-12`} onClick={() => cycle("right")} aria-label="Next">{chevron("right")}</button>
@@ -422,4 +422,5 @@ export default function SocialCards({ cards }: SocialCardsProps) {
     </section>
   );
 }
+
 
