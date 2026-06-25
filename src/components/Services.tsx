@@ -44,13 +44,20 @@ const services: Service[] = [
   },
   {
     index: '05',
+    title: 'Classic Furnitures',
+    description: 'Timeless, elegant furniture designs handcrafted with premium materials, bringing heritage luxury and refined sophistication to your spaces.',
+    details: ['Heritage Woodcraft', 'Premium Leather & Fabrics', 'Antique & Vintage Restoration'],
+    image: 'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?q=80&w=800&auto=format&fit=crop',
+  },
+  {
+    index: '06',
     title: 'Styling & Furniture',
     description: 'Curating objects, art pieces, and custom furniture that complete a space. We source globally from premium artisans.',
     details: ['Custom Furniture Design', 'Art Curation', 'Textile & Lighting Pairing'],
     image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=800&auto=format&fit=crop',
   },
   {
-    index: '06',
+    index: '07',
     title: 'Custom Designing & Furniture',
     description: 'Bespoke furniture and custom architectural elements crafted specifically for your spatial identity and functional needs.',
     details: ['Bespoke Cabinetry', 'Signature Seating', 'Artisan Woodwork'],
