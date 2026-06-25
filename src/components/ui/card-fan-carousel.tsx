@@ -357,7 +357,7 @@ export default function SocialCards({ cards }: SocialCardsProps) {
         }
       } else if (wasVisible) {
         const exitX = direction === "right" ? -120 : 120;
-        gsap.to(card, { x:`${exitX}vw`, opacity:0, scale:0.5, rotation:direction==="right"?-15:15, duration:0.4, ease:"power2.in", zIndex:0 });
+        gsap.to(card, { x:`${exitX}vw`, opacity:0, scale:0.5, rotation:direction==="right"?-15:15, duration:0.4, ease:"power2.in", zIndex:0, onComplete:onCardDone });
       } else if (isFirstMount) {
         gsap.set(card, { opacity:0, scale:0.3, x:"0vw", y:0, zIndex:0 });
       }
@@ -476,4 +476,5 @@ export default function SocialCards({ cards }: SocialCardsProps) {
     </section>
   );
 }
+
 
