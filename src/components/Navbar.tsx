@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Home, Image as ImageIcon, Layers, Phone, Sun, Moon, Menu, X, ArrowUpRight, Instagram } from "lucide-react"
+import { Home, Image as ImageIcon, Layers, Phone, Sun, Moon, Menu, X, ArrowUpRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -14,7 +14,7 @@ const navItems = [
   { name: 'Gallery', url: '/gallery', icon: ImageIcon },
   { name: 'Services', url: '/services', icon: Layers },
   { name: 'Contact', url: '/contact', icon: Phone },
-  { name: 'Socials', url: '/social', icon: Instagram }
+  { name: 'Socials', url: '/social', icon: Layers }
 ]
 
 export default function Navbar() {

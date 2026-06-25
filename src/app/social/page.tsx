@@ -3,7 +3,15 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Instagram, Facebook, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
+
+const InstagramIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+);
+
+const FacebookIcon = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+);
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
@@ -71,7 +79,7 @@ export default function SocialPage() {
             >
               <div className="flex justify-between items-start mb-12">
                 <div className="w-12 h-12 rounded-full bg-[var(--gold)]/10 flex items-center justify-center text-[var(--gold)] group-hover:bg-[var(--gold)] group-hover:text-black transition-colors duration-500">
-                  <Instagram className="w-5 h-5" />
+                  <InstagramIcon className="w-5 h-5" />
                 </div>
                 <ArrowUpRight className="w-6 h-6 text-[var(--gold)] opacity-0 -translate-x-4 translate-y-4 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-500" />
               </div>
@@ -91,7 +99,7 @@ export default function SocialPage() {
             >
               <div className="flex justify-between items-start mb-12">
                 <div className="w-12 h-12 rounded-full bg-[var(--gold)]/10 flex items-center justify-center text-[var(--gold)] group-hover:bg-[var(--gold)] group-hover:text-black transition-colors duration-500">
-                  <Facebook className="w-5 h-5" />
+                  <FacebookIcon className="w-5 h-5" />
                 </div>
                 <ArrowUpRight className="w-6 h-6 text-[var(--gold)] opacity-0 -translate-x-4 translate-y-4 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-500" />
               </div>
@@ -130,7 +138,7 @@ export default function SocialPage() {
                   {/* Overlay on hover */}
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center backdrop-blur-[2px]">
                     <div className="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center text-white/80">
-                      <Instagram className="w-4 h-4" />
+                      <InstagramIcon className="w-4 h-4" />
                     </div>
                   </div>
                 </motion.div>
