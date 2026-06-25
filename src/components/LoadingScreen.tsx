@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
@@ -59,7 +59,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         }
       `}} />
       <div 
-        className={`fixed top-0 left-0 w-screen h-screen bg-[#0B0B0B] z-[99999] flex justify-center items-center flex-col transition-all duration-[1200ms] ease-[cubic-bezier(0.25,1,0.5,1)] ${
+        className={`fixed top-0 left-0 w-screen h-screen bg-[var(--bg)] z-[99999] flex justify-center items-center flex-col transition-all duration-[1200ms] ease-[cubic-bezier(0.25,1,0.5,1)] ${
           isVisible ? 'opacity-100 visible' : 'opacity-0 invisible'
         }`}
       >
@@ -89,3 +89,4 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
     </>
   );
 }
+

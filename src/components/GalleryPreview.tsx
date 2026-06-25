@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
@@ -70,7 +70,7 @@ export default function GalleryPreview() {
                   alt={item.alt || item.title}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 scale-100 group-hover:scale-105 filter brightness-[0.8] hover:brightness-[0.9]"
                 />
-                <div className="absolute inset-0 border border-[#F5F5F0]/5 group-hover:border-[var(--gold-border)] transition-colors duration-500" />
+                <div className="absolute inset-0 border border-[var(--border)] group-hover:border-[var(--gold-border)] transition-colors duration-500" />
               </div>
               <div className="flex justify-between items-center px-1">
                 <span className="font-serif text-sm font-light tracking-wide text-[var(--fg)]/80 group-hover:text-[var(--fg)] transition-colors duration-300">
@@ -87,3 +87,4 @@ export default function GalleryPreview() {
     </section>
   );
 }
+

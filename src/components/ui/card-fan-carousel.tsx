@@ -35,33 +35,67 @@ function getXOffset(width: number, slot: number) {
 const ARROW_CLASSES =
   "relative flex items-center justify-center rounded-full border-[1.5px] border-[var(--border-strong)] bg-[var(--bg-card)] backdrop-blur-[16px] text-[var(--fg)] opacity-70 cursor-pointer shrink-0 z-30 outline-none shadow-[0_4px_20px_rgba(0,0,0,0.12)] hover:opacity-100 hover:border-[var(--gold-border)] active:opacity-60 transition-all duration-300";
 
-/* ─── Mobile Horizontal Scroll Gallery ─── */
+/* ─── Mobile Horizontal Scroll Gallery — Infinite Loop ─── */
 function MobileScrollGallery({ cards }: { cards: CardItem[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [showHint, setShowHint] = useState(true);
+  const isJumping = useRef(false);
 
-  // Track scroll to determine active card
+  // Triple the cards for seamless infinite loop: [clone...originals...clone]
+  const tripled = [...cards, ...cards, ...cards];
+  const N = cards.length;
+
+  // On mount, jump to the middle set so we can scroll both ways
   useEffect(() => {
     const el = scrollRef.current;
-    if (!el) return;
+    if (!el || N === 0) return;
+    const cardW = el.scrollWidth / tripled.length;
+    const gap = 14;
+    el.scrollLeft = N * (cardW + gap);
+  }, [N]);
+
+  // Track scroll, detect edges and silently jump to middle clone
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el || N === 0) return;
 
     const onScroll = () => {
-      const scrollLeft = el.scrollLeft;
-      const cardWidth = el.firstElementChild?.getBoundingClientRect().width || 300;
+      if (isJumping.current) return;
+
+      const cardW = el.scrollWidth / tripled.length;
       const gap = 14;
-      const idx = Math.round(scrollLeft / (cardWidth + gap));
-      setActiveIndex(Math.min(Math.max(idx, 0), cards.length - 1));
+      const scrollLeft = el.scrollLeft;
+      const totalW = cardW + gap;
+
+      // Compute real index within original set
+      const rawIdx = Math.round(scrollLeft / totalW);
+      const realIdx = ((rawIdx % N) + N) % N;
+      setActiveIndex(realIdx);
 
       // Hide hint after first scroll
       if (scrollLeft > 20 && showHint) setShowHint(false);
+
+      // Jump to middle set when near edges (seamless)
+      const lowerBound = 0.4 * totalW;
+      const upperBound = (N * 2 + 0.6) * totalW;
+
+      if (scrollLeft < lowerBound) {
+        isJumping.current = true;
+        el.scrollLeft = scrollLeft + N * totalW;
+        setTimeout(() => { isJumping.current = false; }, 50);
+      } else if (scrollLeft > upperBound) {
+        isJumping.current = true;
+        el.scrollLeft = scrollLeft - N * totalW;
+        setTimeout(() => { isJumping.current = false; }, 50);
+      }
     };
 
     el.addEventListener("scroll", onScroll, { passive: true });
     return () => el.removeEventListener("scroll", onScroll);
-  }, [cards.length, showHint]);
+  }, [N, tripled.length, showHint]);
 
-  // Auto-dismiss hint after 3 seconds
+  // Auto-dismiss hint after 4 seconds
   useEffect(() => {
     const timer = setTimeout(() => setShowHint(false), 4000);
     return () => clearTimeout(timer);
@@ -91,7 +125,7 @@ function MobileScrollGallery({ cards }: { cards: CardItem[] }) {
         }}
         className="mobile-scroll-hide"
       >
-        {cards.map((card, i) => (
+        {tripled.map((card, i) => (
           <div
             key={i}
             style={{
@@ -422,5 +456,6 @@ export default function SocialCards({ cards }: SocialCardsProps) {
     </section>
   );
 }
+
 
 

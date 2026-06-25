@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useRef } from 'react';
 import Image from 'next/image';
@@ -125,7 +125,7 @@ export default function FeaturedProjects() {
                   />
                   
                   {/* Subtle inner shadow overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0B]/35 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg)]/35 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </motion.div>
 
                 {/* Index badge */}
@@ -158,4 +158,5 @@ export default function FeaturedProjects() {
     </section>
   );
 }
+
 

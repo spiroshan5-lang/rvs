@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useRef } from 'react';
 import Image from 'next/image';
@@ -145,7 +145,7 @@ export default function Services() {
                 <span className="font-serif text-sm text-[var(--gold)] select-none font-medium">
                   {service.index}
                 </span>
-                <span className="w-1.5 h-1.5 bg-[#F5F5F0]/25 group-hover:bg-[#c9a86a] group-hover:scale-150 rounded-full transition-all duration-500" />
+                <span className="w-1.5 h-1.5 bg-[var(--fg)]/25 group-hover:bg-[var(--gold)] group-hover:scale-150 rounded-full transition-all duration-500" />
               </div>
 
               {/* Service Image (Enlarged) */}
@@ -176,7 +176,7 @@ export default function Services() {
                       key={detail}
                       className="text-[9px] tracking-wider uppercase font-light text-[var(--fg-subtle)] hover:text-[var(--gold)] transition-colors duration-300"
                     >
-                      • {detail}
+                      â€¢ {detail}
                     </span>
                   ))}
                 </div>
@@ -191,3 +191,4 @@ export default function Services() {
     </section>
   );
 }
+
