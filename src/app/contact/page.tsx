@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -163,7 +163,7 @@ export default function ContactPage() {
                           className={`py-3 px-4 rounded-xl text-xs tracking-wider border transition-all cursor-pointer ${
                             formState.budget === budgetOption 
                               ? 'bg-[#c9a86a]/10 border-[#c9a86a] text-[var(--gold)]' 
-                              : 'bg-transparent border-[var(--nav-border)] text-[var(--fg)]/60 hover:border-[#F5F5F0]/30'
+                              : 'bg-transparent border-[var(--nav-border)] text-[var(--fg)]/60 hover:border-[var(--fg)]/30'
                           }`}
                         >
                           {budgetOption}
@@ -203,3 +203,4 @@ export default function ContactPage() {
     </div>
   );
 }
+

@@ -35,197 +35,169 @@ function getXOffset(width: number, slot: number) {
 const ARROW_CLASSES =
   "relative flex items-center justify-center rounded-full border-[1.5px] border-[var(--border-strong)] bg-[var(--bg-card)] backdrop-blur-[16px] text-[var(--fg)] opacity-70 cursor-pointer shrink-0 z-30 outline-none shadow-[0_4px_20px_rgba(0,0,0,0.12)] hover:opacity-100 hover:border-[var(--gold-border)] active:opacity-60 transition-all duration-300";
 
-/* ─── Mobile Horizontal Scroll Gallery — Infinite Loop ─── */
+/* ─── Mobile Horizontal Scroll Gallery — Clean Infinite Loop ─── */
 function MobileScrollGallery({ cards }: { cards: CardItem[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [showHint, setShowHint] = useState(true);
-  const isJumping = useRef(false);
-
-  // Triple the cards for seamless infinite loop: [clone...originals...clone]
-  const tripled = [...cards, ...cards, ...cards];
   const N = cards.length;
 
-  // On mount, jump to the middle set so we can scroll both ways
+  // Build a 5x repeated list for very comfortable looping room
+  const repeated = [...cards, ...cards, ...cards, ...cards, ...cards];
+  // We start at the 2nd copy so user can scroll both left and right freely
+  const START_COPY = 2;
+
+  // Card + gap width constant (88vw capped at 440, plus 14px gap)
+  const getCardPlusGap = () => {
+    if (!scrollRef.current) return 300 + 14;
+    const el = scrollRef.current;
+    // measure the first actual card child
+    const firstCard = el.children[0] as HTMLElement | null;
+    if (!firstCard) return 300 + 14;
+    return firstCard.getBoundingClientRect().width + 14;
+  };
+
+  // Jump to middle copy on mount (instant, no animation)
   useEffect(() => {
     const el = scrollRef.current;
     if (!el || N === 0) return;
-    const cardW = el.scrollWidth / tripled.length;
-    const gap = 14;
-    el.scrollLeft = N * (cardW + gap);
+    // wait one frame for layout
+    requestAnimationFrame(() => {
+      const cpg = getCardPlusGap();
+      el.scrollLeft = START_COPY * N * cpg;
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [N]);
 
-  // Track scroll, detect edges and silently jump to middle clone
+  // Auto-dismiss hint
+  useEffect(() => {
+    const t = setTimeout(() => setShowHint(false), 4000);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Scroll handler — update dot + infinite teleport
   useEffect(() => {
     const el = scrollRef.current;
     if (!el || N === 0) return;
 
+    let ticking = false;
+
     const onScroll = () => {
-      if (isJumping.current) return;
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        const cpg = getCardPlusGap();
+        const sl = el.scrollLeft;
+        const totalCopies = repeated.length; // 5 * N
+        const totalWidth = cpg * totalCopies;
 
-      const cardW = el.scrollWidth / tripled.length;
-      const gap = 14;
-      const scrollLeft = el.scrollLeft;
-      const totalW = cardW + gap;
+        // Compute dot index — which real card is centered
+        const rawIdx = Math.round(sl / cpg);
+        setActiveIndex(((rawIdx % N) + N) % N);
 
-      // Compute real index within original set
-      const rawIdx = Math.round(scrollLeft / totalW);
-      const realIdx = ((rawIdx % N) + N) % N;
-      setActiveIndex(realIdx);
+        // Hide hint
+        if (sl > 10 && showHint) setShowHint(false);
 
-      // Hide hint after first scroll
-      if (scrollLeft > 20 && showHint) setShowHint(false);
+        // Seamless loop — stay in copies 1-3 range (out of 0-4)
+        const minSafe = cpg * N;         // start of copy 1
+        const maxSafe = cpg * N * 3;     // start of copy 3
 
-      // Jump to middle set when near edges (seamless)
-      const lowerBound = 0.4 * totalW;
-      const upperBound = (N * 2 + 0.6) * totalW;
-
-      if (scrollLeft < lowerBound) {
-        isJumping.current = true;
-        el.scrollLeft = scrollLeft + N * totalW;
-        setTimeout(() => { isJumping.current = false; }, 50);
-      } else if (scrollLeft > upperBound) {
-        isJumping.current = true;
-        el.scrollLeft = scrollLeft - N * totalW;
-        setTimeout(() => { isJumping.current = false; }, 50);
-      }
+        if (sl < minSafe) {
+          // Near left edge — jump forward by N cards (instant, no behavior)
+          el.scrollLeft = sl + cpg * N;
+        } else if (sl > maxSafe) {
+          // Near right edge — jump backward by N cards
+          el.scrollLeft = sl - cpg * N;
+        }
+      });
     };
 
-    el.addEventListener("scroll", onScroll, { passive: true });
-    return () => el.removeEventListener("scroll", onScroll);
-  }, [N, tripled.length, showHint]);
-
-  // Auto-dismiss hint after 4 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => setShowHint(false), 4000);
-    return () => clearTimeout(timer);
-  }, []);
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [N, showHint]);
 
   return (
-    <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: 0 }}>
+    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
-      {/* Horizontally scrollable image strip */}
+      {/* Scroll strip — NO snap so jumps are seamless */}
       <div
         ref={scrollRef}
         style={{
-          width: "100%",
-          display: "flex",
-          gap: "14px",
-          overflowX: "auto",
-          scrollSnapType: "x proximity",
-          WebkitOverflowScrolling: "touch",
-          overscrollBehaviorX: "contain",
-          touchAction: "pan-x pan-y",
-          paddingLeft: "4vw",
-          paddingRight: "4vw",
-          paddingBottom: "4px",
-          /* Hide scrollbar */
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
-        }}
+          width: '100%',
+          display: 'flex',
+          gap: '14px',
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          // NO scroll-snap — it fights the teleport jump and causes sticking
+          WebkitOverflowScrolling: 'touch',
+          overscrollBehaviorX: 'none',
+          touchAction: 'pan-x',
+          paddingLeft: '6vw',
+          paddingRight: '6vw',
+          paddingBottom: '4px',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+        } as React.CSSProperties}
         className="mobile-scroll-hide"
       >
-        {tripled.map((card, i) => (
+        {repeated.map((card, i) => (
           <div
             key={i}
             style={{
               flexShrink: 0,
-              width: "88vw",
+              width: '88vw',
               maxWidth: 440,
-              aspectRatio: "4/3",
-              borderRadius: "1.15rem",
-              overflow: "hidden",
-              boxShadow: "0 20px 56px rgba(0,0,0,0.40), 0 2px 6px rgba(0,0,0,0.22)",
-              border: "1px solid rgba(201,168,106,0.2)",
-              background: "#111",
-              scrollSnapAlign: "center",
-              position: "relative",
+              aspectRatio: '4/3',
+              borderRadius: '1.15rem',
+              overflow: 'hidden',
+              boxShadow: '0 20px 56px rgba(0,0,0,0.36), 0 2px 6px rgba(0,0,0,0.18)',
+              border: '1px solid var(--gold-border)',
+              background: 'var(--bg-card)',
+              position: 'relative',
             }}
           >
             <img
               src={card.imgUrl}
-              alt={card.alt || `Gallery ${i + 1}`}
+              alt={card.alt || `Gallery ${(i % N) + 1}`}
               draggable={false}
               loading="lazy"
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
             />
           </div>
         ))}
       </div>
 
-      {/* Scroll hint indicator — animated arrow + text */}
+      {/* Swipe hint */}
       {showHint && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            marginTop: "14px",
-            opacity: 0.55,
-            animation: "scrollHintPulse 1.8s ease-in-out infinite",
-          }}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold, #c9a86a)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="13 17 18 12 13 7" />
-            <polyline points="6 17 11 12 6 7" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 14, animation: 'scrollHintPulse 1.8s ease-in-out infinite' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold,#c9a86a)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="13 17 18 12 13 7" /><polyline points="6 17 11 12 6 7" />
           </svg>
-          <span style={{
-            fontFamily: "var(--font-sans, sans-serif)",
-            fontSize: "10px",
-            fontWeight: 400,
-            letterSpacing: "0.2em",
-            textTransform: "uppercase" as const,
-            color: "var(--gold, #c9a86a)",
-          }}>
+          <span style={{ fontFamily: 'var(--font-sans,sans-serif)', fontSize: 10, fontWeight: 400, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gold,#c9a86a)', opacity: 0.7 }}>
             Swipe to explore
           </span>
         </div>
       )}
 
       {/* Caption + counter + dots */}
-      <div style={{
-        width: "88vw", maxWidth: 440,
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        marginTop: showHint ? "10px" : "14px", padding: "0 4px",
-        transition: "margin-top 0.3s ease",
-      }}>
-        <span style={{
-          fontFamily: "var(--font-serif,serif)", fontSize: 12, fontWeight: 300,
-          letterSpacing: "0.06em", color: "var(--fg,#F5F5F0)", opacity: 0.6,
-          whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "52%",
-        }}>
+      <div style={{ width: '88vw', maxWidth: 440, display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 14, padding: '0 4px' }}>
+        <span style={{ fontFamily: 'var(--font-serif,serif)', fontSize: 12, fontWeight: 300, letterSpacing: '0.06em', color: 'var(--fg,#1a1008)', opacity: 0.6, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '52%' }}>
           {cards[activeIndex]?.alt || `Space ${activeIndex + 1}`}
         </span>
-
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{
-            fontFamily: "var(--font-sans,sans-serif)", fontSize: 10, fontWeight: 300,
-            letterSpacing: "0.18em", color: "var(--gold,#c9a86a)", opacity: 0.85,
-          }}>
-            {String(activeIndex + 1).padStart(2,"0")} / {String(cards.length).padStart(2,"0")}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontFamily: 'var(--font-sans,sans-serif)', fontSize: 10, fontWeight: 300, letterSpacing: '0.18em', color: 'var(--gold,#c9a86a)', opacity: 0.85 }}>
+            {String(activeIndex + 1).padStart(2,'0')} / {String(N).padStart(2,'0')}
           </span>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
             {cards.map((_,i) => (
-              <span key={i} style={{
-                display: "block",
-                width: i === activeIndex ? 18 : 6,
-                height: 6, borderRadius: 3,
-                background: i === activeIndex ? "var(--gold,#c9a86a)" : "rgba(245,245,240,0.22)",
-                transition: "all 0.35s cubic-bezier(0.4,0,0.2,1)",
-              }} />
+              <span key={i} style={{ display: 'block', width: i === activeIndex ? 18 : 6, height: 6, borderRadius: 3, background: i === activeIndex ? 'var(--gold,#c9a86a)' : 'var(--border-strong)', transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)' }} />
             ))}
           </div>
         </div>
       </div>
 
-      {/* Inline keyframes + scrollbar hide */}
       <style dangerouslySetInnerHTML={{ __html: `
         .mobile-scroll-hide::-webkit-scrollbar { display: none; }
         @keyframes scrollHintPulse {
@@ -236,7 +208,6 @@ function MobileScrollGallery({ cards }: { cards: CardItem[] }) {
     </div>
   );
 }
-
 /* ─── Main Export ─── */
 export default function SocialCards({ cards }: SocialCardsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -456,6 +427,7 @@ export default function SocialCards({ cards }: SocialCardsProps) {
     </section>
   );
 }
+
 
 
 
