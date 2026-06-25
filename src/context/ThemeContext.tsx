@@ -1,13 +1,13 @@
-'use client';
+﻿'use client';
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
 type Theme = 'light' | 'dark';
 interface ThemeContextProps { theme: Theme; toggleTheme: () => void; }
 
-const ThemeContext = createContext<ThemeContextProps>({ theme: 'dark', toggleTheme: () => {} });
+const ThemeContext = createContext<ThemeContextProps>({ theme: 'light', toggleTheme: () => {} });
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<Theme>('dark');
+  const [theme, setTheme] = useState<Theme>('light');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -15,7 +15,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
       if (stored === 'light' || stored === 'dark') {
         setTheme(stored);
       }
-      // If nothing stored, stay dark (default)
+      // If nothing stored, default is light
     }
   }, []);
 

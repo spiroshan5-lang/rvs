@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import LoadingScreen from "@/components/LoadingScreen";
@@ -24,7 +24,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="dark" suppressHydrationWarning>
+    <html lang="en" data-theme="light" suppressHydrationWarning>
+            <head>
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            try {
+              var stored = localStorage.getItem('rvs-theme');
+              var theme = (stored === 'dark' || stored === 'light') ? stored : 'light';
+              document.documentElement.setAttribute('data-theme', theme);
+            } catch(e) {}
+          })();
+        ` }} />
+      </head>
       <body className="transition-colors duration-300" style={{ backgroundColor: "var(--bg)", color: "var(--fg)" }}>
         
         {/* Subtle, expensive paper texture overlay */}
@@ -38,3 +49,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+
