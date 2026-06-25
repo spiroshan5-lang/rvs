@@ -13,7 +13,8 @@ const navItems = [
   { name: 'Home', url: '/', icon: Home },
   { name: 'Gallery', url: '/gallery', icon: ImageIcon },
   { name: 'Services', url: '/services', icon: Layers },
-  { name: 'Contact', url: '/contact', icon: Phone }
+  { name: 'Contact', url: '/contact', icon: Phone },
+  { name: '404 Test', url: '/this-is-a-broken-link', icon: Layers } // Temporary minor error
 ]
 
 export default function Navbar() {
