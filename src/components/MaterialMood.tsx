@@ -63,7 +63,8 @@ export default function MaterialMood() {
   return (
     <section 
       id="materials"
-      className="py-24 transition-colors duration-300" style={{ background: 'var(--bg)', color: 'var(--fg)' }} md:py-36 px-6 md:px-12 relative overflow-hidden"
+      className="py-24 md:py-36 px-6 md:px-12 relative overflow-hidden transition-colors duration-300"
+      style={{ background: 'var(--bg)', color: 'var(--fg)' }}
     >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
