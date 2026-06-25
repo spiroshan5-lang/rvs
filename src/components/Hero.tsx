@@ -38,10 +38,10 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative w-full h-screen flex items-center justify-center p-4 md:p-6 lg:p-8 transition-colors duration-300"
+      className="relative w-full h-screen flex items-center justify-center p-0 md:p-6 lg:p-8 transition-colors duration-300"
       style={{ background: 'var(--bg)' }}
     >
-      <div className="relative w-full h-full max-w-[1920px] mx-auto rounded-[2.5rem] lg:rounded-[3.5rem] overflow-hidden border shadow-2xl" style={{ borderColor: 'var(--gold-border)' }}>
+      <div className="relative w-full h-full max-w-[1920px] mx-auto rounded-none md:rounded-[2.5rem] lg:rounded-[3.5rem] overflow-hidden border-0 md:border shadow-2xl" style={{ borderColor: 'var(--gold-border)' }}>
 
         {/* Background image / video */}
         <div className="absolute inset-0 w-full h-full z-0" style={{ background: 'var(--bg)' }}>
@@ -75,7 +75,7 @@ export default function Hero() {
         <div className="absolute inset-0 z-20 w-full h-full flex flex-col justify-between">
 
           {/* Top bar */}
-          <div className="flex justify-between items-center w-full px-6 md:px-12 pt-6 md:pt-12">
+          <div className="flex justify-between items-center w-full px-6 md:px-12 pt-28 md:pt-12">
             <div className="flex items-center gap-3 md:gap-4">
               <div className="relative w-12 h-12 md:w-20 md:h-20 rounded-full overflow-hidden shadow-lg flex-shrink-0" style={{ border: '1px solid var(--gold-border)', background: '#0B0B0B' }}>
                 <Image src="/new-logo.jpeg" alt="RVS Crafted Interiors Logo" fill className="object-cover" />
@@ -110,7 +110,7 @@ export default function Hero() {
 
           {/* Bottom bar */}
           <div className="flex flex-col md:flex-row md:justify-between items-end md:items-end w-full gap-4 md:gap-0">
-            <div className="px-6 md:px-12 pb-2 md:pb-12 pointer-events-auto self-start md:self-auto">
+            <div className="px-6 md:px-12 pb-8 md:pb-12 pointer-events-auto self-start md:self-auto">
               <div className="flex items-center space-x-3 md:space-x-4 backdrop-blur-md rounded-[1.5rem] p-2.5 md:p-3" style={{ background: 'rgba(31,16,5,0.75)', border: '1px solid var(--gold-border)' }}>
                 <a href="https://wa.me/919591685465" target="_blank" rel="noopener noreferrer"
                   className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all group hover:bg-[#c9a86a]/15"

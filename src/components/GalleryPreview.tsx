@@ -15,10 +15,10 @@ export default function GalleryPreview() {
           if (data?.gallery) {
             const mapped = data.gallery.slice(0, 4).map((item: any, idx: number) => {
               const layoutStyles = [
-                { aspect: 'aspect-[3/4]', colSpan: 'md:col-span-7', yOffset: 'translate-y-0' },
-                { aspect: 'aspect-square', colSpan: 'md:col-span-5', yOffset: 'md:translate-y-16' },
-                { aspect: 'aspect-[4/3]', colSpan: 'md:col-span-5', yOffset: 'md:-translate-y-8' },
-                { aspect: 'aspect-[3/4]', colSpan: 'md:col-span-7', yOffset: 'translate-y-0' }
+                { aspect: 'aspect-[4/5] md:aspect-[3/4]', colSpan: 'md:col-span-7', yOffset: 'translate-y-0' },
+                { aspect: 'aspect-square md:aspect-square', colSpan: 'md:col-span-5', yOffset: 'md:translate-y-16' },
+                { aspect: 'aspect-square md:aspect-[4/3]', colSpan: 'md:col-span-5', yOffset: 'md:-translate-y-8' },
+                { aspect: 'aspect-[4/5] md:aspect-[3/4]', colSpan: 'md:col-span-7', yOffset: 'translate-y-0' }
               ];
               return { ...item, ...layoutStyles[idx % 4] };
             });
@@ -37,10 +37,10 @@ export default function GalleryPreview() {
   return (
     <section 
       id="gallery"
-      className=" text-[var(--fg)] py-24 md:py-36 px-6 md:px-12 relative overflow-hidden transition-colors duration-300"
+      className=" text-[var(--fg)] py-24 md:py-36 px-0 md:px-12 relative overflow-hidden transition-colors duration-300"
      style={{ background: 'var(--bg)', color: 'var(--fg)' }}>
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 md:mb-28">
+      <div className="max-w-7xl mx-auto px-4 md:px-0">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 md:mb-28">
           <div className="max-w-xl">
             <span className="text-[10px] tracking-[0.3em] uppercase font-light text-[var(--gold)] mb-4 block">
               Curated Spaces
@@ -54,7 +54,7 @@ export default function GalleryPreview() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 pb-16">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-12 pb-16">
           {items.map((item) => (
             <motion.div
               key={item.id}
