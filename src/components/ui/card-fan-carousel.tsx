@@ -33,7 +33,7 @@ function getXOffset(width: number, slot: number) {
 }
 
 const ARROW_CLASSES =
-  "relative flex items-center justify-center rounded-full border-[1.5px] border-[var(--border-strong)] bg-[var(--bg-card)] backdrop-blur-[16px] text-[var(--fg)] opacity-70 cursor-pointer shrink-0 z-30 outline-none shadow-[0_4px_20px_rgba(0,0,0,0.12)] hover:opacity-100 hover:border-[var(--gold-border)] active:opacity-60 transition-all duration-300";
+  "relative flex items-center justify-center rounded-full border-[1.5px] border-[var(--gold-border)] bg-[var(--bg-alt)] backdrop-blur-[16px] text-[var(--fg)] cursor-pointer shrink-0 z-30 outline-none shadow-[0_4px_24px_rgba(0,0,0,0.18)] hover:bg-[var(--gold-muted)] hover:border-[var(--gold)] hover:shadow-[0_6px_32px_rgba(0,0,0,0.22)] active:scale-95 transition-all duration-300";
 
 /* ============================================================
    MOBILE SWIPE SLIDER — pointer-events based, no scroll
@@ -435,7 +435,7 @@ export default function SocialCards({ cards }: SocialCardsProps) {
     <section className="flex flex-col items-center w-full py-4 lg:py-8 relative z-20 overflow-hidden">
       <style dangerouslySetInnerHTML={{__html:`
         .fan-layout{width:100%;position:relative;height:38vw;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-top:2rem;}
-        .fan-card{position:absolute;width:50vw;height:28.125vw;border-radius:2rem;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,0.35);border:1px solid var(--gold-border);background:var(--bg-card);cursor:grab;user-select:none;}
+        .fan-card{position:absolute;width:50vw;height:28.125vw;border-radius:2rem;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,0.18), 0 10px 25px rgba(0,0,0,0.12);border:1px solid var(--gold-border);background:var(--bg-card);cursor:grab;user-select:none;}
         .fan-card:active{cursor:grabbing;}
         @media(max-width:1024px){.fan-layout{height:48vw;}.fan-card{width:65vw;height:36.5625vw;border-radius:1.5rem;}}
       `}} />
@@ -467,7 +467,7 @@ export default function SocialCards({ cards }: SocialCardsProps) {
               <span key={i} onClick={() => cycle(i > centerIndex ? "right" : "left")}
                 className="rounded-full transition-all duration-300 cursor-pointer"
                 style={{ display:'block', width: i===centerIndex?18:8, height:8, borderRadius:4,
-                  background: i===centerIndex?'var(--gold)':'var(--border-strong)' }} />
+                  background: i===centerIndex?'var(--gold)':'var(--gold-border)' }} />
             ))}
           </div>
           <button className={`${ARROW_CLASSES} w-10 h-10 md:w-12 md:h-12`} onClick={() => cycle("right")} aria-label="Next">{chevron("right")}</button>
@@ -476,3 +476,4 @@ export default function SocialCards({ cards }: SocialCardsProps) {
     </section>
   );
 }
+
