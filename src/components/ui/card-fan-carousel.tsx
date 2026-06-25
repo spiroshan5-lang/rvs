@@ -35,180 +35,226 @@ function getXOffset(width: number, slot: number) {
 const ARROW_CLASSES =
   "relative flex items-center justify-center rounded-full border-[1.5px] border-[var(--border-strong)] bg-[var(--bg-card)] backdrop-blur-[16px] text-[var(--fg)] opacity-70 cursor-pointer shrink-0 z-30 outline-none shadow-[0_4px_20px_rgba(0,0,0,0.12)] hover:opacity-100 hover:border-[var(--gold-border)] active:opacity-60 transition-all duration-300";
 
-/* ─── Mobile Horizontal Scroll Gallery — Clean Infinite Loop ─── */
-function MobileScrollGallery({ cards }: { cards: CardItem[] }) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [showHint, setShowHint] = useState(true);
+/* ============================================================
+   MOBILE SWIPE SLIDER — pointer-events based, no scroll
+   Infinite circular loop via index arithmetic only.
+   No scrollLeft manipulation — works perfectly on iOS & Android.
+   ============================================================ */
+function MobileSwipeSlider({ cards }: { cards: CardItem[] }) {
   const N = cards.length;
+  const [current, setCurrent] = useState(0);
+  const [animating, setAnimating] = useState(false);
+  const [direction, setDirection] = useState<'left' | 'right' | null>(null);
+  const [showHint, setShowHint] = useState(true);
 
-  // Build a 5x repeated list for very comfortable looping room
-  const repeated = [...cards, ...cards, ...cards, ...cards, ...cards];
-  // We start at the 2nd copy so user can scroll both left and right freely
-  const START_COPY = 2;
+  // Swipe gesture tracking
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const isDragging = useRef(false);
+  const dragDeltaX = useRef(0);
 
-  // Card + gap width constant (88vw capped at 440, plus 14px gap)
-  const getCardPlusGap = () => {
-    if (!scrollRef.current) return 300 + 14;
-    const el = scrollRef.current;
-    // measure the first actual card child
-    const firstCard = el.children[0] as HTMLElement | null;
-    if (!firstCard) return 300 + 14;
-    return firstCard.getBoundingClientRect().width + 14;
-  };
+  const prev = ((current - 1) + N) % N;
+  const next = (current + 1) % N;
 
-  // Jump to middle copy on mount (instant, no animation)
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el || N === 0) return;
-    // wait one frame for layout
-    requestAnimationFrame(() => {
-      const cpg = getCardPlusGap();
-      el.scrollLeft = START_COPY * N * cpg;
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [N]);
-
-  // Auto-dismiss hint
+  // Hide hint after 4s or first swipe
   useEffect(() => {
     const t = setTimeout(() => setShowHint(false), 4000);
     return () => clearTimeout(t);
   }, []);
 
-  // Scroll handler — update dot + infinite teleport
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el || N === 0) return;
+  const go = useCallback((dir: 'left' | 'right') => {
+    if (animating || N <= 1) return;
+    setShowHint(false);
+    setDirection(dir);
+    setAnimating(true);
+    setTimeout(() => {
+      setCurrent(prev => dir === 'right' ? (prev + 1) % N : ((prev - 1) + N) % N);
+      setAnimating(false);
+      setDirection(null);
+    }, 320);
+  }, [animating, N]);
 
-    let ticking = false;
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    dragDeltaX.current = 0;
+    isDragging.current = true;
+  };
 
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        ticking = false;
-        const cpg = getCardPlusGap();
-        const sl = el.scrollLeft;
-        const totalCopies = repeated.length; // 5 * N
-        const totalWidth = cpg * totalCopies;
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging.current || touchStartX.current === null || touchStartY.current === null) return;
+    const dx = e.touches[0].clientX - touchStartX.current;
+    const dy = e.touches[0].clientY - touchStartY.current;
+    // If scrolling vertically more than horizontally, let page scroll
+    if (Math.abs(dy) > Math.abs(dx) + 5) {
+      isDragging.current = false;
+      return;
+    }
+    dragDeltaX.current = dx;
+  };
 
-        // Compute dot index — which real card is centered
-        const rawIdx = Math.round(sl / cpg);
-        setActiveIndex(((rawIdx % N) + N) % N);
+  const onTouchEnd = () => {
+    if (!isDragging.current) return;
+    isDragging.current = false;
+    const dx = dragDeltaX.current;
+    if (Math.abs(dx) > 44) {
+      go(dx < 0 ? 'right' : 'left');
+    }
+    touchStartX.current = null;
+    touchStartY.current = null;
+    dragDeltaX.current = 0;
+  };
 
-        // Hide hint
-        if (sl > 10 && showHint) setShowHint(false);
+  if (N === 0) return null;
 
-        // Seamless loop — stay in copies 1-3 range (out of 0-4)
-        const minSafe = cpg * N;         // start of copy 1
-        const maxSafe = cpg * N * 3;     // start of copy 3
-
-        if (sl < minSafe) {
-          // Near left edge — jump forward by N cards (instant, no behavior)
-          el.scrollLeft = sl + cpg * N;
-        } else if (sl > maxSafe) {
-          // Near right edge — jump backward by N cards
-          el.scrollLeft = sl - cpg * N;
-        }
-      });
+  // Slide transform: during animation, slide current card out + next card in
+  const getSlideStyle = (role: 'prev' | 'current' | 'next'): React.CSSProperties => {
+    const base: React.CSSProperties = {
+      position: 'absolute',
+      top: 0, left: 0, right: 0, bottom: 0,
+      transition: animating ? 'transform 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.32s ease' : 'none',
+      willChange: 'transform',
     };
-
-    el.addEventListener('scroll', onScroll, { passive: true });
-    return () => el.removeEventListener('scroll', onScroll);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [N, showHint]);
+    if (!animating) {
+      if (role === 'current') return { ...base, transform: 'translateX(0)', opacity: 1 };
+      return { ...base, transform: role === 'prev' ? 'translateX(-100%)' : 'translateX(100%)', opacity: 0 };
+    }
+    // During animation: direction === 'right' means going to next
+    if (direction === 'right') {
+      if (role === 'current') return { ...base, transform: 'translateX(-100%)', opacity: 0 };
+      if (role === 'next')    return { ...base, transform: 'translateX(0)', opacity: 1 };
+      return { ...base, transform: 'translateX(-200%)', opacity: 0 };
+    } else {
+      if (role === 'current') return { ...base, transform: 'translateX(100%)', opacity: 0 };
+      if (role === 'prev')    return { ...base, transform: 'translateX(0)', opacity: 1 };
+      return { ...base, transform: 'translateX(200%)', opacity: 0 };
+    }
+  };
 
   return (
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
-      {/* Scroll strip — NO snap so jumps are seamless */}
+      {/* ── Image stage ── */}
       <div
-        ref={scrollRef}
         style={{
-          width: '100%',
-          display: 'flex',
-          gap: '14px',
-          overflowX: 'auto',
-          overflowY: 'hidden',
-          // NO scroll-snap — it fights the teleport jump and causes sticking
-          WebkitOverflowScrolling: 'touch',
-          overscrollBehaviorX: 'none',
-          touchAction: 'pan-x',
-          paddingLeft: '6vw',
-          paddingRight: '6vw',
-          paddingBottom: '4px',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-        } as React.CSSProperties}
-        className="mobile-scroll-hide"
+          position: 'relative',
+          width: '92vw',
+          maxWidth: 460,
+          aspectRatio: '4/3',
+          borderRadius: '1.2rem',
+          overflow: 'hidden',
+          boxShadow: '0 24px 64px rgba(0,0,0,0.38), 0 2px 8px rgba(0,0,0,0.18)',
+          border: '1px solid var(--gold-border)',
+          background: 'var(--bg-card)',
+          touchAction: 'pan-y',
+          userSelect: 'none',
+        }}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
       >
-        {repeated.map((card, i) => (
-          <div
-            key={i}
-            style={{
-              flexShrink: 0,
-              width: '88vw',
-              maxWidth: 440,
-              aspectRatio: '4/3',
-              borderRadius: '1.15rem',
-              overflow: 'hidden',
-              boxShadow: '0 20px 56px rgba(0,0,0,0.36), 0 2px 6px rgba(0,0,0,0.18)',
-              border: '1px solid var(--gold-border)',
-              background: 'var(--bg-card)',
-              position: 'relative',
-            }}
-          >
-            <img
-              src={card.imgUrl}
-              alt={card.alt || `Gallery ${(i % N) + 1}`}
-              draggable={false}
-              loading="lazy"
-              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-          </div>
-        ))}
+        {/* Prev card */}
+        <div style={getSlideStyle('prev')}>
+          <img src={cards[prev].imgUrl} alt={cards[prev].alt || ''} draggable={false}
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+        </div>
+
+        {/* Current card */}
+        <div style={getSlideStyle('current')}>
+          <img src={cards[current].imgUrl} alt={cards[current].alt || ''} draggable={false}
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+        </div>
+
+        {/* Next card */}
+        <div style={getSlideStyle('next')}>
+          <img src={cards[next].imgUrl} alt={cards[next].alt || ''} draggable={false}
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+        </div>
+
+        {/* Left/right tap zones */}
+        {N > 1 && (
+          <>
+            <button onClick={() => go('left')} aria-label="Previous" style={{
+              position: 'absolute', left: 0, top: 0, bottom: 0, width: '30%',
+              background: 'transparent', border: 'none', cursor: 'pointer', zIndex: 10,
+            }} />
+            <button onClick={() => go('right')} aria-label="Next" style={{
+              position: 'absolute', right: 0, top: 0, bottom: 0, width: '30%',
+              background: 'transparent', border: 'none', cursor: 'pointer', zIndex: 10,
+            }} />
+
+            {/* Subtle arrow hints */}
+            <div style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', zIndex: 11,
+              width: 36, height: 36, borderRadius: '50%', background: 'rgba(0,0,0,0.32)',
+              backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              border: '1px solid rgba(255,255,255,0.2)', pointerEvents: 'none' }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </div>
+            <div style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', zIndex: 11,
+              width: 36, height: 36, borderRadius: '50%', background: 'rgba(0,0,0,0.32)',
+              backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              border: '1px solid rgba(255,255,255,0.2)', pointerEvents: 'none' }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Swipe hint */}
-      {showHint && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 14, animation: 'scrollHintPulse 1.8s ease-in-out infinite' }}>
+      {showHint && N > 1 && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 12,
+          animation: 'mobileHintPulse 1.8s ease-in-out infinite' }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold,#c9a86a)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="13 17 18 12 13 7" /><polyline points="6 17 11 12 6 7" />
           </svg>
-          <span style={{ fontFamily: 'var(--font-sans,sans-serif)', fontSize: 10, fontWeight: 400, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gold,#c9a86a)', opacity: 0.7 }}>
+          <span style={{ fontFamily: 'var(--font-sans,sans-serif)', fontSize: 10, fontWeight: 400,
+            letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gold,#c9a86a)', opacity: 0.75 }}>
             Swipe to explore
           </span>
         </div>
       )}
 
-      {/* Caption + counter + dots */}
-      <div style={{ width: '88vw', maxWidth: 440, display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 14, padding: '0 4px' }}>
-        <span style={{ fontFamily: 'var(--font-serif,serif)', fontSize: 12, fontWeight: 300, letterSpacing: '0.06em', color: 'var(--fg,#1a1008)', opacity: 0.6, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '52%' }}>
-          {cards[activeIndex]?.alt || `Space ${activeIndex + 1}`}
+      {/* Caption + counter + pill dots */}
+      <div style={{ width: '92vw', maxWidth: 460, display: 'flex', alignItems: 'center',
+        justifyContent: 'space-between', marginTop: showHint ? 8 : 14, padding: '0 4px' }}>
+        <span style={{ fontFamily: 'var(--font-serif,serif)', fontSize: 12, fontWeight: 300,
+          letterSpacing: '0.06em', color: 'var(--fg)', opacity: 0.6,
+          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '52%' }}>
+          {cards[current]?.alt || `Space ${current + 1}`}
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontFamily: 'var(--font-sans,sans-serif)', fontSize: 10, fontWeight: 300, letterSpacing: '0.18em', color: 'var(--gold,#c9a86a)', opacity: 0.85 }}>
-            {String(activeIndex + 1).padStart(2,'0')} / {String(N).padStart(2,'0')}
+          <span style={{ fontFamily: 'var(--font-sans,sans-serif)', fontSize: 10, fontWeight: 300,
+            letterSpacing: '0.18em', color: 'var(--gold,#c9a86a)' }}>
+            {String(current + 1).padStart(2,'0')} / {String(N).padStart(2,'0')}
           </span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
             {cards.map((_,i) => (
-              <span key={i} style={{ display: 'block', width: i === activeIndex ? 18 : 6, height: 6, borderRadius: 3, background: i === activeIndex ? 'var(--gold,#c9a86a)' : 'var(--border-strong)', transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)' }} />
+              <button key={i} onClick={() => { if (!animating && i !== current) { setDirection(i > current ? 'right' : 'left'); setAnimating(true); setTimeout(() => { setCurrent(i); setAnimating(false); setDirection(null); }, 320); } }}
+                style={{ display: 'block', width: i === current ? 18 : 6, height: 6, borderRadius: 3,
+                  background: i === current ? 'var(--gold,#c9a86a)' : 'var(--border-strong)',
+                  transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)', border: 'none', cursor: 'pointer', padding: 0, flexShrink: 0 }} />
             ))}
           </div>
         </div>
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
-        .mobile-scroll-hide::-webkit-scrollbar { display: none; }
-        @keyframes scrollHintPulse {
-          0%, 100% { opacity: 0.55; transform: translateX(0); }
-          50% { opacity: 0.9; transform: translateX(6px); }
+        @keyframes mobileHintPulse {
+          0%,100% { opacity:0.55; transform:translateX(0); }
+          50% { opacity:0.9; transform:translateX(6px); }
         }
       `}} />
     </div>
   );
 }
-/* ─── Main Export ─── */
+
+/* ============================================================
+   MAIN EXPORT — mobile uses swipe slider, desktop uses GSAP fan
+   ============================================================ */
 export default function SocialCards({ cards }: SocialCardsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const isAnimating = useRef(false);
@@ -270,7 +316,7 @@ export default function SocialCards({ cards }: SocialCardsProps) {
 
   const handleDragEnd = () => { isDragging.current = false; dragStartX.current = null; };
 
-  /* ── Desktop GSAP fan ── */
+  /* GSAP desktop fan animation */
   useEffect(() => {
     if (isMobile) return;
     const container = containerRef.current;
@@ -375,21 +421,21 @@ export default function SocialCards({ cards }: SocialCardsProps) {
     </svg>
   );
 
-  /* ── Mobile: horizontal scroll gallery ── */
+  /* Mobile: swipe slider */
   if (isMobile) {
     return (
-      <section style={{ display:"flex", flexDirection:"column", alignItems:"center", width:"100%", paddingTop:8, paddingBottom:8, position:"relative", zIndex:20 }}>
-        <MobileScrollGallery cards={cards} />
+      <section style={{ display:"flex", flexDirection:"column", alignItems:"center", width:"100%", paddingTop:8, paddingBottom:16, zIndex:20 }}>
+        <MobileSwipeSlider cards={cards} />
       </section>
     );
   }
 
-  /* ── Desktop fan carousel ── */
+  /* Desktop: GSAP fan carousel */
   return (
     <section className="flex flex-col items-center w-full py-4 lg:py-8 relative z-20 overflow-hidden">
       <style dangerouslySetInnerHTML={{__html:`
         .fan-layout{width:100%;position:relative;height:38vw;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-top:2rem;}
-        .fan-card{position:absolute;width:50vw;height:28.125vw;border-radius:2rem;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,0.6);border:1px solid var(--gold-border);background:var(--bg-card);cursor:grab;user-select:none;}
+        .fan-card{position:absolute;width:50vw;height:28.125vw;border-radius:2rem;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,0.35);border:1px solid var(--gold-border);background:var(--bg-card);cursor:grab;user-select:none;}
         .fan-card:active{cursor:grabbing;}
         @media(max-width:1024px){.fan-layout{height:48vw;}.fan-card{width:65vw;height:36.5625vw;border-radius:1.5rem;}}
       `}} />
@@ -418,7 +464,10 @@ export default function SocialCards({ cards }: SocialCardsProps) {
           <button className={`${ARROW_CLASSES} w-10 h-10 md:w-12 md:h-12`} onClick={() => cycle("left")} aria-label="Previous">{chevron("left")}</button>
           <div className="flex items-center gap-2">
             {cards.map((_,i) => (
-              <span key={i} className={`w-2 h-2 rounded-full transition-all duration-300 ${i===centerIndex?"bg-[var(--gold)] scale-[1.3]":"bg-[var(--fg)] opacity-15"}`} />
+              <span key={i} onClick={() => cycle(i > centerIndex ? "right" : "left")}
+                className="rounded-full transition-all duration-300 cursor-pointer"
+                style={{ display:'block', width: i===centerIndex?18:8, height:8, borderRadius:4,
+                  background: i===centerIndex?'var(--gold)':'var(--border-strong)' }} />
             ))}
           </div>
           <button className={`${ARROW_CLASSES} w-10 h-10 md:w-12 md:h-12`} onClick={() => cycle("right")} aria-label="Next">{chevron("right")}</button>
@@ -427,7 +476,3 @@ export default function SocialCards({ cards }: SocialCardsProps) {
     </section>
   );
 }
-
-
-
-
