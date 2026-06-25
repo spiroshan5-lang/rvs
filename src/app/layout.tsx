@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
-      <body className="transition-colors duration-300" style={{ backgroundColor: "var(--bg)", color: "var(--fg)" }} style={{ backgroundColor: "var(--background)", color: "var(--foreground)" }}>
+      <body className="transition-colors duration-300" style={{ backgroundColor: "var(--bg)", color: "var(--fg)" }}>
         
         {/* Subtle, expensive paper texture overlay */}
         <div className="noise-overlay" />
