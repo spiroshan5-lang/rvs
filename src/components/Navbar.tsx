@@ -13,8 +13,8 @@ const navItems = [
   { name: 'Home', url: '/', icon: Home },
   { name: 'Gallery', url: '/gallery', icon: ImageIcon },
   { name: 'Services', url: '/services', icon: Layers },
-  { name: 'Contact', url: '/contact', icon: Phone },
-  { name: 'Socials', url: '/social', icon: Layers }
+  { name: 'Socials', url: '/social', icon: Layers },
+  { name: 'Contact', url: '/contact', icon: Phone }
 ]
 
 export default function Navbar() {
