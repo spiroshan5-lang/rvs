@@ -78,8 +78,10 @@ function MobileScrollGallery({ cards }: { cards: CardItem[] }) {
           display: "flex",
           gap: "14px",
           overflowX: "auto",
-          scrollSnapType: "x mandatory",
+          scrollSnapType: "x proximity",
           WebkitOverflowScrolling: "touch",
+          overscrollBehaviorX: "contain",
+          touchAction: "pan-x pan-y",
           paddingLeft: "4vw",
           paddingRight: "4vw",
           paddingBottom: "4px",
@@ -420,3 +422,4 @@ export default function SocialCards({ cards }: SocialCardsProps) {
     </section>
   );
 }
+
