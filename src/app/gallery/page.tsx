@@ -98,7 +98,7 @@ export default function GalleryPage() {
                   className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full border text-[10px] sm:text-[11px] tracking-[0.2em] uppercase font-light transition-all duration-300 hover:opacity-80 w-full sm:w-auto"
                   style={{ borderColor: 'var(--gold-border)', color: 'var(--fg)', background: 'transparent' }}
                 >
-                  <InstagramIcon className="w-3.5 h-3.5" style={{ color: 'var(--gold)' } as React.CSSProperties} />
+                  <InstagramIcon className="w-3.5 h-3.5 text-[var(--gold)]" />
                   Instagram
                 </a>
 
@@ -109,7 +109,7 @@ export default function GalleryPage() {
                   className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full border text-[10px] sm:text-[11px] tracking-[0.2em] uppercase font-light transition-all duration-300 hover:opacity-80 w-full sm:w-auto"
                   style={{ borderColor: 'var(--gold-border)', color: 'var(--fg)', background: 'transparent' }}
                 >
-                  <FacebookIcon className="w-3.5 h-3.5" style={{ color: 'var(--gold)' } as React.CSSProperties} />
+                  <FacebookIcon className="w-3.5 h-3.5 text-[var(--gold)]" />
                   Facebook
                 </a>
 
