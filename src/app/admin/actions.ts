@@ -107,8 +107,12 @@ export async function submitInquiryAction(formData: {
       // Non-blocking: still send email even if DB write fails
     }
 
-    // Send email notification
-    await sendInquiryEmail(inquiry);
+    // Send email notification (non-blocking — form should still succeed)
+    try {
+      await sendInquiryEmail(inquiry);
+    } catch (emailErr) {
+      console.error('Email notification failed (non-blocking):', emailErr);
+    }
 
     return { success: true };
   } catch (error: any) {
@@ -396,3 +400,4 @@ export async function deleteCMSGalleryCardAction(id: string) {
     return { success: false, error: error.message };
   }
 }
+
