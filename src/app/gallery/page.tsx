@@ -2,6 +2,7 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import GalleryClient from '@/components/GalleryClient';
+import { getDatabaseUrl } from '@/lib/firebase';
 
 export const metadata: Metadata = {
   title: 'Gallery | RVS Craft Interiors | Luxury Spatial Architecture Studio',
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 export default async function GalleryPage() {
   let cards: any[] = [];
   try {
-    const res = await fetch('https://riko-backend-default-rtdb.firebaseio.com/cms.json', {
+    const res = await fetch(getDatabaseUrl('/cms.json'), {
       next: { revalidate: 3600 }, // Enable Incremental Static Regeneration (ISR) with a 1-hour revalidation window
     });
     if (res.ok) {

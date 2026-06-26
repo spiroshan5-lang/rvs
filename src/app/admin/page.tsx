@@ -1,5 +1,6 @@
 ﻿import { cookies } from 'next/headers';
 import { validateSessionToken } from '@/lib/session';
+import { getDatabaseUrl } from '@/lib/firebase';
 import AdminDashboard from './AdminDashboard';
 import LoginForm from './LoginForm';
 
@@ -12,7 +13,7 @@ export default async function AdminPage() {
     return <LoginForm />;
   }
 
-  const res = await fetch('https://riko-backend-default-rtdb.firebaseio.com/cms.json', {
+  const res = await fetch(getDatabaseUrl('/cms.json'), {
     cache: 'no-store'
   });
   const data = res.ok ? await res.json() : null;

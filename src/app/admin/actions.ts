@@ -1,4 +1,5 @@
 ﻿'use server';
+import { getDatabaseUrl } from '@/lib/firebase';
 
 import { cookies, headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
@@ -43,7 +44,14 @@ export async function loginAction(password: string) {
     };
   }
 
-  if (password === process.env.ADMIN_PASSWORD) {
+  const expectedPassword = process.env.ADMIN_PASSWORD;
+
+  // Security: Reject empty, default, or weak 'admin123' passwords
+  if (!expectedPassword || expectedPassword === 'admin123' || password === 'admin123') {
+    return { success: false, error: 'Invalid password' };
+  }
+
+  if (password === expectedPassword) {
     const cookieStore = await cookies();
     const sessionToken = createSessionToken();
 
@@ -83,7 +91,7 @@ export async function saveCmsAction(data: any) {
 
   try {
     const response = await fetch(
-      'https://riko-backend-default-rtdb.firebaseio.com/cms.json',
+      getDatabaseUrl('/cms.json'),
       {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -151,3 +159,4 @@ export async function submitInquiryAction(formData: {
     return { success: false, error: 'Failed to submit inquiry. Please try again.' };
   }
 }
+

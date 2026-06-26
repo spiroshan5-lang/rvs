@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { getDatabaseUrl } from '@/lib/firebase';
 
 export default function GalleryPreview() {
   const [items, setItems] = useState<any[]>([]);
@@ -9,7 +10,7 @@ export default function GalleryPreview() {
   useEffect(() => {
     async function fetchCms() {
       try {
-        const res = await fetch('https://riko-backend-default-rtdb.firebaseio.com/cms.json');
+        const res = await fetch(getDatabaseUrl('/cms.json'));
         if (res.ok) {
           const data = await res.json();
           if (data?.gallery) {
@@ -87,4 +88,3 @@ export default function GalleryPreview() {
     </section>
   );
 }
-

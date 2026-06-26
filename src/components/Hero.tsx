@@ -1,4 +1,5 @@
-'use client';
+﻿'use client';
+import { getDatabaseUrl } from '@/lib/firebase';
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
@@ -14,7 +15,7 @@ export default function Hero() {
   useEffect(() => {
     async function fetchCms() {
       try {
-        const res = await fetch('https://riko-backend-default-rtdb.firebaseio.com/cms.json');
+        const res = await fetch(getDatabaseUrl('/cms.json'));
         if (res.ok) {
           const data = await res.json();
           if (data?.hero?.images) setImages(data.hero.images);
@@ -35,9 +36,9 @@ export default function Hero() {
     return () => clearInterval(timer);
   }, [images, intervalTime]);
 
-  /* ─────────────────────────────────────────────
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
      Shared: Background image / video layer
-     ───────────────────────────────────────────── */
+     â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   const backgroundLayer = (
     <div className="absolute inset-0 w-full h-full z-0" style={{ background: 'var(--bg)' }}>
       <AnimatePresence mode="popLayout">
@@ -61,9 +62,9 @@ export default function Hero() {
     </div>
   );
 
-  /* ─────────────────────────────────────────────
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
      Shared: Gradient overlay
-     ───────────────────────────────────────────── */
+     â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   const gradientOverlay = (
     <div
       className="absolute inset-0 z-10 pointer-events-none"
@@ -82,9 +83,9 @@ export default function Hero() {
         {backgroundLayer}
         {gradientOverlay}
 
-        {/* ═══════════════════════════════════════════════
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
            DESKTOP CONTENT LAYER (hidden on mobile)
-           ═══════════════════════════════════════════════ */}
+           â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <div className="absolute inset-0 z-20 w-full h-full hidden md:flex flex-col justify-between">
 
           {/* Top bar */}
@@ -157,9 +158,9 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* ═══════════════════════════════════════════════
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
            MOBILE CONTENT LAYER (hidden on desktop)
-           ═══════════════════════════════════════════════ */}
+           â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <div className="absolute inset-0 z-20 w-full h-full flex md:hidden flex-col justify-between px-5 pb-6">
 
           {/* Top spacer to clear fixed mobile header (80px = h-20) */}
@@ -234,3 +235,5 @@ export default function Hero() {
     </section>
   );
 }
+
+
