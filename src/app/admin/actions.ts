@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
 'use server';
 
 import { cookies, headers } from 'next/headers';
@@ -8,6 +8,7 @@ import { createSessionToken, validateSessionToken } from '@/lib/session';
 import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
 import { InquirySchema } from '@/lib/validation';
 import { getDatabaseUrl } from '@/lib/firebase';
+import { createHash } from 'crypto';
 
 /** Helper: get client IP for rate limiting */
 async function getClientIP(): Promise<string> {
@@ -25,9 +26,9 @@ async function isAuthenticated(): Promise<boolean> {
   return validateSessionToken(token);
 }
 
-// ─────────────────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
 // AUTH
-// ─────────────────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
 
 export async function loginAction(password: string) {
   const ip = await getClientIP();
@@ -63,9 +64,9 @@ export async function logoutAction() {
   return { success: true };
 }
 
-// ─────────────────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
 // CUSTOMER INQUIRIES  (Firebase RTDB – server-side only)
-// ─────────────────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
 
 export async function submitInquiryAction(formData: {
   name: string;
@@ -171,9 +172,79 @@ export async function updateInquiryStatusAction(id: string, status: string) {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// CMS – HERO SLIDES  (Firebase RTDB /cms/heroSlides)
-// ─────────────────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// CLOUDINARY HELPERS  (image config stored as raw JSON in Cloudinary)
+// Hero slides  → public_id: rvs_cms/hero_config
+// Gallery cards → public_id: rvs_cms/gallery_config
+// ════════════════════════════════════════════════════════════════
+
+const HERO_PUBLIC_ID    = 'rvs_cms/hero_config';
+const GALLERY_PUBLIC_ID = 'rvs_cms/gallery_config';
+
+/** Build Cloudinary SHA-1 signature */
+function cloudinarySign(params: Record<string, string>, apiSecret: string): string {
+  const sorted = Object.entries(params)
+    .filter(([, v]) => v !== '' && v !== undefined)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([k, v]) => `${k}=${v}`)
+    .join('&');
+  return createHash('sha1').update(sorted + apiSecret).digest('hex');
+}
+
+/** Fetch the JSON array stored in Cloudinary as a raw resource */
+async function readCloudinaryJson(publicId: string): Promise<any[]> {
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  if (!cloudName) return [];
+  const url = `https://res.cloudinary.com/${cloudName}/raw/upload/${publicId}.json?_t=${Date.now()}`;
+  try {
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) return [];          // not found yet → empty list
+    return await res.json();
+  } catch {
+    return [];
+  }
+}
+
+/** Upload (overwrite) a JSON array to Cloudinary as a raw resource */
+async function writeCloudinaryJson(publicId: string, data: any[]): Promise<void> {
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const apiKey    = process.env.CLOUDINARY_API_KEY;
+  const apiSecret = process.env.CLOUDINARY_API_SECRET;
+  if (!cloudName || !apiKey || !apiSecret) throw new Error('Cloudinary env vars not configured');
+
+  const timestamp = Math.round(Date.now() / 1000).toString();
+  // Only params that go into signature (excludes file, api_key, resource_type, cloud_name)
+  const sigParams: Record<string, string> = {
+    invalidate: 'true',
+    overwrite:  'true',
+    public_id:  publicId,
+    timestamp,
+  };
+  const signature = cloudinarySign(sigParams, apiSecret);
+
+  const json = JSON.stringify(data);
+  const form = new FormData();
+  form.append('file',      new Blob([json], { type: 'application/json' }), 'config.json');
+  form.append('api_key',   apiKey);
+  form.append('timestamp', timestamp);
+  form.append('signature', signature);
+  form.append('public_id', publicId);
+  form.append('overwrite', 'true');
+  form.append('invalidate','true');
+
+  const res = await fetch(
+    `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`,
+    { method: 'POST', body: form }
+  );
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err?.error?.message || 'Cloudinary write failed');
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+// CMS – HERO SLIDES  (Cloudinary-only, no Firebase)
+// ════════════════════════════════════════════════════════════════
 
 export interface CMSHeroSlide {
   id: string;
@@ -184,18 +255,9 @@ export interface CMSHeroSlide {
 
 export async function getCMSHeroSlidesAction(): Promise<{ success: boolean; data: CMSHeroSlide[]; error?: string }> {
   if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized', data: [] };
-
   try {
-    const response = await fetch(await getDatabaseUrl('/cms/heroSlides.json'), { cache: 'no-store' });
-    if (!response.ok) throw new Error('Failed to fetch hero slides');
-    const raw = await response.json();
-    if (!raw) return { success: true, data: [] };
-
-    const list: CMSHeroSlide[] = Object.entries(raw)
-      .map(([id, val]: [string, any]) => ({ id, ...val }))
-      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-
-    return { success: true, data: list };
+    const slides = (await readCloudinaryJson(HERO_PUBLIC_ID)) as CMSHeroSlide[];
+    return { success: true, data: slides.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)) };
   } catch (error: any) {
     return { success: false, error: error.message, data: [] };
   }
@@ -207,15 +269,12 @@ export async function addCMSHeroSlideAction(slide: { url: string; alt: string; o
   const ip = await getClientIP();
   const rateCheck = checkRateLimit(`cms:${ip}`, RATE_LIMITS.CMS_SAVE.maxAttempts, RATE_LIMITS.CMS_SAVE.windowMs);
   if (!rateCheck.allowed) return { success: false, error: 'Too many updates. Please wait a few minutes.' };
-  if (!slide.url.startsWith('https://')) return { success: false, error: 'URL must start with https://' };
+  if (!slide.url.trim().startsWith('https://')) return { success: false, error: 'URL must start with https://' };
 
   try {
-    const response = await fetch(await getDatabaseUrl('/cms/heroSlides.json'), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(slide),
-    });
-    if (!response.ok) throw new Error('Failed to add hero slide');
+    const slides = (await readCloudinaryJson(HERO_PUBLIC_ID)) as CMSHeroSlide[];
+    const newSlide: CMSHeroSlide = { id: `hero-${Date.now()}`, ...slide };
+    await writeCloudinaryJson(HERO_PUBLIC_ID, [...slides, newSlide]);
     revalidatePath('/');
     return { success: true };
   } catch (error: any) {
@@ -229,15 +288,12 @@ export async function updateCMSHeroSlideAction(id: string, slide: Partial<{ url:
   const ip = await getClientIP();
   const rateCheck = checkRateLimit(`cms:${ip}`, RATE_LIMITS.CMS_SAVE.maxAttempts, RATE_LIMITS.CMS_SAVE.windowMs);
   if (!rateCheck.allowed) return { success: false, error: 'Too many updates. Please wait a few minutes.' };
-  if (!/^[\w\-]+$/.test(id)) return { success: false, error: 'Invalid ID' };
+  if (!id || !id.startsWith('hero-')) return { success: false, error: 'Invalid slide ID' };
 
   try {
-    const response = await fetch(await getDatabaseUrl(`/cms/heroSlides/${id}.json`), {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(slide),
-    });
-    if (!response.ok) throw new Error('Failed to update hero slide');
+    const slides = (await readCloudinaryJson(HERO_PUBLIC_ID)) as CMSHeroSlide[];
+    const updated = slides.map(s => s.id === id ? { ...s, ...slide } : s);
+    await writeCloudinaryJson(HERO_PUBLIC_ID, updated);
     revalidatePath('/');
     return { success: true };
   } catch (error: any) {
@@ -251,11 +307,11 @@ export async function deleteCMSHeroSlideAction(id: string) {
   const ip = await getClientIP();
   const rateCheck = checkRateLimit(`cms:${ip}`, RATE_LIMITS.CMS_SAVE.maxAttempts, RATE_LIMITS.CMS_SAVE.windowMs);
   if (!rateCheck.allowed) return { success: false, error: 'Too many updates. Please wait a few minutes.' };
-  if (!/^[\w\-]+$/.test(id)) return { success: false, error: 'Invalid ID' };
+  if (!id || !id.startsWith('hero-')) return { success: false, error: 'Invalid slide ID' };
 
   try {
-    const response = await fetch(await getDatabaseUrl(`/cms/heroSlides/${id}.json`), { method: 'DELETE' });
-    if (!response.ok) throw new Error('Failed to delete hero slide');
+    const slides = (await readCloudinaryJson(HERO_PUBLIC_ID)) as CMSHeroSlide[];
+    await writeCloudinaryJson(HERO_PUBLIC_ID, slides.filter(s => s.id !== id));
     revalidatePath('/');
     return { success: true };
   } catch (error: any) {
@@ -263,9 +319,9 @@ export async function deleteCMSHeroSlideAction(id: string) {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// CMS – GALLERY CARDS  (Firebase RTDB /cms/galleryCards)
-// ─────────────────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// CMS – GALLERY CARDS  (Cloudinary-only, no Firebase)
+// ════════════════════════════════════════════════════════════════
 
 export interface CMSGalleryCard {
   id: string;
@@ -277,18 +333,9 @@ export interface CMSGalleryCard {
 
 export async function getCMSGalleryCardsAction(): Promise<{ success: boolean; data: CMSGalleryCard[]; error?: string }> {
   if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized', data: [] };
-
   try {
-    const response = await fetch(await getDatabaseUrl('/cms/galleryCards.json'), { cache: 'no-store' });
-    if (!response.ok) throw new Error('Failed to fetch gallery cards');
-    const raw = await response.json();
-    if (!raw) return { success: true, data: [] };
-
-    const list: CMSGalleryCard[] = Object.entries(raw)
-      .map(([id, val]: [string, any]) => ({ id, ...val }))
-      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-
-    return { success: true, data: list };
+    const cards = (await readCloudinaryJson(GALLERY_PUBLIC_ID)) as CMSGalleryCard[];
+    return { success: true, data: cards.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)) };
   } catch (error: any) {
     return { success: false, error: error.message, data: [] };
   }
@@ -300,15 +347,12 @@ export async function addCMSGalleryCardAction(card: { imgUrl: string; alt: strin
   const ip = await getClientIP();
   const rateCheck = checkRateLimit(`cms:${ip}`, RATE_LIMITS.CMS_SAVE.maxAttempts, RATE_LIMITS.CMS_SAVE.windowMs);
   if (!rateCheck.allowed) return { success: false, error: 'Too many updates. Please wait a few minutes.' };
-  if (!card.imgUrl.startsWith('https://')) return { success: false, error: 'Image URL must start with https://' };
+  if (!card.imgUrl.trim().startsWith('https://')) return { success: false, error: 'Image URL must start with https://' };
 
   try {
-    const response = await fetch(await getDatabaseUrl('/cms/galleryCards.json'), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(card),
-    });
-    if (!response.ok) throw new Error('Failed to add gallery card');
+    const cards = (await readCloudinaryJson(GALLERY_PUBLIC_ID)) as CMSGalleryCard[];
+    const newCard: CMSGalleryCard = { id: `gallery-${Date.now()}`, ...card };
+    await writeCloudinaryJson(GALLERY_PUBLIC_ID, [...cards, newCard]);
     revalidatePath('/gallery');
     return { success: true };
   } catch (error: any) {
@@ -322,15 +366,12 @@ export async function updateCMSGalleryCardAction(id: string, card: Partial<{ img
   const ip = await getClientIP();
   const rateCheck = checkRateLimit(`cms:${ip}`, RATE_LIMITS.CMS_SAVE.maxAttempts, RATE_LIMITS.CMS_SAVE.windowMs);
   if (!rateCheck.allowed) return { success: false, error: 'Too many updates. Please wait a few minutes.' };
-  if (!/^[\w\-]+$/.test(id)) return { success: false, error: 'Invalid ID' };
+  if (!id || !id.startsWith('gallery-')) return { success: false, error: 'Invalid card ID' };
 
   try {
-    const response = await fetch(await getDatabaseUrl(`/cms/galleryCards/${id}.json`), {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(card),
-    });
-    if (!response.ok) throw new Error('Failed to update gallery card');
+    const cards = (await readCloudinaryJson(GALLERY_PUBLIC_ID)) as CMSGalleryCard[];
+    const updated = cards.map(c => c.id === id ? { ...c, ...card } : c);
+    await writeCloudinaryJson(GALLERY_PUBLIC_ID, updated);
     revalidatePath('/gallery');
     return { success: true };
   } catch (error: any) {
@@ -344,11 +385,11 @@ export async function deleteCMSGalleryCardAction(id: string) {
   const ip = await getClientIP();
   const rateCheck = checkRateLimit(`cms:${ip}`, RATE_LIMITS.CMS_SAVE.maxAttempts, RATE_LIMITS.CMS_SAVE.windowMs);
   if (!rateCheck.allowed) return { success: false, error: 'Too many updates. Please wait a few minutes.' };
-  if (!/^[\w\-]+$/.test(id)) return { success: false, error: 'Invalid ID' };
+  if (!id || !id.startsWith('gallery-')) return { success: false, error: 'Invalid card ID' };
 
   try {
-    const response = await fetch(await getDatabaseUrl(`/cms/galleryCards/${id}.json`), { method: 'DELETE' });
-    if (!response.ok) throw new Error('Failed to delete gallery card');
+    const cards = (await readCloudinaryJson(GALLERY_PUBLIC_ID)) as CMSGalleryCard[];
+    await writeCloudinaryJson(GALLERY_PUBLIC_ID, cards.filter(c => c.id !== id));
     revalidatePath('/gallery');
     return { success: true };
   } catch (error: any) {

@@ -1,33 +1,29 @@
-import { NextResponse } from 'next/server';
-import { getDatabaseUrl } from '@/lib/firebase';
+﻿import { NextResponse } from 'next/server';
 
 // Public endpoint: returns CMS hero slides and gallery cards
-// No auth required - this is public read-only content
+// Reads from Cloudinary raw JSON configs — no Firebase dependency
+const HERO_PUBLIC_ID    = 'rvs_cms/hero_config';
+const GALLERY_PUBLIC_ID = 'rvs_cms/gallery_config';
+
+async function readCloudinaryJson(publicId: string): Promise<unknown[]> {
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  if (!cloudName) return [];
+  const url = `https://res.cloudinary.com/${cloudName}/raw/upload/${publicId}.json?_t=${Date.now()}`;
+  try {
+    const res = await fetch(url, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch {
+    return [];
+  }
+}
+
 export async function GET() {
   try {
-    const [heroRes, galleryRes] = await Promise.all([
-      fetch(await getDatabaseUrl('/cms/heroSlides.json'), { next: { revalidate: 60 } }),
-      fetch(await getDatabaseUrl('/cms/galleryCards.json'), { next: { revalidate: 60 } }),
+    const [heroSlides, galleryCards] = await Promise.all([
+      readCloudinaryJson(HERO_PUBLIC_ID),
+      readCloudinaryJson(GALLERY_PUBLIC_ID),
     ]);
-
-    const heroRaw = heroRes.ok ? await heroRes.json() : null;
-    const galleryRaw = galleryRes.ok ? await galleryRes.json() : null;
-
-    const heroSlides = heroRaw
-      ? Object.entries(heroRaw)
-          .map(([id, val]: [string, unknown]) => ({ id, ...(val as object) }))
-          .sort((a: Record<string, unknown>, b: Record<string, unknown>) =>
-            ((a.order as number) ?? 0) - ((b.order as number) ?? 0)
-          )
-      : [];
-
-    const galleryCards = galleryRaw
-      ? Object.entries(galleryRaw)
-          .map(([id, val]: [string, unknown]) => ({ id, ...(val as object) }))
-          .sort((a: Record<string, unknown>, b: Record<string, unknown>) =>
-            ((a.order as number) ?? 0) - ((b.order as number) ?? 0)
-          )
-      : [];
 
     return NextResponse.json({ heroSlides, galleryCards });
   } catch {
