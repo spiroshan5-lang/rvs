@@ -1,8 +1,9 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { saveCmsAction, logoutAction } from './actions';
 import { useRouter } from 'next/navigation';
+import InquiriesPanel from './InquiriesPanel';
 
 export default function AdminDashboard({ initialData }: { initialData: any }) {
   const [data, setData] = useState(initialData);
@@ -47,6 +48,9 @@ export default function AdminDashboard({ initialData }: { initialData: any }) {
             </button>
           </div>
         </div>
+
+        {/* Customer Inquiries */}
+        <InquiriesPanel />
 
         {/* Hero CMS */}
         <section className="mb-16 bg-[var(--gold-muted)]/50 border border-[var(--gold-border)] rounded-2xl p-6">

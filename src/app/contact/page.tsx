@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, Send, CheckCircle } from 'lucide-react';
+import { Mail, Phone, Send, CheckCircle, Loader2 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { submitInquiryAction } from '@/app/admin/actions';
 
 export default function ContactPage() {
   const [formState, setFormState] = useState({ 
@@ -16,13 +17,20 @@ export default function ContactPage() {
     message: '' 
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate API request
-    setTimeout(() => {
+    setIsLoading(true);
+    setSubmitError('');
+    const result = await submitInquiryAction(formState);
+    setIsLoading(false);
+    if (result.success) {
       setIsSubmitted(true);
-    }, 800);
+    } else {
+      setSubmitError(result.error || 'Failed to submit. Please try again.');
+    }
   };
 
   return (
@@ -30,19 +38,17 @@ export default function ContactPage() {
       <Navbar />
       <main className="pt-32 pb-24 px-6 md:px-12 relative overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
           <div className="max-w-3xl mb-16 md:mb-24">
             <span className="text-[10px] tracking-[0.3em] uppercase font-light text-[var(--gold)] mb-4 block">
               Inquire
             </span>
             <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl font-light leading-[1.1] tracking-wide">
-              Let's Create Your <br />
+              Let&apos;s Create Your <br />
               <span className="italic font-normal text-[var(--gold)]">Sanctuary</span>
             </h1>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
-            {/* Left side: Contact Info */}
             <div className="lg:col-span-5 flex flex-col space-y-12">
               <p className="text-base md:text-lg font-light leading-relaxed text-[var(--fg)]/70 tracking-wide">
                 Have a project in mind, or want to explore architectural possibilities? Fill out the inquiry form, and our design consultation team will connect with you within 48 hours.
@@ -75,7 +81,6 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* Right side: Form */}
             <div className="lg:col-span-7">
               {isSubmitted ? (
                 <motion.div 
@@ -93,28 +98,20 @@ export default function ContactPage() {
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-8 bg-[var(--bg-alt)]/40 border border-[var(--nav-border)] rounded-[2rem] p-8 md:p-12 backdrop-blur-md">
-                  {/* Name and Email Row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Name */}
                     <div className="flex flex-col space-y-2">
                       <label className="text-[9px] tracking-[0.2em] uppercase text-[var(--fg)]/50 font-light">Full Name</label>
                       <input 
-                        type="text" 
-                        required
-                        value={formState.name}
+                        type="text" required value={formState.name}
                         onChange={e => setFormState({...formState, name: e.target.value})}
                         className="bg-transparent border-b border-[var(--nav-border)] focus:border-[#c9a86a] py-3 text-sm font-light outline-none transition-colors"
                         placeholder="John Doe"
                       />
                     </div>
-
-                    {/* Email */}
                     <div className="flex flex-col space-y-2">
                       <label className="text-[9px] tracking-[0.2em] uppercase text-[var(--fg)]/50 font-light">Email Address</label>
                       <input 
-                        type="email" 
-                        required
-                        value={formState.email}
+                        type="email" required value={formState.email}
                         onChange={e => setFormState({...formState, email: e.target.value})}
                         className="bg-transparent border-b border-[var(--nav-border)] focus:border-[#c9a86a] py-3 text-sm font-light outline-none transition-colors"
                         placeholder="john@example.com"
@@ -122,28 +119,20 @@ export default function ContactPage() {
                     </div>
                   </div>
 
-                  {/* Phone and Location Row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Phone Number */}
                     <div className="flex flex-col space-y-2">
                       <label className="text-[9px] tracking-[0.2em] uppercase text-[var(--fg)]/50 font-light">Phone Number</label>
                       <input 
-                        type="tel" 
-                        required
-                        value={formState.phone}
+                        type="tel" required value={formState.phone}
                         onChange={e => setFormState({...formState, phone: e.target.value})}
                         className="bg-transparent border-b border-[var(--nav-border)] focus:border-[#c9a86a] py-3 text-sm font-light outline-none transition-colors"
                         placeholder="+91 98765 43210"
                       />
                     </div>
-
-                    {/* Project Location Address */}
                     <div className="flex flex-col space-y-2">
-                      <label className="text-[9px] tracking-[0.2em] uppercase text-[var(--fg)]/50 font-light">Project Location Address</label>
+                      <label className="text-[9px] tracking-[0.2em] uppercase text-[var(--fg)]/50 font-light">Project Location</label>
                       <input 
-                        type="text" 
-                        required
-                        value={formState.location}
+                        type="text" required value={formState.location}
                         onChange={e => setFormState({...formState, location: e.target.value})}
                         className="bg-transparent border-b border-[var(--nav-border)] focus:border-[#c9a86a] py-3 text-sm font-light outline-none transition-colors"
                         placeholder="City, State / Full Address"
@@ -151,14 +140,11 @@ export default function ContactPage() {
                     </div>
                   </div>
 
-                  {/* Budget Range */}
                   <div className="flex flex-col space-y-3">
                     <label className="text-[9px] tracking-[0.2em] uppercase text-[var(--fg)]/50 font-light">Budget Range</label>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       {['Under 5L', '5-10L', '10-25L', 'Above 25L'].map((budgetOption) => (
-                        <button
-                          key={budgetOption}
-                          type="button"
+                        <button key={budgetOption} type="button"
                           onClick={() => setFormState({...formState, budget: budgetOption})}
                           className={`py-3 px-4 rounded-xl text-xs tracking-wider border transition-all cursor-pointer ${
                             formState.budget === budgetOption 
@@ -172,26 +158,29 @@ export default function ContactPage() {
                     </div>
                   </div>
 
-                  {/* Message */}
                   <div className="flex flex-col space-y-2">
                     <label className="text-[9px] tracking-[0.2em] uppercase text-[var(--fg)]/50 font-light">Tell us about your space</label>
                     <textarea 
-                      required
-                      rows={4}
-                      value={formState.message}
+                      required rows={4} value={formState.message}
                       onChange={e => setFormState({...formState, message: e.target.value})}
                       className="bg-transparent border-b border-[var(--nav-border)] focus:border-[#c9a86a] py-3 text-sm font-light outline-none transition-colors resize-none"
                       placeholder="Describe your vision, dimensions, or specific design challenges..."
                     />
                   </div>
 
-                  {/* Submit Button */}
+                  {submitError && (
+                    <p className="text-red-400 text-xs text-center bg-red-400/10 py-2 px-4 rounded-lg">{submitError}</p>
+                  )}
+
                   <button 
-                    type="submit"
-                    className="w-full flex items-center justify-center space-x-3 bg-[#c9a86a] hover:bg-[#b08e50] text-[#0B0B0B] py-4 rounded-xl text-xs tracking-[0.2em] uppercase font-semibold transition-all duration-300 group shadow-lg shadow-[#c9a86a]/10 cursor-pointer"
+                    type="submit" disabled={isLoading}
+                    className="w-full flex items-center justify-center space-x-3 bg-[#c9a86a] hover:bg-[#b08e50] disabled:opacity-60 text-[#0B0B0B] py-4 rounded-xl text-xs tracking-[0.2em] uppercase font-semibold transition-all duration-300 group shadow-lg shadow-[#c9a86a]/10 cursor-pointer"
                   >
-                    <span>Submit Inquiry</span>
-                    <Send className="w-3.5 h-3.5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    {isLoading ? (
+                      <><Loader2 className="w-3.5 h-3.5 animate-spin" /><span>Submitting...</span></>
+                    ) : (
+                      <><span>Submit Inquiry</span><Send className="w-3.5 h-3.5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" /></>
+                    )}
                   </button>
                 </form>
               )}
@@ -203,4 +192,3 @@ export default function ContactPage() {
     </div>
   );
 }
-
