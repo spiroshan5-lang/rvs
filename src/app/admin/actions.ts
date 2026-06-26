@@ -20,7 +20,7 @@ async function getClientIP(): Promise<string> {
 /** Helper to validate admin session from cookie */
 async function isAuthenticated(): Promise<boolean> {
   const cookieStore = await cookies();
-  const token = cookieStore.get('admin_session') ?.value;
+  const token = cookieStore.get('admin_session')?.value;
   if (!token) return false;
   return validateSessionToken(token);
 }
@@ -86,7 +86,7 @@ export async function saveCmsAction(data: any) {
       'https://riko-backend-default-rtdb.firebaseio.com/cms.json',
       {
         method: 'PUT',
-        headers: { 'Content-Type' : 'application/json' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       }
     );
@@ -142,122 +142,12 @@ export async function submitInquiryAction(formData: {
       status: 'new',
     };
 
-    // Save to Firebase
-    const response = await fetch(
-      'https://riko-backend-default-rtdb.firebaseio.com/inquiries.json',
-      {
-        method: 'POST',
-        headers: { 'Content-Type' : 'application/json' },
-        body: JSON.stringify(inquiry),
-      }
-    );
-
-    if (!response.ok) throw new Error('Failed to save inquiry');
-
-    // Send email notification (non-blocking)
-    try {
-      await sendInquiryEmail(inquiry);
-    } catch (emailError) {
-      console.error('Email notification failed:', emailError);
-    }
+    // Send email notification directly (no longer saving to Firebase database)
+    await sendInquiryEmail(inquiry);
 
     return { success: true };
   } catch (error: any) {
-    return { success: false, error: error.message };
+    console.error('Inquiry submission / email notification failed:', error);
+    return { success: false, error: 'Failed to submit inquiry. Please try again.' };
   }
 }
-
-export async function getInquiriesAction() {
-  if (!(await isAuthenticated())) {
-    return { success: false, error: 'Unauthorized', data: [] };
-  }
-
-  try {
-    const response = await fetch(
-      'https://riko-backend-default-rtdb.firebaseio.com/inquiries.json',
-      { cache: 'no-store' }
-    );
-
-    if (!response.ok) throw new Error('Failed to fetch inquiries');
-
-    const raw = await response.json();
-    if (!raw) return { success: true, data: [] };
-
-    const list = Object.entries(raw).map(([id, val]: [string, any]) => ({
-      id,
-      ...val,
-    }));
-
-    list.sort(
-      (a, b) =>
-        new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
-    );
-
-    return { success: true, data: list };
-  } catch (error: any) {
-    return { success: false, error: error.message, data: [] };
-  }
-}
-
-export async function deleteInquiryAction(id: string) {
-  if (!(await isAuthenticated())) {
-    return { success: false, error: 'Unauthorized' };
-  }
-
-  // Validate ID format to prevent path traversal
-  if (!/^[\w\-]+$/.test(id)) {
-    return { success: false, error: 'Invalid inquiry ID' };
-  }
-
-  try {
-    const url =
-      'https://riko-backend-default-rtdb.firebaseio.com/inquiries/' +
-      id +
-      '.json';
-    const response = await fetch(url, { method: 'DELETE' });
-
-    if (!response.ok) throw new Error('Failed to delete inquiry');
-
-    revalidatePath('/admin');
-    return { success: true };
-  } catch (error: any) {
-    return { success: false, error: error.message };
-  }
-}
-
-export async function updateInquiryStatusAction(id: string, status: string) {
-  if (!(await isAuthenticated())) {
-    return { success: false, error: 'Unauthorized' };
-  }
-
-  // Validate ID format to prevent path traversal
-  if (!/^[\w\-]+$/.test(id)) {
-    return { success: false, error: 'Invalid inquiry ID' };
-  }
-
-  // Validate status value
-  const allowedStatuses = ['new', 'contacted', 'in-progress', 'closed'];
-  if (!allowedStatuses.includes(status)) {
-    return { success: false, error: 'Invalid status value' };
-  }
-
-  try {
-    const url =
-      'https://riko-backend-default-rtdb.firebaseio.com/inquiries/' +
-      id +
-      '.json';
-    const response = await fetch(url, {
-      method: 'PATCH',
-      headers: { 'Content-Type' : 'application/json' },
-      body: JSON.stringify({ status }),
-    });
-
-    if (!response.ok) throw new Error('Failed to update inquiry status');
-
-    revalidatePath('/admin');
-    return { success: true };
-  } catch (error: any) {
-    return { success: false, error: error.message };
-  }
-}
-

@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { saveCmsAction, logoutAction } from './actions';
 import { useRouter } from 'next/navigation';
-import InquiriesPanel from './InquiriesPanel';
 
 export default function AdminDashboard({ initialData }: { initialData: any }) {
   const [data, setData] = useState(initialData);
@@ -42,15 +41,12 @@ export default function AdminDashboard({ initialData }: { initialData: any }) {
             </button>
             <button
               onClick={handleLogout}
-              className="border border-[#c9a86a]/50 text-[var(--gold)] px-6 py-2 rounded-lg font-semibold hover:bg-[#c9a86a]/10 transition-colors"
+              className="border border-[var(--gold-border)] hover:bg-[#c9a86a]/10 px-6 py-2 rounded-lg font-semibold transition-colors"
             >
               Logout
             </button>
           </div>
         </div>
-
-        {/* Customer Inquiries */}
-        <InquiriesPanel />
 
         {/* Hero CMS */}
         <section className="mb-16 bg-[var(--gold-muted)]/50 border border-[var(--gold-border)] rounded-2xl p-6">
