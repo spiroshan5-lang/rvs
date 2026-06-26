@@ -1,4 +1,5 @@
-import nodemailer from 'nodemailer';
+﻿import nodemailer from 'nodemailer';
+import { escapeHtml } from './validation';
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -17,6 +18,17 @@ export async function sendInquiryEmail(data: {
   message: string;
   submittedAt: string;
 }) {
+  // Sanitize ALL user inputs before inserting into HTML
+  const safe = {
+    name: escapeHtml(data.name),
+    email: escapeHtml(data.email),
+    phone: escapeHtml(data.phone),
+    budget: escapeHtml(data.budget),
+    location: escapeHtml(data.location),
+    message: escapeHtml(data.message),
+    submittedAt: escapeHtml(data.submittedAt),
+  };
+
   const html = `
     <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #faf8f4; border: 1px solid #e8dcc8; border-radius: 12px; overflow: hidden;">
       <div style="background: #1a1208; padding: 28px 32px;">
@@ -30,7 +42,7 @@ export async function sendInquiryEmail(data: {
               <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #9a8a6a;">Full Name</span>
             </td>
             <td style="padding: 10px 0; border-bottom: 1px solid #e8dcc8;">
-              <strong style="color: #1a1208; font-size: 15px;">${data.name}</strong>
+              <strong style="color: #1a1208; font-size: 15px;">${safe.name}</strong>
             </td>
           </tr>
           <tr>
@@ -38,7 +50,7 @@ export async function sendInquiryEmail(data: {
               <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #9a8a6a;">Email</span>
             </td>
             <td style="padding: 10px 0; border-bottom: 1px solid #e8dcc8;">
-              <a href="mailto:${data.email}" style="color: #c9a86a; text-decoration: none;">${data.email}</a>
+              <a href="mailto:${safe.email}" style="color: #c9a86a; text-decoration: none;">${safe.email}</a>
             </td>
           </tr>
           <tr>
@@ -46,21 +58,21 @@ export async function sendInquiryEmail(data: {
               <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #9a8a6a;">Phone</span>
             </td>
             <td style="padding: 10px 0; border-bottom: 1px solid #e8dcc8;">
-              <a href="tel:${data.phone}" style="color: #1a1208;">${data.phone}</a>
+              <a href="tel:${safe.phone}" style="color: #1a1208;">${safe.phone}</a>
             </td>
           </tr>
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid #e8dcc8;">
               <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #9a8a6a;">Location</span>
             </td>
-            <td style="padding: 10px 0; border-bottom: 1px solid #e8dcc8; color: #1a1208;">${data.location}</td>
+            <td style="padding: 10px 0; border-bottom: 1px solid #e8dcc8; color: #1a1208;">${safe.location}</td>
           </tr>
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid #e8dcc8;">
               <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #9a8a6a;">Budget</span>
             </td>
             <td style="padding: 10px 0; border-bottom: 1px solid #e8dcc8;">
-              <span style="background: #c9a86a20; color: #8a6a2a; padding: 3px 10px; border-radius: 20px; font-size: 13px; border: 1px solid #c9a86a50;">${data.budget}</span>
+              <span style="background: #c9a86a20; color: #8a6a2a; padding: 3px 10px; border-radius: 20px; font-size: 13px; border: 1px solid #c9a86a50;">${safe.budget}</span>
             </td>
           </tr>
           <tr>
@@ -73,13 +85,13 @@ export async function sendInquiryEmail(data: {
         <div style="margin-top: 24px;">
           <p style="font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #9a8a6a; margin-bottom: 10px;">Message</p>
           <div style="background: #fff; border: 1px solid #e8dcc8; border-left: 3px solid #c9a86a; border-radius: 6px; padding: 16px; color: #2a1e0e; font-size: 14px; line-height: 1.7;">
-            ${data.message}
+            ${safe.message}
           </div>
         </div>
         <div style="margin-top: 28px; text-align: center;">
-          <a href="mailto:${data.email}?subject=Re: Your Interior Design Inquiry - RVS Craft Interiors"
+          <a href="mailto:${safe.email}?subject=Re: Your Interior Design Inquiry - RVS Craft Interiors"
              style="display: inline-block; background: #c9a86a; color: #0B0B0B; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600;">
-            Reply to ${data.name}
+            Reply to ${safe.name}
           </a>
         </div>
       </div>
@@ -92,7 +104,7 @@ export async function sendInquiryEmail(data: {
   await transporter.sendMail({
     from: `"RVS Craft Interiors" <${process.env.GMAIL_USER}>`,
     to: process.env.NOTIFY_EMAIL || 'spiroshan5@gmail.com',
-    subject: 'New Inquiry from ' + data.name + ' - ' + data.budget + ' Budget',
+    subject: 'New Inquiry from ' + safe.name + ' - ' + safe.budget + ' Budget',
     html,
     replyTo: data.email,
   });

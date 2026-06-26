@@ -13,3 +13,14 @@ Rules:
 - If nothing is staged/changed, report that briefly and skip the commit
 - Always run from the workspace root (the git repo root)
 - git user identity: email = spiroshan5@gmail.com, name = spiroshan5-lang
+
+
+# Persistent Security & Development Rules
+
+## 1. Security Baseline
+- **Database Safety**: Never expose the database REST URLs without token authorization. Server Actions must validate authentication, session tokens, and rate limits.
+- **Admin Authentication**: Always use HMAC-SHA256 token verification instead of static cookie values.
+- **Input Validation**: Use `zod` for validating contact form inquiries and escape HTML to prevent XSS in email templates.
+
+## 2. Windows/PowerShell Development
+- **File Writing via Shell**: When writing TypeScript or JavaScript files via PowerShell command line (`run_command`), wrap the content in single quotes (`'`) and double any inner single quotes (`''`) to prevent PowerShell from eating backticks (```` ` ````) and mangling variables (e.g. `${var}`).

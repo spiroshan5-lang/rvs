@@ -1,11 +1,12 @@
-import { cookies } from 'next/headers';
+﻿import { cookies } from 'next/headers';
+import { validateSessionToken } from '@/lib/session';
 import AdminDashboard from './AdminDashboard';
 import LoginForm from './LoginForm';
 
 export default async function AdminPage() {
   const cookieStore = await cookies();
   const session = cookieStore.get('admin_session');
-  const isAuthenticated = session?.value === 'authenticated';
+  const isAuthenticated = session?.value ? validateSessionToken(session.value) : false;
 
   if (!isAuthenticated) {
     return <LoginForm />;
