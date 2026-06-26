@@ -94,7 +94,7 @@ export async function submitInquiryAction(formData: {
     };
 
     // Save securely to Firebase RTDB (token auth appended by getDatabaseUrl)
-    const response = await fetch(getDatabaseUrl('/inquiries.json'), {
+    const response = await fetch(await getDatabaseUrl('/inquiries.json'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(inquiry),
@@ -119,7 +119,7 @@ export async function getInquiriesAction() {
   if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized', data: [] };
 
   try {
-    const response = await fetch(getDatabaseUrl('/inquiries.json'), { cache: 'no-store' });
+    const response = await fetch(await getDatabaseUrl('/inquiries.json'), { cache: 'no-store' });
     if (!response.ok) throw new Error('Failed to fetch inquiries');
 
     const raw = await response.json();
@@ -140,7 +140,7 @@ export async function deleteInquiryAction(id: string) {
   if (!/^[\w\-]+$/.test(id)) return { success: false, error: 'Invalid inquiry ID' };
 
   try {
-    const response = await fetch(getDatabaseUrl(`/inquiries/${id}.json`), { method: 'DELETE' });
+    const response = await fetch(await getDatabaseUrl(`/inquiries/${id}.json`), { method: 'DELETE' });
     if (!response.ok) throw new Error('Failed to delete inquiry');
     revalidatePath('/admin');
     return { success: true };
@@ -157,7 +157,7 @@ export async function updateInquiryStatusAction(id: string, status: string) {
   if (!allowedStatuses.includes(status)) return { success: false, error: 'Invalid status value' };
 
   try {
-    const response = await fetch(getDatabaseUrl(`/inquiries/${id}.json`), {
+    const response = await fetch(await getDatabaseUrl(`/inquiries/${id}.json`), {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status }),
@@ -169,3 +169,4 @@ export async function updateInquiryStatusAction(id: string, status: string) {
     return { success: false, error: error.message };
   }
 }
+
