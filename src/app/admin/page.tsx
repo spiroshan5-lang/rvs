@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { validateSessionToken } from '@/lib/session';
-import { getInquiriesAction } from './actions';
+import { getInquiriesAction, getCMSHeroSlidesAction, getCMSGalleryCardsAction } from './actions';
 import InquiriesPanel from './InquiriesPanel';
 import LoginForm from './LoginForm';
 
@@ -13,7 +13,17 @@ export default async function AdminPage() {
     return <LoginForm />;
   }
 
-  const { data: inquiries } = await getInquiriesAction();
+  const [inquiriesResult, heroSlidesResult, galleryCardsResult] = await Promise.all([
+    getInquiriesAction(),
+    getCMSHeroSlidesAction(),
+    getCMSGalleryCardsAction(),
+  ]);
 
-  return <InquiriesPanel initialInquiries={inquiries ?? []} />;
+  return (
+    <InquiriesPanel
+      initialInquiries={inquiriesResult.data ?? []}
+      initialHeroSlides={heroSlidesResult.data ?? []}
+      initialGalleryCards={galleryCardsResult.data ?? []}
+    />
+  );
 }

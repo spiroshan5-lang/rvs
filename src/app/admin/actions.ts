@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-﻿'use server';
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
+'use server';
 
 import { cookies, headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
@@ -25,9 +25,9 @@ async function isAuthenticated(): Promise<boolean> {
   return validateSessionToken(token);
 }
 
-// ─────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────
 // AUTH
-// ─────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────
 
 export async function loginAction(password: string) {
   const ip = await getClientIP();
@@ -63,9 +63,9 @@ export async function logoutAction() {
   return { success: true };
 }
 
-// ─────────────────────────────────────────────────────────────
-// CUSTOMER INQUIRIES  (Firebase RTDB — server-side only)
-// ─────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────
+// CUSTOMER INQUIRIES  (Firebase RTDB – server-side only)
+// ─────────────────────────────────────────────────────────────────
 
 export async function submitInquiryAction(formData: {
   name: string;
@@ -171,3 +171,217 @@ export async function updateInquiryStatusAction(id: string, status: string) {
   }
 }
 
+// ─────────────────────────────────────────────────────────────────
+// CMS – HERO SLIDES  (Firebase RTDB /cms/heroSlides)
+// ─────────────────────────────────────────────────────────────────
+
+export interface CMSHeroSlide {
+  id: string;
+  url: string;
+  alt: string;
+  order: number;
+}
+
+export async function getCMSHeroSlidesAction(): Promise<{ success: boolean; data: CMSHeroSlide[]; error?: string }> {
+  if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized', data: [] };
+
+  try {
+    const response = await fetch(await getDatabaseUrl('/cms/heroSlides.json'), { cache: 'no-store' });
+    if (!response.ok) throw new Error('Failed to fetch hero slides');
+    const raw = await response.json();
+    if (!raw) return { success: true, data: [] };
+
+    const list: CMSHeroSlide[] = Object.entries(raw)
+      .map(([id, val]: [string, any]) => ({ id, ...val }))
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+    return { success: true, data: list };
+  } catch (error: any) {
+    return { success: false, error: error.message, data: [] };
+  }
+}
+
+export async function addCMSHeroSlideAction(slide: { url: string; alt: string; order: number }) {
+  if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized' };
+  if (!slide.url.startsWith('https://')) return { success: false, error: 'URL must start with https://' };
+
+  try {
+    const response = await fetch(await getDatabaseUrl('/cms/heroSlides.json'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(slide),
+    });
+    if (!response.ok) throw new Error('Failed to add hero slide');
+    revalidatePath('/');
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+export async function updateCMSHeroSlideAction(id: string, slide: Partial<{ url: string; alt: string; order: number }>) {
+  if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized' };
+  if (!/^[\w\-]+$/.test(id)) return { success: false, error: 'Invalid ID' };
+
+  try {
+    const response = await fetch(await getDatabaseUrl(`/cms/heroSlides/${id}.json`), {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(slide),
+    });
+    if (!response.ok) throw new Error('Failed to update hero slide');
+    revalidatePath('/');
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+export async function deleteCMSHeroSlideAction(id: string) {
+  if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized' };
+  if (!/^[\w\-]+$/.test(id)) return { success: false, error: 'Invalid ID' };
+
+  try {
+    const response = await fetch(await getDatabaseUrl(`/cms/heroSlides/${id}.json`), { method: 'DELETE' });
+    if (!response.ok) throw new Error('Failed to delete hero slide');
+    revalidatePath('/');
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
+// CMS – GALLERY CARDS  (Firebase RTDB /cms/galleryCards)
+// ─────────────────────────────────────────────────────────────────
+
+export interface CMSGalleryCard {
+  id: string;
+  imgUrl: string;
+  alt: string;
+  linkUrl?: string;
+  order: number;
+}
+
+export async function getCMSGalleryCardsAction(): Promise<{ success: boolean; data: CMSGalleryCard[]; error?: string }> {
+  if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized', data: [] };
+
+  try {
+    const response = await fetch(await getDatabaseUrl('/cms/galleryCards.json'), { cache: 'no-store' });
+    if (!response.ok) throw new Error('Failed to fetch gallery cards');
+    const raw = await response.json();
+    if (!raw) return { success: true, data: [] };
+
+    const list: CMSGalleryCard[] = Object.entries(raw)
+      .map(([id, val]: [string, any]) => ({ id, ...val }))
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+    return { success: true, data: list };
+  } catch (error: any) {
+    return { success: false, error: error.message, data: [] };
+  }
+}
+
+export async function addCMSGalleryCardAction(card: { imgUrl: string; alt: string; linkUrl?: string; order: number }) {
+  if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized' };
+  if (!card.imgUrl.startsWith('https://')) return { success: false, error: 'Image URL must start with https://' };
+
+  try {
+    const response = await fetch(await getDatabaseUrl('/cms/galleryCards.json'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(card),
+    });
+    if (!response.ok) throw new Error('Failed to add gallery card');
+    revalidatePath('/gallery');
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+export async function updateCMSGalleryCardAction(id: string, card: Partial<{ imgUrl: string; alt: string; linkUrl: string; order: number }>) {
+  if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized' };
+  if (!/^[\w\-]+$/.test(id)) return { success: false, error: 'Invalid ID' };
+
+  try {
+    const response = await fetch(await getDatabaseUrl(`/cms/galleryCards/${id}.json`), {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(card),
+    });
+    if (!response.ok) throw new Error('Failed to update gallery card');
+    revalidatePath('/gallery');
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+export async function deleteCMSGalleryCardAction(id: string) {
+  if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized' };
+  if (!/^[\w\-]+$/.test(id)) return { success: false, error: 'Invalid ID' };
+
+  try {
+    const response = await fetch(await getDatabaseUrl(`/cms/galleryCards/${id}.json`), { method: 'DELETE' });
+    if (!response.ok) throw new Error('Failed to delete gallery card');
+    revalidatePath('/gallery');
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+
+// ─────────────────────────────────────────────────────────────────
+// CMS – CLOUDINARY UPLOAD ACTION
+// ─────────────────────────────────────────────────────────────────
+
+import { v2 as cloudinary } from 'cloudinary';
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true,
+});
+
+export async function uploadImageToCloudinaryAction(formData: FormData): Promise<{ success: boolean; url?: string; error?: string }> {
+  if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized' };
+
+  const file = formData.get('file') as File;
+  if (!file) return { success: false, error: 'No file provided' };
+
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const apiKey = process.env.CLOUDINARY_API_KEY;
+  const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+  if (!cloudName || !apiKey || !apiSecret) {
+    return {
+      success: false,
+      error: 'Cloudinary credentials are not configured in your .env.local file. Please add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET.',
+    };
+  }
+
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    const uploadResponse = await new Promise<any>((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        {
+          folder: 'rvs_cms',
+          resource_type: 'image',
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      ).end(buffer);
+    });
+
+    return { success: true, url: uploadResponse.secure_url };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'Failed to upload to Cloudinary' };
+  }
+}

@@ -1,10 +1,11 @@
 'use client';
+import { useState, useEffect } from 'react';
 import { GalleryCard } from '@/data/gallery';
 
 import { motion } from 'framer-motion';
 import SocialCards from '@/components/ui/card-fan-carousel';
 
-/* 🎨🎨 Inline SVG Icons 🎨🎨 */
+/* Inline SVG Icons */
 const InstagramIcon = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
     <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
@@ -28,9 +29,28 @@ interface GalleryClientProps {
 }
 
 export default function GalleryClient({ initialCards }: GalleryClientProps) {
+  const [cards, setCards] = useState<GalleryCard[]>(initialCards);
+
+  // Fetch CMS gallery cards (overrides static data if CMS has entries)
+  useEffect(() => {
+    fetch('/api/cms')
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data.galleryCards) && data.galleryCards.length > 0) {
+          setCards(data.galleryCards.map((c: Record<string, string>) => ({
+            id: c.id,
+            imgUrl: c.imgUrl,
+            alt: c.alt,
+            linkUrl: c.linkUrl,
+          })));
+        }
+      })
+      .catch(() => { /* silently fall back to static data */ });
+  }, []);
+
   return (
     <>
-      {/* 🚀🚀 SOCIAL CTA BANNER 🚀🚀 */}
+      {/* SOCIAL CTA BANNER */}
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
@@ -68,7 +88,6 @@ export default function GalleryClient({ initialCards }: GalleryClientProps) {
               Be the first to see our latest projects, design tips, and behind-the-scenes moments from the studio.
             </p>
 
-            {/* Buttons 📱 stack on mobile, row on sm+ */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3">
               <a
                 href="https://www.instagram.com/rvs_crafted_interiors?igsh=eHRwcWtzNms4dmw5"
@@ -107,7 +126,7 @@ export default function GalleryClient({ initialCards }: GalleryClientProps) {
         </div>
       </motion.div>
 
-      {/* 🚀🚀 GALLERY SECTION 🚀🚀 */}
+      {/* GALLERY SECTION */}
       <div className="flex-grow flex flex-col justify-center items-center">
         {/* Section header */}
         <div className="w-full px-6 md:px-12 text-center mb-5 md:mb-8" style={{ maxWidth: '90rem' }}>
@@ -130,8 +149,8 @@ export default function GalleryClient({ initialCards }: GalleryClientProps) {
 
         {/* Gallery slider */}
         <div className="w-full flex justify-center" style={{ minHeight: '40vh' }}>
-          {initialCards && initialCards.length > 0 ? (
-            <SocialCards cards={initialCards} />
+          {cards && cards.length > 0 ? (
+            <SocialCards cards={cards} />
           ) : (
             <div className="flex items-center justify-center" style={{ minHeight: '40vh' }}>
               <span className="text-[var(--gold)] opacity-50 font-sans tracking-widest text-xs uppercase">No Gallery Items Available</span>
@@ -142,4 +161,3 @@ export default function GalleryClient({ initialCards }: GalleryClientProps) {
     </>
   );
 }
-

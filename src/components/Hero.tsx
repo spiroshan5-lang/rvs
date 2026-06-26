@@ -7,10 +7,28 @@ import { ArrowUpRight, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HERO_SLIDES, HERO_INTERVAL } from '@/data/hero';
 
+interface HeroSlide {
+  id?: string;
+  url: string;
+  alt: string;
+}
+
 export default function Hero() {
-  const images = HERO_SLIDES;
+  const [images, setImages] = useState<HeroSlide[]>(HERO_SLIDES);
   const intervalTime = HERO_INTERVAL;
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Fetch CMS hero slides from Firebase (via public API route)
+  useEffect(() => {
+    fetch('/api/cms')
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data.heroSlides) && data.heroSlides.length > 0) {
+          setImages(data.heroSlides.map((s: Record<string, string>) => ({ id: s.id, url: s.url, alt: s.alt })));
+        }
+      })
+      .catch(() => { /* silently fall back to static data */ });
+  }, []);
 
   useEffect(() => {
     if (images.length <= 1) return;
@@ -20,9 +38,9 @@ export default function Hero() {
     return () => clearInterval(timer);
   }, [images, intervalTime]);
 
-  /* ─────────────────────────────────────────────────────────
+  /* ───────────────────────────────────────────────────────────────
      Shared: Background image / video layer
-     ───────────────────────────────────────────────────────── */
+     ─────────────────────────────────────────────────────────────── */
   const backgroundLayer = (
     <div className="absolute inset-0 w-full h-full z-0" style={{ background: 'var(--bg)' }}>
       <AnimatePresence mode="popLayout">
@@ -46,9 +64,9 @@ export default function Hero() {
     </div>
   );
 
-  /* ─────────────────────────────────────────────────────────
+  /* ───────────────────────────────────────────────────────────────
      Shared: Gradient overlay
-     ───────────────────────────────────────────────────────── */
+     ─────────────────────────────────────────────────────────────── */
   const gradientOverlay = (
     <div
       className="absolute inset-0 z-10 pointer-events-none"
@@ -58,16 +76,15 @@ export default function Hero() {
 
   return (
     <section
-      id="home"
-      className="relative w-full h-[100svh] md:h-screen flex items-center justify-center p-0 md:p-6 lg:p-8 transition-colors duration-300"
-      style={{ background: 'var(--bg)' }}
+      className="relative flex flex-col w-full overflow-hidden"
+      style={{ height: '100svh', minHeight: '600px' }}
     >
       {backgroundLayer}
       {gradientOverlay}
 
-      {/* ─────────────────────────────────────────────────────
+      {/* ─────────────────────────────────────────────────────────────
           DESKTOP CONTENT LAYER (hidden on mobile)
-          ───────────────────────────────────────────────────── */}
+          ───────────────────────────────────────────────────────────── */}
       <div className="hidden md:flex relative z-20 w-full h-full items-end justify-between px-12 pb-16">
         {/* Bottom-left: headline */}
         <div className="max-w-2xl">
@@ -106,9 +123,9 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* ─────────────────────────────────────────────────────
+      {/* ─────────────────────────────────────────────────────────────
           MOBILE CONTENT LAYER (hidden on desktop)
-          ───────────────────────────────────────────────────── */}
+          ───────────────────────────────────────────────────────────── */}
       <div className="absolute inset-0 z-20 w-full h-full flex md:hidden flex-col justify-between px-5 pb-6">
         <div className="pt-24 flex-shrink-0" />
 
@@ -190,4 +207,3 @@ export default function Hero() {
     </section>
   );
 }
-
