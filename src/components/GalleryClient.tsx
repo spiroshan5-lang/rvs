@@ -1,4 +1,5 @@
-﻿'use client';
+'use client';
+import { GalleryCard } from '@/data/gallery';
 
 import { motion } from 'framer-motion';
 import SocialCards from '@/components/ui/card-fan-carousel';
@@ -23,7 +24,7 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 );
 
 interface GalleryClientProps {
-  initialCards: any[];
+  initialCards: GalleryCard[];
 }
 
 export default function GalleryClient({ initialCards }: GalleryClientProps) {
@@ -141,3 +142,4 @@ export default function GalleryClient({ initialCards }: GalleryClientProps) {
     </>
   );
 }
+

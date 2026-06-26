@@ -1,4 +1,6 @@
-﻿'use client';
+'use client';
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
 type Theme = 'light' | 'dark';
@@ -15,7 +17,6 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
       if (stored === 'light' || stored === 'dark') {
         setTheme(stored);
       }
-      // If nothing stored, default is light
     }
   }, []);
 

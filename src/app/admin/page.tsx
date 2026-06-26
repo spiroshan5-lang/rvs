@@ -1,4 +1,4 @@
-﻿import { cookies } from 'next/headers';
+import { cookies } from 'next/headers';
 import { validateSessionToken } from '@/lib/session';
 import { getInquiriesAction } from './actions';
 import InquiriesPanel from './InquiriesPanel';

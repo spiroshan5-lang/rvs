@@ -1,4 +1,4 @@
-﻿import { z } from 'zod';
+import { z } from 'zod';
 
 /**
  * Server-side validation schema for contact form inquiries.

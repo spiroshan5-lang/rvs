@@ -1,4 +1,4 @@
-﻿import crypto from 'crypto';
+import crypto from 'crypto';
 
 const SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
 

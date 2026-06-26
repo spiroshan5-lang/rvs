@@ -1,7 +1,6 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
-import LoadingScreen from "@/components/LoadingScreen";
 
 export const metadata: Metadata = {
   title: "RVS Craft Interiors | Luxury Spatial Architecture Studio",

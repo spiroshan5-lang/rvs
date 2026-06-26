@@ -1,4 +1,4 @@
-﻿/**
+/**
  * In-memory rate limiter for server actions.
  * Tracks attempts by IP/key with configurable window and max attempts.
  */

@@ -1,6 +1,6 @@
-﻿'use client';
+'use client';
 
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -188,5 +188,6 @@ export default function Services() {
     </section>
   );
 }
+
 
 

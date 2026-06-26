@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import gsap from "gsap";
@@ -376,7 +376,8 @@ export default function SocialCards({ cards }: SocialCardsProps) {
       const cw = window.innerWidth;
       visibleEntries.forEach(({el,slot}) => {
         const base = config(slot);
-        let tx = getXOffset(cw, slot), ty = base.y, tr = base.rot, ts = base.scale, delay = 0;
+        let tx = getXOffset(cw, slot), ts = base.scale, delay = 0;
+        const ty = base.y, tr = base.rot;
         if (hoveredSlot !== null) {
           delay = Math.abs(slot-hoveredSlot)*0.02;
           if (slot===hoveredSlot) { ts*=1.05; } else { tx += slot<hoveredSlot ? -4 : 4; }
@@ -476,5 +477,6 @@ export default function SocialCards({ cards }: SocialCardsProps) {
     </section>
   );
 }
+
 
 

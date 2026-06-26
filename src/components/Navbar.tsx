@@ -1,9 +1,10 @@
-﻿"use client"
+/* eslint-disable react-hooks/set-state-in-effect, @typescript-eslint/no-unused-vars */
+"use client"
 
 import React, { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Home, Image as ImageIcon, Layers, Phone, Sun, Moon, Menu, X, ArrowUpRight } from "lucide-react"
-import { cn } from "@/lib/utils"
+
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useTheme } from "@/context/ThemeContext"
@@ -231,3 +232,4 @@ export default function Navbar() {
     </>
   )
 }
+

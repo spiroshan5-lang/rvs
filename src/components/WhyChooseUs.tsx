@@ -58,10 +58,10 @@ export default function WhyChooseUs() {
             </p>
           </div>
 
-          {/* Numbers Don't Lie Stats Section */}
+          {/* Numbers Don&apos;t Lie Stats Section */}
           <div className="pt-8 border-t border-[var(--gold-border)]">
             <h3 className="font-serif text-2xl font-light italic text-[var(--gold)] mb-8">
-              Numbers Don't Lie
+              Numbers Don&apos;t Lie
             </h3>
             <div className="grid grid-cols-3 gap-x-6 gap-y-10">
               <div>
@@ -123,3 +123,4 @@ export default function WhyChooseUs() {
     </section>
   );
 }
+

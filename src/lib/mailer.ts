@@ -1,4 +1,4 @@
-﻿import nodemailer from 'nodemailer';
+import nodemailer from 'nodemailer';
 import { escapeHtml } from './validation';
 
 const transporter = nodemailer.createTransport({

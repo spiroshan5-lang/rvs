@@ -47,7 +47,7 @@ export default function NotFound() {
               This space is currently unfurnished.
             </h1>
             <p className="text-sm md:text-base font-light text-[var(--fg-muted)] tracking-wider max-w-lg mx-auto leading-relaxed mb-12">
-              It seems we've led you to an empty room. The page you are looking for has been moved, removed, or never existed in our blueprints. Let's get you back to a more curated space.
+              It seems we&apos;ve led you to an empty room. The page you are looking for has been moved, removed, or never existed in our blueprints. Let&apos;s get you back to a more curated space.
             </p>
             
             <Link 
