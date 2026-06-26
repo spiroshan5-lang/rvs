@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useTransition } from 'react';
 import Image from 'next/image';
@@ -6,26 +6,26 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Plus, Trash2, Edit3, Save, X, Image as ImageIcon,
   GalleryHorizontal, Sparkles, Link, Hash, MoveUp, MoveDown,
-  CheckCircle2, AlertCircle, Loader2, Upload,
+  CheckCircle2, AlertCircle, Loader2,
 } from 'lucide-react';
 import {
   CMSHeroSlide, CMSGalleryCard,
   addCMSHeroSlideAction, updateCMSHeroSlideAction, deleteCMSHeroSlideAction,
   addCMSGalleryCardAction, updateCMSGalleryCardAction, deleteCMSGalleryCardAction,
-  uploadImageToCloudinaryAction,
+  
 } from './actions';
 
-// ─────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Shared Styles
-// ─────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const INPUT_CLS = 'w-full bg-[var(--bg)] border border-[var(--gold-border)] rounded-xl px-4 py-2.5 text-sm text-[var(--fg)] placeholder-[var(--fg)]/30 focus:outline-none focus:border-[var(--gold)] transition-colors font-mono';
 const BTN_GOLD = 'inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--gold)]/10 border border-[var(--gold-border)] text-[var(--gold)] hover:bg-[var(--gold)]/20 transition-colors text-sm font-medium';
 const BTN_DANGER = 'inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-red-500/20 text-red-400/70 hover:bg-red-500/10 hover:text-red-400 transition-colors text-xs';
 const BTN_SAVE = 'inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 transition-colors text-sm font-medium';
 
-// ─────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Toast Notification
-// ─────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function Toast({ msg, type }: { msg: string; type: 'ok' | 'err' }) {
   return (
     <motion.div
@@ -44,68 +44,14 @@ function Toast({ msg, type }: { msg: string; type: 'ok' | 'err' }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Image Upload Area
-// ─────────────────────────────────────────────────────────────────
-function ImageUploadArea({
-  onUploadSuccess,
-  onUploadError,
-}: {
-  onUploadSuccess: (url: string) => void;
-  onUploadError: (err: string) => void;
-}) {
-  const [uploading, setUploading] = useState(false);
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
 
-    setUploading(true);
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const res = await uploadImageToCloudinaryAction(formData);
-      if (res.success && res.url) {
-        onUploadSuccess(res.url);
-      } else {
-        onUploadError(res.error || 'Upload failed');
-      }
-    } catch (err: any) {
-      onUploadError(err.message || 'An error occurred during upload');
-    } finally {
-      setUploading(false);
-    }
-  }
-
-  return (
-    <div className='relative border border-dashed border-[var(--gold-border)]/40 hover:border-[var(--gold)]/60 rounded-xl p-5 transition-colors flex flex-col items-center justify-center bg-[var(--bg)]/30 group'>
-      <input
-        type='file'
-        accept='image/*'
-        onChange={handleFileChange}
-        className='absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed'
-        disabled={uploading}
-      />
-      {uploading ? (
-        <div className='flex flex-col items-center gap-2'>
-          <Loader2 className='w-6 h-6 animate-spin text-[var(--gold)]' />
-          <span className='text-xs font-mono text-[var(--fg)]/40 animate-pulse'>Uploading to Cloudinary...</span>
-        </div>
-      ) : (
-        <div className='flex flex-col items-center gap-1.5 text-center pointer-events-none'>
-          <Upload className='w-5 h-5 text-[var(--gold)]/60 group-hover:text-[var(--gold)] transition-colors' />
-          <span className='text-xs font-sans text-[var(--fg)]/60'>Drag & drop or <span className='text-[var(--gold)] underline font-medium'>click to upload</span></span>
-          <span className='text-[9px] font-mono text-[var(--fg)]/30 uppercase tracking-wider'>PNG, JPG, WEBP up to 10MB</span>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Image Preview Card
-// ─────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function ImagePreview({ url, alt }: { url: string; alt: string }) {
   const [error, setError] = useState(false);
   if (!url || error) {
@@ -118,14 +64,14 @@ function ImagePreview({ url, alt }: { url: string; alt: string }) {
   }
   return (
     <div className='relative w-full aspect-video rounded-xl overflow-hidden border border-[var(--gold-border)]/30'>
-      <Image src={url} alt={alt || 'Preview'} fill className='object-cover' onError={() => setError(true)} unoptimized />
+      <img src={url} alt={alt || 'Preview'} className='absolute inset-0 w-full h-full object-cover' onError={() => setError(true)} />
     </div>
   );
 }
 
-// ─────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // HERO SLIDES CMS
-// ─────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export function HeroCMSPanel({ initialSlides }: { initialSlides: CMSHeroSlide[] }) {
   const [slides, setSlides] = useState<CMSHeroSlide[]>(initialSlides);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -196,7 +142,7 @@ export function HeroCMSPanel({ initialSlides }: { initialSlides: CMSHeroSlide[] 
             Hero Slideshow
           </h3>
           <p className='text-xs text-[var(--fg)]/40 mt-1 font-mono'>
-            Upload images locally or paste Cloudinary URLs. Order decides slideshow sequence.
+            Paste image URLs (e.g. Cloudinary or Unsplash). Order decides slideshow sequence.
           </p>
         </div>
         <button className={BTN_GOLD} onClick={() => setShowAdd(!showAdd)}>
@@ -217,20 +163,9 @@ export function HeroCMSPanel({ initialSlides }: { initialSlides: CMSHeroSlide[] 
             <div className='rounded-2xl border border-[var(--gold-border)] bg-[var(--bg-alt)] p-5 space-y-4'>
               <h4 className='text-sm font-semibold text-[var(--gold)] tracking-wide uppercase'>New Slide</h4>
               
-              <div className='space-y-2'>
-                <label className='text-xs text-[var(--fg)]/50 uppercase tracking-widest font-mono'>Upload Image *</label>
-                <ImageUploadArea
-                  onUploadSuccess={url => {
-                    setNewSlide(p => ({ ...p, url }));
-                    showToast('Image uploaded successfully!', 'ok');
-                  }}
-                  onUploadError={err => showToast(err, 'err')}
-                />
-              </div>
-
               <div className='grid md:grid-cols-2 gap-4'>
-                <div className='space-y-2'>
-                  <label className='text-xs text-[var(--fg)]/50 uppercase tracking-widest font-mono'>Or Image URL</label>
+                <div className='space-y-2 md:col-span-2'>
+                  <label className='text-xs text-[var(--fg)]/50 uppercase tracking-widest font-mono'>Image URL *</label>
                   <input
                     className={INPUT_CLS}
                     placeholder='https://res.cloudinary.com/...'
@@ -291,19 +226,8 @@ export function HeroCMSPanel({ initialSlides }: { initialSlides: CMSHeroSlide[] 
             >
               {editingId === slide.id ? (
                 <div className='p-5 space-y-4'>
-                  <div className='space-y-2'>
-                    <label className='text-xs text-[var(--fg)]/50 uppercase tracking-widest font-mono'>Upload Replacement Image</label>
-                    <ImageUploadArea
-                      onUploadSuccess={url => {
-                        setEditForm(p => ({ ...p, url }));
-                        showToast('Image uploaded!', 'ok');
-                      }}
-                      onUploadError={err => showToast(err, 'err')}
-                    />
-                  </div>
-
                   <div className='grid md:grid-cols-2 gap-4'>
-                    <div className='space-y-2'>
+                    <div className='space-y-2 md:col-span-2'>
                       <label className='text-xs text-[var(--fg)]/50 uppercase tracking-widest font-mono'>Image URL</label>
                       <input
                         className={INPUT_CLS}
@@ -347,7 +271,7 @@ export function HeroCMSPanel({ initialSlides }: { initialSlides: CMSHeroSlide[] 
                   </div>
                   <div className='flex-1 min-w-0'>
                     <p className='text-sm text-[var(--fg)]/80 font-mono truncate'>{slide.url}</p>
-                    <p className='text-xs text-[var(--fg)]/40 mt-0.5'>{slide.alt} • order: {slide.order}</p>
+                    <p className='text-xs text-[var(--fg)]/40 mt-0.5'>{slide.alt} â€¢ order: {slide.order}</p>
                   </div>
                   <div className='flex items-center gap-2 flex-shrink-0'>
                     <button
@@ -374,9 +298,9 @@ export function HeroCMSPanel({ initialSlides }: { initialSlides: CMSHeroSlide[] 
   );
 }
 
-// ─────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // GALLERY CMS
-// ─────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export function GalleryCMSPanel({ initialCards }: { initialCards: CMSGalleryCard[] }) {
   const [cards, setCards] = useState<CMSGalleryCard[]>(initialCards);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -452,7 +376,7 @@ export function GalleryCMSPanel({ initialCards }: { initialCards: CMSGalleryCard
             Gallery Images
           </h3>
           <p className='text-xs text-[var(--fg)]/40 mt-1 font-mono'>
-            Upload images locally or paste Cloudinary URLs. Changes reflect instantly on the /gallery page.
+            Paste image URLs (e.g. Cloudinary or Unsplash). Changes reflect instantly on the /gallery page.
           </p>
         </div>
         <button className={BTN_GOLD} onClick={() => setShowAdd(!showAdd)}>
@@ -473,20 +397,9 @@ export function GalleryCMSPanel({ initialCards }: { initialCards: CMSGalleryCard
             <div className='rounded-2xl border border-[var(--gold-border)] bg-[var(--bg-alt)] p-5 space-y-4'>
               <h4 className='text-sm font-semibold text-[var(--gold)] tracking-wide uppercase'>New Gallery Image</h4>
               
-              <div className='space-y-2'>
-                <label className='text-xs text-[var(--fg)]/50 uppercase tracking-widest font-mono'>Upload Image *</label>
-                <ImageUploadArea
-                  onUploadSuccess={url => {
-                    setNewCard(p => ({ ...p, imgUrl: url }));
-                    showToast('Image uploaded successfully!', 'ok');
-                  }}
-                  onUploadError={err => showToast(err, 'err')}
-                />
-              </div>
-
               <div className='grid md:grid-cols-2 gap-4'>
                 <div className='space-y-2 md:col-span-2'>
-                  <label className='text-xs text-[var(--fg)]/50 uppercase tracking-widest font-mono'>Or Image URL</label>
+                  <label className='text-xs text-[var(--fg)]/50 uppercase tracking-widest font-mono'>Image URL *</label>
                   <input
                     className={INPUT_CLS}
                     placeholder='https://res.cloudinary.com/...'
@@ -556,17 +469,6 @@ export function GalleryCMSPanel({ initialCards }: { initialCards: CMSGalleryCard
             >
               {editingId === card.id ? (
                 <div className='p-4 space-y-3'>
-                  <div className='space-y-2'>
-                    <label className='text-xs text-[var(--fg)]/50 uppercase tracking-widest font-mono'>Upload Replacement Image</label>
-                    <ImageUploadArea
-                      onUploadSuccess={url => {
-                        setEditForm(p => ({ ...p, imgUrl: url }));
-                        showToast('Image uploaded!', 'ok');
-                      }}
-                      onUploadError={err => showToast(err, 'err')}
-                    />
-                  </div>
-
                   <div className='space-y-2'>
                     <label className='text-xs text-[var(--fg)]/50 uppercase tracking-widest font-mono'>Image URL</label>
                     <input
@@ -651,3 +553,4 @@ export function GalleryCMSPanel({ initialCards }: { initialCards: CMSGalleryCard
     </div>
   );
 }
+

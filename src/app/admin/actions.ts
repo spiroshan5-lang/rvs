@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use server';
 
 import { cookies, headers } from 'next/headers';
@@ -203,6 +203,10 @@ export async function getCMSHeroSlidesAction(): Promise<{ success: boolean; data
 
 export async function addCMSHeroSlideAction(slide: { url: string; alt: string; order: number }) {
   if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized' };
+
+  const ip = await getClientIP();
+  const rateCheck = checkRateLimit(`cms:${ip}`, RATE_LIMITS.CMS_SAVE.maxAttempts, RATE_LIMITS.CMS_SAVE.windowMs);
+  if (!rateCheck.allowed) return { success: false, error: 'Too many updates. Please wait a few minutes.' };
   if (!slide.url.startsWith('https://')) return { success: false, error: 'URL must start with https://' };
 
   try {
@@ -221,6 +225,10 @@ export async function addCMSHeroSlideAction(slide: { url: string; alt: string; o
 
 export async function updateCMSHeroSlideAction(id: string, slide: Partial<{ url: string; alt: string; order: number }>) {
   if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized' };
+
+  const ip = await getClientIP();
+  const rateCheck = checkRateLimit(`cms:${ip}`, RATE_LIMITS.CMS_SAVE.maxAttempts, RATE_LIMITS.CMS_SAVE.windowMs);
+  if (!rateCheck.allowed) return { success: false, error: 'Too many updates. Please wait a few minutes.' };
   if (!/^[\w\-]+$/.test(id)) return { success: false, error: 'Invalid ID' };
 
   try {
@@ -239,6 +247,10 @@ export async function updateCMSHeroSlideAction(id: string, slide: Partial<{ url:
 
 export async function deleteCMSHeroSlideAction(id: string) {
   if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized' };
+
+  const ip = await getClientIP();
+  const rateCheck = checkRateLimit(`cms:${ip}`, RATE_LIMITS.CMS_SAVE.maxAttempts, RATE_LIMITS.CMS_SAVE.windowMs);
+  if (!rateCheck.allowed) return { success: false, error: 'Too many updates. Please wait a few minutes.' };
   if (!/^[\w\-]+$/.test(id)) return { success: false, error: 'Invalid ID' };
 
   try {
@@ -284,6 +296,10 @@ export async function getCMSGalleryCardsAction(): Promise<{ success: boolean; da
 
 export async function addCMSGalleryCardAction(card: { imgUrl: string; alt: string; linkUrl?: string; order: number }) {
   if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized' };
+
+  const ip = await getClientIP();
+  const rateCheck = checkRateLimit(`cms:${ip}`, RATE_LIMITS.CMS_SAVE.maxAttempts, RATE_LIMITS.CMS_SAVE.windowMs);
+  if (!rateCheck.allowed) return { success: false, error: 'Too many updates. Please wait a few minutes.' };
   if (!card.imgUrl.startsWith('https://')) return { success: false, error: 'Image URL must start with https://' };
 
   try {
@@ -302,6 +318,10 @@ export async function addCMSGalleryCardAction(card: { imgUrl: string; alt: strin
 
 export async function updateCMSGalleryCardAction(id: string, card: Partial<{ imgUrl: string; alt: string; linkUrl: string; order: number }>) {
   if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized' };
+
+  const ip = await getClientIP();
+  const rateCheck = checkRateLimit(`cms:${ip}`, RATE_LIMITS.CMS_SAVE.maxAttempts, RATE_LIMITS.CMS_SAVE.windowMs);
+  if (!rateCheck.allowed) return { success: false, error: 'Too many updates. Please wait a few minutes.' };
   if (!/^[\w\-]+$/.test(id)) return { success: false, error: 'Invalid ID' };
 
   try {
@@ -320,6 +340,10 @@ export async function updateCMSGalleryCardAction(id: string, card: Partial<{ img
 
 export async function deleteCMSGalleryCardAction(id: string) {
   if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized' };
+
+  const ip = await getClientIP();
+  const rateCheck = checkRateLimit(`cms:${ip}`, RATE_LIMITS.CMS_SAVE.maxAttempts, RATE_LIMITS.CMS_SAVE.windowMs);
+  if (!rateCheck.allowed) return { success: false, error: 'Too many updates. Please wait a few minutes.' };
   if (!/^[\w\-]+$/.test(id)) return { success: false, error: 'Invalid ID' };
 
   try {
@@ -329,59 +353,5 @@ export async function deleteCMSGalleryCardAction(id: string) {
     return { success: true };
   } catch (error: any) {
     return { success: false, error: error.message };
-  }
-}
-
-
-// ─────────────────────────────────────────────────────────────────
-// CMS – CLOUDINARY UPLOAD ACTION
-// ─────────────────────────────────────────────────────────────────
-
-import { v2 as cloudinary } from 'cloudinary';
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-  secure: true,
-});
-
-export async function uploadImageToCloudinaryAction(formData: FormData): Promise<{ success: boolean; url?: string; error?: string }> {
-  if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized' };
-
-  const file = formData.get('file') as File;
-  if (!file) return { success: false, error: 'No file provided' };
-
-  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
-  const apiKey = process.env.CLOUDINARY_API_KEY;
-  const apiSecret = process.env.CLOUDINARY_API_SECRET;
-
-  if (!cloudName || !apiKey || !apiSecret) {
-    return {
-      success: false,
-      error: 'Cloudinary credentials are not configured in your .env.local file. Please add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET.',
-    };
-  }
-
-  try {
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    const uploadResponse = await new Promise<any>((resolve, reject) => {
-      cloudinary.uploader.upload_stream(
-        {
-          folder: 'rvs_cms',
-          resource_type: 'image',
-        },
-        (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-        }
-      ).end(buffer);
-    });
-
-    return { success: true, url: uploadResponse.secure_url };
-  } catch (error: any) {
-    return { success: false, error: error.message || 'Failed to upload to Cloudinary' };
   }
 }
