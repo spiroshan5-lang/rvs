@@ -1,26 +1,21 @@
-﻿import { initializeApp, getApps, getApp } from "firebase/app";
-
-const firebaseConfig = {
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
-};
-
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-
-export { app };
+﻿/**
+ * Firebase Realtime Database — REST helper (server-side only).
+ * The full Firebase SDK is NOT used; all reads/writes go through
+ * the RTDB REST API so no client bundle is inflated.
+ *
+ * Required env vars  (.env.local):
+ *   NEXT_PUBLIC_FIREBASE_DATABASE_URL  — your RTDB URL
+ *   FIREBASE_AUTH_TOKEN                — database secret (server-only, never exposed to browser)
+ */
 
 /**
- * Constructs the Firebase RTDB REST API URL.
- * Automatically appends the Firebase database secret auth query parameter if configured server-side.
+ * Builds a fully-authenticated Firebase RTDB REST URL.
+ * Auth token is appended only server-side; the env var is never
+ * prefixed with NEXT_PUBLIC so it stays out of the browser bundle.
  */
 export function getDatabaseUrl(path: string): string {
-  const dbUrl = process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL || 'https://riko-backend-default-rtdb.firebaseio.com';
+  const base = process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL
+    || 'https://riko-backend-default-rtdb.firebaseio.com';
   const token = process.env.FIREBASE_AUTH_TOKEN;
-  return `${dbUrl}${path}${token ? `?auth=${token}` : ''}`;
+  return `${base}${path}${token ? `?auth=${token}` : ''}`;
 }

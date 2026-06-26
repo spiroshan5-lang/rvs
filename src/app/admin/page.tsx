@@ -1,7 +1,7 @@
 ﻿import { cookies } from 'next/headers';
 import { validateSessionToken } from '@/lib/session';
-import { getDatabaseUrl } from '@/lib/firebase';
-import AdminDashboard from './AdminDashboard';
+import { getInquiriesAction } from './actions';
+import InquiriesPanel from './InquiriesPanel';
 import LoginForm from './LoginForm';
 
 export default async function AdminPage() {
@@ -13,11 +13,7 @@ export default async function AdminPage() {
     return <LoginForm />;
   }
 
-  const res = await fetch(getDatabaseUrl('/cms.json'), {
-    cache: 'no-store'
-  });
-  const data = res.ok ? await res.json() : null;
-  const cmsData = data || { hero: { images: [], interval: 4.5 }, gallery: [] };
+  const { data: inquiries } = await getInquiriesAction();
 
-  return <AdminDashboard initialData={cmsData} />;
+  return <InquiriesPanel initialInquiries={inquiries ?? []} />;
 }
