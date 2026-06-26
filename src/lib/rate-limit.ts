@@ -1,4 +1,4 @@
-/**
+﻿/**
  * In-memory rate limiter for server actions.
  * Tracks attempts by IP/key with configurable window and max attempts.
  */
@@ -62,6 +62,6 @@ export function checkRateLimit(
  */
 export const RATE_LIMITS = {
   LOGIN: { maxAttempts: 5, windowMs: 15 * 60 * 1000 },       // 5 attempts per 15 min
-  CONTACT_FORM: { maxAttempts: 3, windowMs: 10 * 60 * 1000 }, // 3 submissions per 10 min
+  CONTACT_FORM: { maxAttempts: 3, windowMs: 1 * 60 * 1000 }, // 3 submissions per 1 min
   CMS_SAVE: { maxAttempts: 20, windowMs: 5 * 60 * 1000 },     // 20 saves per 5 min
 } as const;
