@@ -2,6 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
+import { sendInquiryEmail } from '@/lib/mailer';
 
 export async function loginAction(password: string) {
   if (password === process.env.ADMIN_PASSWORD) {
@@ -10,7 +11,7 @@ export async function loginAction(password: string) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       path: '/',
-      maxAge: 60 * 60 * 24 * 7 // 1 week
+      maxAge: 60 * 60 * 24 * 7
     });
     return { success: true };
   }
@@ -32,20 +33,16 @@ export async function saveCmsAction(data: any) {
   try {
     const response = await fetch('https://riko-backend-default-rtdb.firebaseio.com/cms.json', {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     });
-    
-    if (!response.ok) {
-      throw new Error('Failed to update Firebase database');
-    }
+
+    if (!response.ok) throw new Error('Failed to update Firebase database');
 
     revalidatePath('/');
     revalidatePath('/gallery');
     revalidatePath('/admin');
-    
+
     return { success: true };
   } catch (error: any) {
     return { success: false, error: error.message };
@@ -67,6 +64,7 @@ export async function submitInquiryAction(formData: {
       status: 'new',
     };
 
+    // Save to Firebase
     const response = await fetch('https://riko-backend-default-rtdb.firebaseio.com/inquiries.json', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -74,6 +72,13 @@ export async function submitInquiryAction(formData: {
     });
 
     if (!response.ok) throw new Error('Failed to save inquiry');
+
+    // Send email notification (non-blocking — don't fail form if email fails)
+    try {
+      await sendInquiryEmail(inquiry);
+    } catch (emailError) {
+      console.error('Email notification failed:', emailError);
+    }
 
     return { success: true };
   } catch (error: any) {
@@ -97,13 +102,11 @@ export async function getInquiriesAction() {
     const raw = await response.json();
     if (!raw) return { success: true, data: [] };
 
-    // Firebase POST returns an object keyed by push IDs
     const list = Object.entries(raw).map(([id, val]: [string, any]) => ({
       id,
       ...val,
     }));
 
-    // Sort newest first
     list.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
 
     return { success: true, data: list };
@@ -119,9 +122,8 @@ export async function deleteInquiryAction(id: string) {
   }
 
   try {
-    const response = await fetch('https://riko-backend-default-rtdb.firebaseio.com/inquiries/' + id + '.json', {
-      method: 'DELETE',
-    });
+    const url = 'https://riko-backend-default-rtdb.firebaseio.com/inquiries/' + id + '.json';
+    const response = await fetch(url, { method: 'DELETE' });
 
     if (!response.ok) throw new Error('Failed to delete inquiry');
 
@@ -139,7 +141,8 @@ export async function updateInquiryStatusAction(id: string, status: string) {
   }
 
   try {
-    const response = await fetch('https://riko-backend-default-rtdb.firebaseio.com/inquiries/' + id + '.json', {
+    const url = 'https://riko-backend-default-rtdb.firebaseio.com/inquiries/' + id + '.json';
+    const response = await fetch(url, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status }),
