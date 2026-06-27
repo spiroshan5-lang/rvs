@@ -67,6 +67,11 @@ export default function Hero() {
     />
   );
 
+  const waMessage = encodeURIComponent(
+    "Hi! I'm interested in interior design services from RVS Craft Interiors. Could you share more details?"
+  );
+  const waHref = 'https://wa.me/919591685465?text=' + waMessage;
+
   return (
     <section
       className="relative flex flex-col w-full overflow-hidden"
@@ -75,86 +80,88 @@ export default function Hero() {
       {backgroundLayer}
       {gradientOverlay}
 
-      {/* DESKTOP CONTENT LAYER (hidden on mobile) */}
-      <div className="hidden md:flex relative z-20 w-full h-full items-end justify-between px-12 pb-20">
-        {/* Bottom-left: headline & View Portfolio button */}
-        <div className="max-w-2xl flex flex-col items-start gap-8">
+      {/* UNIFIED RESPONSIVE CONTENT LAYER (100% Adaptive to Desktop & Mobile) */}
+      <div className="relative z-20 w-full h-full flex flex-col justify-end px-6 md:px-12 pb-24 md:pb-20 max-w-7xl mx-auto">
+        <div className="flex flex-col items-start gap-6 md:gap-8 max-w-3xl">
+          {/* Headline and Tagline */}
           <div>
             <h1
-              className="font-serif leading-[1.08] tracking-tight mb-6 drop-shadow-2xl"
-              style={{ color: '#F5F5F0', fontSize: 'clamp(3rem, 6vw, 5.5rem)' }}
+              className="font-serif leading-[1.08] tracking-tight mb-4 md:mb-6 drop-shadow-2xl"
+              style={{ color: '#F5F5F0', fontSize: 'clamp(2.25rem, 6vw, 5.5rem)' }}
             >
               Future of<br />
               Modern Living
             </h1>
-            <div className="w-24 h-[1px] mb-6 opacity-80" style={{ background: 'linear-gradient(to right, var(--gold), transparent)' }} />
-            <p className="font-sans text-sm tracking-wider font-semibold drop-shadow-md mb-2" style={{ color: '#F5F5F0' }}>
+            <div className="w-16 md:w-24 h-[1px] mb-4 md:mb-6 opacity-80" style={{ background: 'linear-gradient(to right, var(--gold), transparent)' }} />
+            <p className="font-sans text-xs md:text-sm tracking-wider font-semibold drop-shadow-md" style={{ color: '#F5F5F0' }}>
               Design.Build.Inspire!
             </p>
           </div>
 
-          <Link
-            href="/gallery"
-            className="inline-flex items-center space-x-4 backdrop-blur-md rounded-full px-8 py-4.5 transition-all duration-300 group cursor-pointer hover:bg-[var(--gold)] hover:text-[#0B0B0B]"
-            style={{ background: 'rgba(201, 168, 106, 0.15)', border: '1px solid var(--gold-border)', color: '#F5F5F0' }}
-          >
-            <span className="text-xs tracking-wider font-sans font-semibold uppercase">View Portfolio</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />
-            <span className="text-[10px] tracking-wider uppercase opacity-75 font-medium">150+ projects</span>
-            <ArrowUpRight className="w-4 h-4 group-hover:-translate-y-[2px] group-hover:translate-x-[2px] transition-transform" strokeWidth={2} />
-          </Link>
-        </div>
-      </div>
+          {/* Action Buttons Row */}
+          <div className="flex flex-wrap items-center gap-3.5 md:gap-4 w-full">
+            {/* View Portfolio */}
+            <Link
+              href="/gallery"
+              className="flex items-center gap-2.5 px-5 md:px-6 py-3.5 md:py-4.5 rounded-full shadow-xl transition-all duration-300 group cursor-pointer hover:bg-[var(--gold)] hover:text-[#0B0B0B]"
+              style={{ background: 'rgba(201, 168, 106, 0.12)', border: '1px solid var(--gold-border)', color: '#F5F5F0' }}
+            >
+              <span className="text-[10px] md:text-xs tracking-wider font-sans font-semibold uppercase">View Portfolio</span>
+              <span className="w-1 h-1 rounded-full bg-[var(--gold)] hidden sm:inline" />
+              <span className="text-[8px] md:text-[9px] tracking-wider uppercase opacity-75 font-medium hidden sm:inline">150+ projects</span>
+              <ArrowUpRight className="w-3.5 h-3.5 md:w-4 h-4 group-hover:-translate-y-[2px] group-hover:translate-x-[2px] transition-transform" strokeWidth={2} />
+            </Link>
 
-      {/* MOBILE CONTENT LAYER (hidden on desktop) */}
-      <div className="absolute inset-0 z-20 w-full h-full flex md:hidden flex-col justify-between px-5 pb-6">
-        <div className="pt-24 flex-shrink-0" />
+            {/* Book Consultation */}
+            <Link
+              href="/contact"
+              className="flex items-center gap-2 px-5 md:px-6 py-3.5 md:py-4.5 rounded-full shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer font-sans text-[10px] md:text-xs tracking-wider uppercase font-semibold border border-white/10"
+              style={{ background: 'var(--gold)', color: '#0B0B0B' }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                className="w-3.5 h-3.5"
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              <span>Book Consultation</span>
+            </Link>
 
-        <div className="flex-1 flex flex-col justify-center pointer-events-none max-w-[90vw] gap-4">
-          <h1
-            className="font-serif leading-[1.08] tracking-tight drop-shadow-2xl"
-            style={{ color: '#F5F5F0', fontSize: 'clamp(2.25rem, 10vw, 3.5rem)' }}
-          >
-            Future of<br />
-            Modern Living
-          </h1>
-          <div className="w-16 h-[1px] opacity-80" style={{ background: 'linear-gradient(to right, var(--gold), transparent)' }} />
-          <p className="font-sans text-xs tracking-wider font-semibold drop-shadow-md" style={{ color: '#F5F5F0' }}>
-            Design.Build.Inspire!
-          </p>
-        </div>
+            {/* Divider (visible on desktop) */}
+            <div className="hidden sm:block w-px h-6 bg-white/20 mx-1" />
 
-        {/* Mobile footer CTA row */}
-        <div className="flex items-center justify-between w-full gap-3 pointer-events-auto flex-shrink-0">
-          <div className="flex items-center space-x-2 backdrop-blur-md rounded-[1.25rem] p-1.5" style={{ background: 'rgba(11, 11, 11, 0.75)', border: '1px solid var(--gold-border)' }}>
-            <a href="https://wa.me/919591685465" target="_blank" rel="noopener noreferrer"
-              className="w-9 h-9 rounded-full flex items-center justify-center transition-all group hover:bg-[#c9a86a]/15"
-              style={{ border: '1px solid var(--gold-border)' }} title="Chat on WhatsApp">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c9a86a" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="group-hover:scale-110 transition-transform">
+            {/* WhatsApp Icon Button */}
+            <a
+              href={waHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-11 md:w-12 h-11 md:h-12 rounded-full flex items-center justify-center transition-all group hover:bg-[#c9a86a]/15 backdrop-blur-md"
+              style={{ border: '1px solid var(--gold-border)', background: 'rgba(11, 11, 11, 0.45)' }}
+              title="Chat on WhatsApp"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c9a86a" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="group-hover:scale-110 transition-transform">
                 <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
                 <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />
               </svg>
             </a>
-            <a href="tel:+919591685465"
-              className="w-9 h-9 rounded-full flex items-center justify-center transition-all group hover:bg-[#c9a86a]/15"
-              style={{ border: '1px solid var(--gold-border)' }} title="Call Us">
-              <Phone className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" style={{ color: 'var(--gold)' }} strokeWidth={1.75} />
+
+            {/* Call Icon Button */}
+            <a
+              href="tel:+919591685465"
+              className="w-11 md:w-12 h-11 md:h-12 rounded-full flex items-center justify-center transition-all group hover:bg-[#c9a86a]/15 backdrop-blur-md"
+              style={{ border: '1px solid var(--gold-border)', background: 'rgba(11, 11, 11, 0.45)' }}
+              title="Call Us"
+            >
+              <Phone className="w-4 h-4 group-hover:scale-110 transition-transform" style={{ color: 'var(--gold)' }} strokeWidth={1.75} />
             </a>
           </div>
-
-          <Link
-            href="/gallery"
-            className="flex items-center space-x-2.5 px-4.5 py-3 backdrop-blur-md rounded-[1.25rem] group cursor-pointer transition-all"
-            style={{ background: 'rgba(11, 11, 11, 0.75)', border: '1px solid var(--gold-border)', color: '#F5F5F0' }}
-          >
-            <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-colors group-hover:bg-[#c9a86a]/20" style={{ border: '1px solid var(--gold-border)' }}>
-              <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={2} style={{ color: '#F5F5F0' }} />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-sans text-[10px] tracking-wide font-semibold whitespace-nowrap">View Projects</span>
-              <span className="font-sans text-[7px] tracking-[0.2em] uppercase" style={{ color: 'var(--gold)' }}>150+ customers</span>
-            </div>
-          </Link>
         </div>
       </div>
 
