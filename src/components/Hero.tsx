@@ -81,7 +81,7 @@ export default function Hero() {
       {gradientOverlay}
 
       {/* DESKTOP CONTENT LAYER (hidden on mobile) */}
-      <div className="hidden md:flex absolute inset-x-0 bottom-0 z-20 w-full flex-col justify-end px-12 pb-16 max-w-7xl mx-auto">
+      <div className="hidden md:flex absolute inset-x-0 bottom-0 z-20 w-full flex-col justify-end px-8 pb-16">
         <div className="flex flex-col items-start gap-5 max-w-4xl">
           <div>
             <h1
