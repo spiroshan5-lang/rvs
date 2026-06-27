@@ -133,6 +133,42 @@ export default function Services() {
   // Left-side architectural ruler slider scale
   const rulerScaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
+  // Framer Motion state variants for the cards stack to bypass WAAPI scroll bugs
+  const cardVariants = {
+    active: {
+      scale: 1.0,
+      opacity: 1.0,
+      rotateY: 0,
+      y: 0,
+      z: 0,
+      transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] as any }
+    },
+    scrolledPast: {
+      scale: 2.2,
+      opacity: 0,
+      rotateY: -10,
+      y: -120,
+      z: 50,
+      transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] as any }
+    },
+    upcoming: {
+      scale: 0.7,
+      opacity: 0.85,
+      rotateY: 6,
+      y: 35,
+      z: -50,
+      transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] as any }
+    },
+    hidden: {
+      scale: 0.35,
+      opacity: 0,
+      rotateY: 12,
+      y: 100,
+      z: -100,
+      transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] as any }
+    }
+  };
+
   return (
     <section
       ref={containerRef}
@@ -172,42 +208,28 @@ export default function Services() {
         </div>
 
         {/* 3. The 3D Spatial Walkthrough Stack */}
-        <div className="relative w-full h-full flex items-center justify-center">
+        <div className="relative w-full h-full flex items-center justify-center" style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}>
           {services.map((service, i) => {
-            const step = 1 / services.length;
-            const focus = i * step;
-
-            // Framer Motion transforms for 3D walkthrough depth
-            // Entry -> Focus -> Exit (passes through screen)
-            const scale = useTransform(
-              scrollYProgress,
-              [focus - step * 1.5, focus - step * 0.4, focus, focus + step * 0.6, focus + step * 1.2],
-              [0.35, 0.7, 1.0, 1.5, 2.5]
-            );
-
-            const opacity = useTransform(
-              scrollYProgress,
-              [focus - step * 1.5, focus - step * 0.4, focus, focus + step * 0.5, focus + step * 1.0],
-              [0, 0.9, 1.0, 0.9, 0]
-            );
+            // Determine active/scrolledPast/upcoming/hidden variant state
+            let currentState = 'hidden';
+            if (i === activeIdx) {
+              currentState = 'active';
+            } else if (i < activeIdx) {
+              currentState = 'scrolledPast';
+            } else if (i === activeIdx + 1) {
+              currentState = 'upcoming';
+            }
 
             const zIndex = activeIdx === i ? 20 : i < activeIdx ? 10 : 5;
-
-            // Parallax 3D tilt movement on translation
-            const rotateY = useTransform(
-              scrollYProgress,
-              [focus - step * 1.5, focus, focus + step * 1.2],
-              [10, 0, -10]
-            );
 
             return (
               <motion.div
                 key={service.index}
+                initial="hidden"
+                animate={currentState}
+                variants={cardVariants}
                 style={{
-                  scale,
-                  opacity,
                   zIndex,
-                  rotateY,
                   transformStyle: "preserve-3d",
                 }}
                 className="absolute w-[90vw] sm:w-[650px] md:w-[850px] h-[65svh] sm:h-[480px] rounded-[2rem] border border-[var(--gold-border)]/35 bg-[var(--bg-alt)]/90 backdrop-blur-xl flex flex-col sm:flex-row overflow-hidden shadow-2xl pointer-events-auto"
