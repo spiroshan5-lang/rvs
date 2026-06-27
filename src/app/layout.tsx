@@ -1,6 +1,7 @@
 ﻿import type { Metadata } from 'next';
 import './globals.css';
 import SmoothScroll from '@/components/SmoothScroll';
+import WhatsAppButton from '@/components/WhatsAppButton';
 
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://rvs-wheat.vercel.app';
