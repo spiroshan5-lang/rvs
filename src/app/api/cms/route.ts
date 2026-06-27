@@ -11,7 +11,7 @@ async function readCloudinaryJson(publicId: string): Promise<unknown[]> {
   if (!cloudName) return [];
   const url = `https://res.cloudinary.com/${cloudName}/raw/upload/${publicId}.json?_t=${Date.now()}`;
   try {
-    const res = await fetch(url, { next: { revalidate: 60 } });
+    const res = await fetch(url, { cache: 'no-store' });
     if (!res.ok) return [];
     return await res.json();
   } catch {
