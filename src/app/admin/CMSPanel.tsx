@@ -170,12 +170,21 @@ export function HeroCMSPanel({ initialSlides }: { initialSlides: CMSHeroSlide[] 
               
               <div className='grid md:grid-cols-2 gap-4'>
                 <div className='space-y-2 md:col-span-2'>
-                  <label className='text-xs text-[var(--fg)]/50 uppercase tracking-widest font-mono'>Image URL *</label>
+                  <label className='text-xs text-[var(--fg)]/50 uppercase tracking-widest font-mono'>Desktop Image URL *</label>
                   <input
                     className={INPUT_CLS}
                     placeholder='https://res.cloudinary.com/...'
                     value={newSlide.url}
                     onChange={e => setNewSlide(p => ({ ...p, url: e.target.value }))}
+                  />
+                </div>
+                <div className='space-y-2 md:col-span-2'>
+                  <label className='text-xs text-[var(--fg)]/50 uppercase tracking-widest font-mono'>Mobile Image URL (Optional)</label>
+                  <input
+                    className={INPUT_CLS}
+                    placeholder='https://res.cloudinary.com/...'
+                    value={newSlide.mobileUrl}
+                    onChange={e => setNewSlide(p => ({ ...p, mobileUrl: e.target.value }))}
                   />
                 </div>
                 <div className='space-y-2'>
@@ -233,11 +242,19 @@ export function HeroCMSPanel({ initialSlides }: { initialSlides: CMSHeroSlide[] 
                 <div className='p-5 space-y-4'>
                   <div className='grid md:grid-cols-2 gap-4'>
                     <div className='space-y-2 md:col-span-2'>
-                      <label className='text-xs text-[var(--fg)]/50 uppercase tracking-widest font-mono'>Image URL</label>
+                      <label className='text-xs text-[var(--fg)]/50 uppercase tracking-widest font-mono'>Desktop Image URL</label>
                       <input
                         className={INPUT_CLS}
                         value={editForm.url || ''}
                         onChange={e => setEditForm(p => ({ ...p, url: e.target.value }))}
+                      />
+                    </div>
+                    <div className='space-y-2 md:col-span-2'>
+                      <label className='text-xs text-[var(--fg)]/50 uppercase tracking-widest font-mono'>Mobile Image URL (Optional)</label>
+                      <input
+                        className={INPUT_CLS}
+                        value={editForm.mobileUrl || ''}
+                        onChange={e => setEditForm(p => ({ ...p, mobileUrl: e.target.value }))}
                       />
                     </div>
                     <div className='space-y-2'>
