@@ -1,16 +1,16 @@
-// ╔════════════════════════════════════════════════════════════╗
-// ║  GALLERY CARDS — paste your Cloudinary image URLs below   ║
-// ╚════════════════════════════════════════════════════════════╝
-export interface GalleryCard {
+﻿export interface GalleryCard {
   id: string;
   imgUrl: string;
   alt: string;
   linkUrl?: string;
 }
 
-// Add your Cloudinary URLs here.
+// Static fallback cards. CMS data (from /api/cms) overrides these at runtime.
 export const GALLERY_CARDS: GalleryCard[] = [
-  // { id: 'g1', imgUrl: 'https://res.cloudinary.com/YOUR_CLOUD/image/upload/g1.jpg', alt: 'Modern living space' },
-  // { id: 'g2', imgUrl: 'https://res.cloudinary.com/YOUR_CLOUD/image/upload/g2.jpg', alt: 'Luxury bedroom' },
-  // { id: 'g3', imgUrl: 'https://res.cloudinary.com/YOUR_CLOUD/image/upload/g3.jpg', alt: 'Premium kitchen' },
+  { id: 'g1', imgUrl: 'https://res.cloudinary.com/dbxbpvn8j/image/upload/v1782543003/rvs_cms/gallery_living_room.jpg', alt: 'Modern Living Space' },
+  { id: 'g2', imgUrl: 'https://res.cloudinary.com/dbxbpvn8j/image/upload/v1782543004/rvs_cms/gallery_kitchen.jpg', alt: 'Premium Kitchen' },
+  { id: 'g3', imgUrl: 'https://res.cloudinary.com/dbxbpvn8j/image/upload/v1782543005/rvs_cms/gallery_bedroom.jpg', alt: 'Master Bedroom Suite' },
+  { id: 'g4', imgUrl: 'https://res.cloudinary.com/dbxbpvn8j/image/upload/v1782543006/rvs_cms/gallery_bathroom.jpg', alt: 'Spa-Inspired Bathroom' },
+  { id: 'g5', imgUrl: 'https://res.cloudinary.com/dbxbpvn8j/image/upload/v1782543007/rvs_cms/gallery_dining.jpg', alt: 'Elegant Dining Room' },
+  { id: 'g6', imgUrl: 'https://res.cloudinary.com/dbxbpvn8j/image/upload/v1782543008/rvs_cms/gallery_office.jpg', alt: 'Luxury Home Office' },
 ];
