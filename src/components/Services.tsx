@@ -1,9 +1,9 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { ChevronDown, HelpCircle } from 'lucide-react';
+import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
+import { ChevronDown } from 'lucide-react';
 
 interface Service {
   index: string;
@@ -117,20 +117,21 @@ export default function Services() {
     offset: ['start start', 'end end'],
   });
 
-  // Dynamic index tracker based on scroll progress
-  useEffect(() => {
-    return scrollYProgress.onChange((v) => {
-      const current = Math.min(Math.floor(v * services.length), services.length - 1);
-      setActiveIdx(current >= 0 ? current : 0);
-    });
-  }, [scrollYProgress]);
+  // Dynamic index tracker using type-safe useMotionValueEvent
+  useMotionValueEvent(scrollYProgress, 'change', (v) => {
+    const current = Math.min(Math.floor(v * services.length), services.length - 1);
+    const safeIndex = current >= 0 ? current : 0;
+    if (safeIndex !== activeIdx) {
+      setActiveIdx(safeIndex);
+    }
+  });
 
   // Fade out scroll indicator as user scrolls down
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
   const indicatorY = useTransform(scrollYProgress, [0, 0.08], [0, 20]);
 
-  // Left-side architectural ruler slider height
-  const rulerHeight = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+  // Left-side architectural ruler slider scale
+  const rulerScaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
     <section
@@ -150,8 +151,8 @@ export default function Services() {
           
           <div className="w-[1.5px] h-[250px] bg-[var(--fg)]/10 relative rounded-full overflow-hidden">
             <motion.div 
-              style={{ height: rulerHeight }}
-              className="absolute top-0 left-0 w-full bg-[var(--gold)]" 
+              style={{ scaleY: rulerScaleY, originY: 0 }}
+              className="absolute inset-0 w-full h-full bg-[var(--gold)]" 
             />
           </div>
 
@@ -208,7 +209,6 @@ export default function Services() {
                   zIndex,
                   rotateY,
                   transformStyle: "preserve-3d",
-                  perspective: "1200px",
                 }}
                 className="absolute w-[90vw] sm:w-[650px] md:w-[850px] h-[65svh] sm:h-[480px] rounded-[2rem] border border-[var(--gold-border)]/35 bg-[var(--bg-alt)]/90 backdrop-blur-xl flex flex-col sm:flex-row overflow-hidden shadow-2xl pointer-events-auto"
               >
