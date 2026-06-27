@@ -1,18 +1,15 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { getDatabaseUrl } from '@/lib/firebase';
 
-const HERO_PUBLIC_ID    = 'rvs_cms/hero_config';
-const GALLERY_PUBLIC_ID = 'rvs_cms/gallery_config';
-
-async function readCloudinaryJson(publicId: string): Promise<unknown[]> {
-  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
-  if (!cloudName) return [];
-  const url = 'https://res.cloudinary.com/' + cloudName + '/raw/upload/' + publicId + '.json?_t=' + Date.now();
+async function readFirebaseJson(path: string): Promise<unknown[]> {
   try {
+    const url = await getDatabaseUrl(path);
     const res = await fetch(url, { cache: 'no-store' });
     if (!res.ok) return [];
-    return await res.json();
+    const data = await res.json();
+    return data || [];
   } catch {
     return [];
   }
@@ -29,8 +26,8 @@ export async function GET(request: NextRequest) {
 
   try {
     const [heroSlides, galleryCards] = await Promise.all([
-      readCloudinaryJson(HERO_PUBLIC_ID),
-      readCloudinaryJson(GALLERY_PUBLIC_ID),
+      readFirebaseJson('/cms/hero.json'),
+      readFirebaseJson('/cms/gallery.json'),
     ]);
     return NextResponse.json(
       { heroSlides, galleryCards },

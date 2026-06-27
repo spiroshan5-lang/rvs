@@ -188,64 +188,29 @@ export async function updateInquiryStatusAction(id: string, status: string) {
 const HERO_PUBLIC_ID    = 'rvs_cms/hero_config';
 const GALLERY_PUBLIC_ID = 'rvs_cms/gallery_config';
 
-/** Build Cloudinary SHA-1 signature */
-function cloudinarySign(params: Record<string, string>, apiSecret: string): string {
-  const sorted = Object.entries(params)
-    .filter(([, v]) => v !== '' && v !== undefined)
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([k, v]) => `${k}=${v}`)
-    .join('&');
-  return createHash('sha1').update(sorted + apiSecret).digest('hex');
-}
-
-/** Fetch the JSON array stored in Cloudinary as a raw resource */
 async function readCloudinaryJson(publicId: string): Promise<any[]> {
-  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
-  if (!cloudName) return [];
-  const url = `https://res.cloudinary.com/${cloudName}/raw/upload/${publicId}.json?_t=${Date.now()}`;
+  const path = publicId === 'rvs_cms/hero_config' ? '/cms/hero.json' : '/cms/gallery.json';
   try {
+    const url = await getDatabaseUrl(path);
     const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) return [];          // not found yet → empty list
-    return await res.json();
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data || [];
   } catch {
     return [];
   }
 }
 
-/** Upload (overwrite) a JSON array to Cloudinary as a raw resource */
 async function writeCloudinaryJson(publicId: string, data: any[]): Promise<void> {
-  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
-  const apiKey    = process.env.CLOUDINARY_API_KEY;
-  const apiSecret = process.env.CLOUDINARY_API_SECRET;
-  if (!cloudName || !apiKey || !apiSecret) throw new Error('Cloudinary env vars not configured');
-
-  const timestamp = Math.round(Date.now() / 1000).toString();
-  // Only params that go into signature (excludes file, api_key, resource_type, cloud_name)
-  const sigParams: Record<string, string> = {
-    invalidate: 'true',
-    overwrite:  'true',
-    public_id:  publicId,
-    timestamp,
-  };
-  const signature = cloudinarySign(sigParams, apiSecret);
-
-  const json = JSON.stringify(data);
-  const form = new FormData();
-  form.append('file',      new Blob([json], { type: 'application/json' }), 'config.json');
-  form.append('api_key',   apiKey);
-  form.append('timestamp', timestamp);
-  form.append('signature', signature);
-  form.append('public_id', publicId);
-  form.append('overwrite', 'true');
-  form.append('invalidate','true');
-
-  const res = await fetch(
-    `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`,
-    { method: 'POST', body: form }
-  );
+  const path = publicId === 'rvs_cms/hero_config' ? '/cms/hero.json' : '/cms/gallery.json';
+  const url = await getDatabaseUrl(path);
+  const res = await fetch(url, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
   if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err?.error?.message || 'Cloudinary write failed');
+    throw new Error('Firebase write failed');
   }
 }
 
