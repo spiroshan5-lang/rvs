@@ -179,11 +179,7 @@ export default function GalleryClient({ initialCards }: GalleryClientProps) {
           <p className="font-light tracking-wider mx-auto leading-relaxed" style={{ fontSize: 'clamp(11px, 2.8vw, 14px)', color: 'var(--fg-muted)', maxWidth: 420 }}>
             A dynamic, tactile showcase of physical details, lighting composition, and rich material pairing.
           </p>
-          {!loading && cards.length > 0 && (
-            <p className="text-[10px] tracking-widest uppercase text-[var(--fg)]/30 mt-2">
-              Click any image to view full screen
-            </p>
-          )}
+
         </div>
 
         {/* Gallery slider / skeleton / empty state */}
