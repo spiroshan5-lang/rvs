@@ -81,23 +81,22 @@ export default function Hero() {
       {gradientOverlay}
 
       {/* DESKTOP CONTENT LAYER (hidden on mobile) */}
-      <div className="hidden md:flex absolute inset-0 z-20 w-full h-full flex-col justify-end px-12 pb-24 max-w-7xl mx-auto">
-        <div className="flex flex-col items-start gap-8 max-w-3xl">
+      <div className="hidden md:flex absolute inset-x-0 bottom-0 z-20 w-full flex-col justify-end px-12 pb-16 max-w-7xl mx-auto">
+        <div className="flex flex-col items-start gap-5 max-w-4xl">
           <div>
             <h1
-              className="font-serif leading-[1.08] tracking-tight mb-6 drop-shadow-2xl"
-              style={{ color: '#F5F5F0', fontSize: 'clamp(3.5rem, 5.5vw, 5rem)' }}
+              className="font-serif leading-[1.1] tracking-tight mb-4 drop-shadow-2xl"
+              style={{ color: '#F5F5F0', fontSize: 'clamp(2.5rem, 4.5vw, 4.25rem)' }}
             >
-              Future of<br />
-              Modern Living
+              Future of Modern Living
             </h1>
-            <div className="w-24 h-[1px] mb-6 opacity-80" style={{ background: 'linear-gradient(to right, var(--gold), transparent)' }} />
-            <p className="font-sans text-sm tracking-wider font-semibold drop-shadow-md" style={{ color: '#F5F5F0' }}>
+            <div className="w-20 h-[1px] mb-4 opacity-80" style={{ background: 'linear-gradient(to right, var(--gold), transparent)' }} />
+            <p className="font-sans text-xs md:text-sm tracking-wider font-semibold drop-shadow-md" style={{ color: '#F5F5F0' }}>
               Design.Build.Inspire!
             </p>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3.5">
             <Link
               href="/gallery"
               className="inline-flex items-center space-x-4 backdrop-blur-md rounded-full px-8 py-4.5 transition-all duration-300 group cursor-pointer hover:bg-[var(--gold)] hover:text-[#0B0B0B]"

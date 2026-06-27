@@ -139,7 +139,7 @@ export default function RootLayout({
         <SmoothScroll>
           <ThemeProvider>
             {children}
-            
+            <WhatsAppButton />
           </ThemeProvider>
         </SmoothScroll>
       </body>
