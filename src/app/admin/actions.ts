@@ -280,7 +280,7 @@ export async function addCMSHeroSlideAction(slide: { url: string; alt: string; o
     const newSlide: CMSHeroSlide = { id: `hero-${Date.now()}`, ...slide };
     await writeCloudinaryJson(HERO_PUBLIC_ID, [...slides, newSlide]);
     revalidatePath('/');
-    return { success: true };
+    return { success: true, id: newSlide.id };
   } catch (error: any) {
     return { success: false, error: error.message };
   }
@@ -358,7 +358,7 @@ export async function addCMSGalleryCardAction(card: { imgUrl: string; alt: strin
     const newCard: CMSGalleryCard = { id: `gallery-${Date.now()}`, ...card };
     await writeCloudinaryJson(GALLERY_PUBLIC_ID, [...cards, newCard]);
     revalidatePath('/gallery');
-    return { success: true };
+    return { success: true, id: newCard.id };
   } catch (error: any) {
     return { success: false, error: error.message };
   }

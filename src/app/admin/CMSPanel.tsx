@@ -99,7 +99,7 @@ export function HeroCMSPanel({ initialSlides }: { initialSlides: CMSHeroSlide[] 
         showToast('Hero slide added. Redeploy or revalidate to see live.', 'ok');
         setShowAdd(false);
         setNewSlide({ url: '', alt: '', order: slides.length + 2 });
-        setSlides(prev => [...prev, { id: Date.now().toString(), ...newSlide }]);
+        setSlides(prev => [...prev, { id: res.id || `hero-${Date.now()}`, ...newSlide }]);
       } else {
         showToast(res.error || 'Failed to add', 'err');
       }
@@ -331,7 +331,7 @@ export function GalleryCMSPanel({ initialCards }: { initialCards: CMSGalleryCard
       });
       if (res.success) {
         showToast('Gallery card added.', 'ok');
-        setCards(prev => [...prev, { id: Date.now().toString(), ...newCard }]);
+        setCards(prev => [...prev, { id: res.id || `gallery-${Date.now()}`, ...newCard }]);
         setShowAdd(false);
         setNewCard({ imgUrl: '', alt: '', linkUrl: '', order: cards.length + 2 });
       } else {
