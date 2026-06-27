@@ -65,10 +65,10 @@ const services: Service[] = [
   },
   {
     index: '08',
-    title: '3D Visualizations & VR',
-    description: 'State-of-the-art photorealistic renders and virtual walk-throughs that let you experience your space before construction starts.',
-    details: ['3D Renders', 'VR Walkthroughs', 'Floor Plans', 'Sectional Views'],
-    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=800&auto=format&fit=crop',
+    title: 'Space Planning & Layouts',
+    description: 'Precision zoning and traffic flow optimization. We draft comprehensive layout blueprints and conceptual floor plans.',
+    details: ['Zoning Blueprints', 'Traffic Flow Analysis', 'Conceptual Floor Plans', 'Space Optimization'],
+    image: 'https://images.unsplash.com/photo-1503387762-592dec583e72?q=80&w=800&auto=format&fit=crop',
   },
   {
     index: '09',
@@ -90,6 +90,20 @@ const services: Service[] = [
     description: 'End-to-end execution with meticulous timeline management, site coordination, and structural oversight for complete peace of mind.',
     details: ['Vendor Procurement', 'Site Supervision', 'Quality Control', 'Timeline Management'],
     image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800&auto=format&fit=crop',
+  },
+  {
+    index: '12',
+    title: 'Material & Finish Curation',
+    description: 'Selecting premium surface finishes, stone patterns, exotic veneers, and wallpaper textiles that establish spatial character.',
+    details: ['Stone & Marble Selection', 'Exotic Veneers', 'Wall Coverings', 'Paint & Texture Palette'],
+    image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800&auto=format&fit=crop',
+  },
+  {
+    index: '13',
+    title: 'Modular Wardrobes & Closets',
+    description: 'Bespoke bedroom wardrobes, walk-in closets, and innovative storage configurations engineered for style and utility.',
+    details: ['Walk-in Closets', 'Sliding Wardrobes', 'Smart Dresser Storage', 'Premium Glass Doors'],
+    image: 'https://images.unsplash.com/photo-1558882224-cca166733360?q=80&w=800&auto=format&fit=crop',
   },
 ];
 
