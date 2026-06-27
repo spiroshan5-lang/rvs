@@ -14,8 +14,11 @@ import { createHash } from 'crypto';
 async function getClientIP(): Promise<string> {
   const headerStore = await headers();
   const forwarded = headerStore.get('x-forwarded-for');
-  if (forwarded) return forwarded.split(',')[0].trim();
-  return headerStore.get('x-real-ip') || 'unknown';
+  const rawIP = forwarded
+    ? forwarded.split(',')[0].trim()
+    : (headerStore.get('x-real-ip') || 'unknown');
+  // Sanitize: only allow valid IP characters to prevent header-injection
+  return rawIP.replace(/[^0-9a-fA-F.:]/g, '').slice(0, 45) || 'unknown';
 }
 
 /** Helper: validate admin session cookie */

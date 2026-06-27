@@ -1,5 +1,8 @@
 import crypto from 'crypto';
 
+if (!process.env.SESSION_SECRET) {
+  console.error('[SECURITY] SESSION_SECRET environment variable is not set. Sessions will not persist across restarts.');
+}
 const SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
 
 /**

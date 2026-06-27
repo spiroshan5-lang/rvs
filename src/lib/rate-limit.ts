@@ -10,6 +10,11 @@ interface RateLimitEntry {
 
 const store = new Map<string, RateLimitEntry>();
 
+/** Sanitizes rate-limit keys to prevent header-injection bypass attempts. */
+function sanitizeKey(key: string): string {
+  return key.replace(/[^a-zA-Z0-9.:\-/]/g, '').slice(0, 128) || 'unknown';
+}
+
 // Clean up expired entries every 5 minutes
 setInterval(() => {
   const now = Date.now();
@@ -28,10 +33,11 @@ setInterval(() => {
  * @returns Object with allowed boolean and remaining attempts
  */
 export function checkRateLimit(
-  key: string,
+  rawKey: string,
   maxAttempts: number = 5,
   windowMs: number = 15 * 60 * 1000 // 15 minutes default
 ): { allowed: boolean; remaining: number; resetIn: number } {
+  const key = sanitizeKey(rawKey);
   const now = Date.now();
   const entry = store.get(key);
 
