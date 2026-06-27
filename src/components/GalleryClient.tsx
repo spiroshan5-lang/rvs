@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState, useEffect } from 'react';
 import { GalleryCard } from '@/data/gallery';
 
@@ -36,7 +36,7 @@ export default function GalleryClient({ initialCards }: GalleryClientProps) {
     fetch('/api/cms')
       .then(r => r.json())
       .then(data => {
-        if (Array.isArray(data.galleryCards) && data.galleryCards.length > 0) {
+        if (Array.isArray(data.galleryCards)) {
           setCards(data.galleryCards.map((c: Record<string, string>) => ({
             id: c.id,
             imgUrl: c.imgUrl,
