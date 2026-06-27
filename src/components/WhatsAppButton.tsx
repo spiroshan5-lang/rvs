@@ -61,8 +61,7 @@ I'd like to book a design consultation. Here are my details:
 • Location: ${formState.location}
 • Budget: ${formState.budget}
 
-Message: 
-${formState.message}`;
+${formState.message ? `Message: \n${formState.message}` : 'Message: \n(Not specified)'}`;
 
       const waUrl = 'https://wa.me/919591685465?text=' + encodeURIComponent(textMsg);
       
@@ -263,7 +262,6 @@ ${formState.message}`;
                   <div className="flex flex-col space-y-1.5">
                     <label className="text-[9px] tracking-[0.2em] uppercase text-[var(--fg)]/50 font-light">Tell us about your space</label>
                     <textarea
-                      required
                       rows={3}
                       maxLength={500}
                       value={formState.message}

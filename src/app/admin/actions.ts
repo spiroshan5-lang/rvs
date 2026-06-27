@@ -94,6 +94,7 @@ export async function submitInquiryAction(formData: {
   try {
     const inquiry = {
       ...parsed.data,
+      message: parsed.data.message || '',
       submittedAt: new Date().toISOString(),
       status: 'new',
     };

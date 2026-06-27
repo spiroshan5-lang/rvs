@@ -26,8 +26,9 @@ export const InquirySchema = z.object({
     .max(200, 'Location must be under 200 characters'),
   message: z
     .string()
-    .min(10, 'Message must be at least 10 characters')
-    .max(500, 'Message must be under 500 characters'),
+    .max(500, 'Message must be under 500 characters')
+    .optional()
+    .or(z.literal('')),
 });
 
 export type InquiryInput = z.infer<typeof InquirySchema>;

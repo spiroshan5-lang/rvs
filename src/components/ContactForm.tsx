@@ -141,7 +141,6 @@ export default function ContactForm() {
               </span>
             </div>
             <textarea
-              required
               rows={4}
               maxLength={MAX_MSG}
               value={formState.message}
