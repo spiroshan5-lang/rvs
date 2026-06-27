@@ -15,6 +15,7 @@ export default function ContactForm() {
     email: '',
     phone: '',
     budget: 'Under 5L',
+    service: 'Residential',
     location: '',
     message: '',
   });
@@ -110,6 +111,24 @@ export default function ContactForm() {
                 placeholder="City, State"
                 autoComplete="address-level2"
               />
+            </div>
+          </div>
+
+          <div className="flex flex-col space-y-3">
+            <label className="text-[9px] tracking-[0.2em] uppercase text-[var(--fg)]/50 font-light">Service Interested In</label>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+              {['Residential', 'Commercial', 'Modular Kitchen', 'Turnkey Design', 'Other'].map((serviceOption) => (
+                <button key={serviceOption} type="button"
+                  onClick={() => setFormState({...formState, service: serviceOption})}
+                  className={`py-3 px-2 rounded-xl text-[10px] text-center tracking-wider border transition-all cursor-pointer ${
+                    formState.service === serviceOption 
+                      ? 'bg-[#c9a86a]/10 border-[#c9a86a] text-[var(--gold)]' 
+                      : 'bg-transparent border-[var(--nav-border)] text-[var(--fg)]/60 hover:border-[var(--fg)]/30'
+                  }`}
+                >
+                  {serviceOption}
+                </button>
+              ))}
             </div>
           </div>
 

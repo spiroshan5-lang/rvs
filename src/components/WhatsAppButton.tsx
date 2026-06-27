@@ -17,6 +17,7 @@ export default function WhatsAppButton() {
     email: '',
     phone: '',
     budget: 'Under 5L',
+    service: 'Residential',
     location: '',
     message: '',
   });
@@ -59,6 +60,7 @@ I'd like to book a design consultation. Here are my details:
 • Email: ${formState.email}
 • Phone: ${formState.phone}
 • Location: ${formState.location}
+• Service: ${formState.service}
 • Budget: ${formState.budget}
 
 ${formState.message ? `Message: \n${formState.message}` : 'Message: \n(Not specified)'}`;
@@ -74,6 +76,7 @@ ${formState.message ? `Message: \n${formState.message}` : 'Message: \n(Not speci
         email: '',
         phone: '',
         budget: 'Under 5L',
+        service: 'Residential',
         location: '',
         message: '',
       });
@@ -236,6 +239,26 @@ ${formState.message ? `Message: \n${formState.message}` : 'Message: \n(Not speci
                         placeholder="City, State"
                         autoComplete="address-level2"
                       />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col space-y-2">
+                    <label className="text-[9px] tracking-[0.2em] uppercase text-[var(--fg)]/50 font-light">Service Interested In</label>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      {['Residential', 'Commercial', 'Modular Kitchen', 'Turnkey Design', 'Other'].map(serviceOption => (
+                        <button
+                          key={serviceOption}
+                          type="button"
+                          onClick={() => setFormState({ ...formState, service: serviceOption })}
+                          className={`py-2 px-1 rounded-lg text-[9px] text-center tracking-wide border transition-all cursor-pointer ${
+                            formState.service === serviceOption
+                              ? 'bg-[#c9a86a]/10 border-[#c9a86a] text-[var(--gold)]'
+                              : 'bg-transparent border-[var(--nav-border)] text-[var(--fg)]/60 hover:border-[var(--fg)]/30'
+                          }`}
+                        >
+                          {serviceOption}
+                        </button>
+                      ))}
                     </div>
                   </div>
 

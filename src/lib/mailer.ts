@@ -14,6 +14,7 @@ export async function sendInquiryEmail(data: {
   email: string;
   phone: string;
   budget: string;
+  service: string;
   location: string;
   message: string;
   submittedAt: string;
@@ -24,6 +25,7 @@ export async function sendInquiryEmail(data: {
     email: escapeHtml(data.email),
     phone: escapeHtml(data.phone),
     budget: escapeHtml(data.budget),
+    service: escapeHtml(data.service),
     location: escapeHtml(data.location),
     message: escapeHtml(data.message),
     submittedAt: escapeHtml(data.submittedAt),
@@ -69,6 +71,14 @@ export async function sendInquiryEmail(data: {
           </tr>
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid #e8dcc8;">
+              <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #9a8a6a;">Service</span>
+            </td>
+            <td style="padding: 10px 0; border-bottom: 1px solid #e8dcc8; color: #1a1208; font-size: 14px;">
+              ${safe.service}
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 0; border-bottom: 1px solid #e8dcc8;">
               <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #9a8a6a;">Budget</span>
             </td>
             <td style="padding: 10px 0; border-bottom: 1px solid #e8dcc8;">
@@ -104,7 +114,7 @@ export async function sendInquiryEmail(data: {
   await transporter.sendMail({
     from: `"RVS Craft Interiors" <${process.env.GMAIL_USER}>`,
     to: process.env.NOTIFY_EMAIL || 'spiroshan5@gmail.com',
-    subject: 'New Inquiry from ' + safe.name + ' - ' + safe.budget + ' Budget',
+    subject: 'New ' + safe.service + ' Inquiry from ' + safe.name + ' - ' + safe.budget + ' Budget',
     html,
     replyTo: data.email,
   });

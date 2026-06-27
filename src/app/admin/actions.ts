@@ -76,6 +76,7 @@ export async function submitInquiryAction(formData: {
   email: string;
   phone: string;
   budget: string;
+  service: string;
   location: string;
   message: string;
 }) {

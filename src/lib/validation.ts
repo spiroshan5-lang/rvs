@@ -20,6 +20,7 @@ export const InquirySchema = z.object({
     .max(20, 'Phone number too long')
     .regex(/^[\d\s\+\-\(\)]+$/, 'Phone contains invalid characters'),
   budget: z.enum(['Under 5L', '5-10L', '10-25L', 'Above 25L'] as const),
+  service: z.enum(['Residential', 'Commercial', 'Modular Kitchen', 'Turnkey Design', 'Other'] as const),
   location: z
     .string()
     .min(2, 'Location must be at least 2 characters')

@@ -36,6 +36,7 @@ interface Inquiry {
   phone: string;
   location: string;
   budget: string;
+  service: string;
   message: string;
   status: string;
   submittedAt: string;
@@ -234,7 +235,9 @@ export default function InquiriesPanel({ initialInquiries, initialHeroSlides, in
                         </div>
                         <div className="flex items-center gap-2 flex-shrink-0">
                           <IndianRupee className="w-3 h-3 text-[var(--gold)]/50" />
-                          <span className="text-xs text-[var(--fg)]/50 font-mono">{inq.budget}</span>
+                          <span className="text-xs text-[var(--gold)] font-mono">{inq.service}</span>
+                            <span className="text-[var(--fg)]/20 font-mono">&middot;</span>
+                            <span className="text-xs text-[var(--fg)]/50 font-mono">{inq.budget}</span>
                           {expanded === inq.id ? <ChevronUp className="w-4 h-4 text-[var(--fg)]/30" /> : <ChevronDown className="w-4 h-4 text-[var(--fg)]/30" />}
                         </div>
                       </div>
