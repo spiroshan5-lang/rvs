@@ -1,4 +1,5 @@
-﻿import { NextResponse } from 'next/server';
+﻿export const dynamic = 'force-dynamic';
+import { NextResponse } from 'next/server';
 
 // Public endpoint: returns CMS hero slides and gallery cards
 // Reads from Cloudinary raw JSON configs — no Firebase dependency
