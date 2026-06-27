@@ -84,7 +84,7 @@ export function HeroCMSPanel({ initialSlides }: { initialSlides: CMSHeroSlide[] 
   const [toast, setToast] = useState<{ msg: string; type: 'ok' | 'err' } | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  const [newSlide, setNewSlide] = useState({ url: '', alt: '', order: slides.length + 1 });
+  const [newSlide, setNewSlide] = useState({ url: '', mobileUrl: '', alt: '', order: slides.length + 1 });
   const [editForm, setEditForm] = useState<Partial<CMSHeroSlide>>({});
 
   function showToast(msg: string, type: 'ok' | 'err') {
@@ -98,7 +98,7 @@ export function HeroCMSPanel({ initialSlides }: { initialSlides: CMSHeroSlide[] 
       if (res.success) {
         showToast('Hero slide added. Redeploy or revalidate to see live.', 'ok');
         setShowAdd(false);
-        setNewSlide({ url: '', alt: '', order: slides.length + 2 });
+        setNewSlide({ url: '', mobileUrl: '', alt: '', order: slides.length + 2 });
         setSlides(prev => [...prev, { id: res.id || `hero-${Date.now()}`, ...newSlide }]);
       } else {
         showToast(res.error || 'Failed to add', 'err');
@@ -108,7 +108,7 @@ export function HeroCMSPanel({ initialSlides }: { initialSlides: CMSHeroSlide[] 
 
   function startEdit(slide: CMSHeroSlide) {
     setEditingId(slide.id);
-    setEditForm({ url: slide.url, alt: slide.alt, order: slide.order });
+    setEditForm({ url: slide.url, mobileUrl: slide.mobileUrl || '', alt: slide.alt, order: slide.order });
   }
 
   function handleSaveEdit(id: string) {

@@ -2,6 +2,7 @@
 export interface HeroSlide {
   id: string;
   url: string;
+  mobileUrl?: string;
   alt: string;
 }
 

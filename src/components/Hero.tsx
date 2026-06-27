@@ -9,6 +9,7 @@ import { HERO_SLIDES, HERO_INTERVAL } from '@/data/hero';
 interface HeroSlide {
   id?: string;
   url: string;
+  mobileUrl?: string;
   alt: string;
 }
 
@@ -16,6 +17,14 @@ export default function Hero() {
   const [images, setImages] = useState<HeroSlide[]>(HERO_SLIDES);
   const intervalTime = HERO_INTERVAL;
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Fetch CMS hero slides from Firebase (via public API route)
   useEffect(() => {
@@ -23,7 +32,7 @@ export default function Hero() {
       .then(r => r.json())
       .then(data => {
         if (Array.isArray(data.heroSlides) && data.heroSlides.length > 0) {
-          setImages(data.heroSlides.map((s: Record<string, string>) => ({ id: s.id, url: s.url, alt: s.alt })));
+          setImages(data.heroSlides.map((s: Record<string, string>) => ({ id: s.id, url: s.url, mobileUrl: s.mobileUrl, alt: s.alt })));
         }
       })
       .catch(() => { /* silently fall back to static data */ });
@@ -42,8 +51,8 @@ export default function Hero() {
       <AnimatePresence mode="popLayout">
         {images.length > 0 ? (
           <motion.img
-            key={currentIndex}
-            src={images[currentIndex]?.url}
+            key={`${currentIndex}-${isMobile}`}
+            src={(isMobile && images[currentIndex]?.mobileUrl) ? images[currentIndex].mobileUrl : images[currentIndex]?.url}
             alt={images[currentIndex]?.alt || 'Hero Image'}
             initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}

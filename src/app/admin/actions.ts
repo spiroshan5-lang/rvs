@@ -223,6 +223,7 @@ async function writeCloudinaryJson(publicId: string, data: any[]): Promise<void>
 export interface CMSHeroSlide {
   id: string;
   url: string;
+  mobileUrl?: string;
   alt: string;
   order: number;
 }
@@ -237,7 +238,7 @@ export async function getCMSHeroSlidesAction(): Promise<{ success: boolean; data
   }
 }
 
-export async function addCMSHeroSlideAction(slide: { url: string; alt: string; order: number }) {
+export async function addCMSHeroSlideAction(slide: { url: string; mobileUrl?: string; alt: string; order: number }) {
   if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized' };
 
   const ip = await getClientIP();
@@ -256,7 +257,7 @@ export async function addCMSHeroSlideAction(slide: { url: string; alt: string; o
   }
 }
 
-export async function updateCMSHeroSlideAction(id: string, slide: Partial<{ url: string; alt: string; order: number }>) {
+export async function updateCMSHeroSlideAction(id: string, slide: Partial<{ url: string; mobileUrl: string; alt: string; order: number }>) {
   if (!(await isAuthenticated())) return { success: false, error: 'Unauthorized' };
 
   const ip = await getClientIP();
