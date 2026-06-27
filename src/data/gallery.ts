@@ -1,4 +1,5 @@
-﻿export interface GalleryCard {
+﻿// Updated fallback content for Vercel rebuild
+export interface GalleryCard {
   id: string;
   imgUrl: string;
   alt: string;
