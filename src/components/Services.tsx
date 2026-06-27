@@ -1,9 +1,9 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { ChevronDown, HelpCircle } from 'lucide-react';
 
 interface Service {
   index: string;
@@ -18,7 +18,7 @@ const services: Service[] = [
     index: '01',
     title: 'Residential Interiors',
     description: 'Bespoke living environments tailored to individual stories. We craft private sanctuaries from concept planning to finishing details.',
-    details: ['Villas & Private Estates', 'Luxury Penthouses', 'High-End Apartments', 'Renovations'],
+    details: ['Villas & Estates', 'Luxury Penthouses', 'High-End Apartments', 'Renovations'],
     image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=800&auto=format&fit=crop',
   },
   {
@@ -46,7 +46,7 @@ const services: Service[] = [
     index: '05',
     title: 'Retail & Showrooms',
     description: 'Immersive flagship store layouts designed to engage clients, drive conversions, and communicate your brand identity.',
-    details: ['Flagship Showrooms', 'Luxury Retail Boutiques', 'Experience Centers', 'Window Displays'],
+    details: ['Flagship Showrooms', 'Luxury Boutiques', 'Experience Centers', 'Window Displays'],
     image: 'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?q=80&w=800&auto=format&fit=crop',
   },
   {
@@ -95,138 +95,193 @@ const services: Service[] = [
     index: '12',
     title: 'Material & Finish Curation',
     description: 'Selecting premium surface finishes, stone patterns, exotic veneers, and wallpaper textiles that establish spatial character.',
-    details: ['Stone & Marble Selection', 'Exotic Veneers', 'Wall Coverings', 'Paint & Texture Palette'],
+    details: ['Stone & Marble', 'Exotic Veneers', 'Wall Coverings', 'Texture Palettes'],
     image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800&auto=format&fit=crop',
   },
   {
     index: '13',
     title: 'Modular Wardrobes & Closets',
     description: 'Bespoke bedroom wardrobes, walk-in closets, and innovative storage configurations engineered for style and utility.',
-    details: ['Walk-in Closets', 'Sliding Wardrobes', 'Smart Dresser Storage', 'Premium Glass Doors'],
+    details: ['Walk-in Closets', 'Sliding Wardrobes', 'Smart Drawers', 'Glass Doors'],
     image: 'https://images.unsplash.com/photo-1558882224-cca166733360?q=80&w=800&auto=format&fit=crop',
   },
 ];
 
 export default function Services() {
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [activeIdx, setActiveIdx] = useState(0);
 
-  const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current;
-      const scrollAmount = clientWidth > 768 ? 480 : clientWidth * 0.85;
-      const scrollTo = direction === "left" 
-        ? scrollLeft - scrollAmount 
-        : scrollLeft + scrollAmount;
-      
-      scrollRef.current.scrollTo({ left: scrollTo, behavior: "smooth" });
-    }
-  };
+  // Track parent scroll
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end'],
+  });
+
+  // Dynamic index tracker based on scroll progress
+  useEffect(() => {
+    return scrollYProgress.onChange((v) => {
+      const current = Math.min(Math.floor(v * services.length), services.length - 1);
+      setActiveIdx(current >= 0 ? current : 0);
+    });
+  }, [scrollYProgress]);
+
+  // Fade out scroll indicator as user scrolls down
+  const indicatorOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
+  const indicatorY = useTransform(scrollYProgress, [0, 0.08], [0, 20]);
+
+  // Left-side architectural ruler slider height
+  const rulerHeight = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
 
   return (
     <section
+      ref={containerRef}
       id="services"
-      className="py-24 md:py-36 px-6 md:px-12 relative overflow-hidden transition-colors duration-300" style={{ background: "var(--bg)", color: "var(--fg)" }}
+      className="relative z-10 w-full"
+      style={{ height: (services.length * 80) + "vh", minHeight: "600vh", background: "var(--bg)" }}
     >
-      <style dangerouslySetInnerHTML={{__html: "\n        .scrollbar-none::-webkit-scrollbar {\n          display: none;\n        }\n        .scrollbar-none {\n          -ms-overflow-style: none;\n          scrollbar-width: none;\n        }\n      "}} />
+      {/* Sticky Fullscreen Wrapper */}
+      <div className="sticky top-0 left-0 w-full h-[100svh] overflow-hidden flex items-center justify-center">
+        {/* Dynamic Abstract Background Gradient Overlay */}
+        <div className="absolute inset-0 bg-radial-gradient opacity-10 pointer-events-none" style={{ background: "radial-gradient(circle, var(--gold) 0%, transparent 70%)" }} />
 
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-16 md:mb-24 gap-6">
-          <div className="max-w-xl">
-            <span className="text-[10px] tracking-[0.3em] uppercase font-light text-[var(--gold)] mb-4 block">
-              Capabilities
-            </span>
-            <h2 className="font-serif text-3xl md:text-5xl font-light tracking-wide leading-tight">
-              Spatial Solutions
-            </h2>
-          </div>
+        {/* 1. Left-Side Architectural Progress Ruler (Hidden on Mobile) */}
+        <div className="absolute left-10 lg:left-16 top-1/2 -translate-y-1/2 hidden md:flex flex-col items-center gap-4 z-30">
+          <span className="text-[10px] font-mono tracking-widest text-[var(--gold)]">01</span>
           
-          <div className="flex flex-col sm:flex-row sm:items-center gap-6 lg:mt-0">
-            <p className="text-xs md:text-sm font-light text-[var(--fg-muted)] tracking-wider max-w-xs leading-relaxed">
-              From spatial consultations to architectural construction supervision, we deliver uncompromising quality.
-            </p>
-            
-            {/* Navigation Arrows */}
-            <div className="flex items-center gap-3 self-start sm:self-center">
-              <button 
-                onClick={() => scroll("left")}
-                className="w-10 h-10 rounded-full border border-[var(--gold-border)] hover:border-[#c9a86a] bg-transparent flex items-center justify-center text-[var(--gold)] hover:bg-[#c9a86a]/10 active:opacity-75 transition-all duration-300 cursor-pointer"
-                aria-label="Scroll Left"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <button 
-                onClick={() => scroll("right")}
-                className="w-10 h-10 rounded-full border border-[var(--gold-border)] hover:border-[#c9a86a] bg-transparent flex items-center justify-center text-[var(--gold)] hover:bg-[#c9a86a]/10 active:opacity-75 transition-all duration-300 cursor-pointer"
-                aria-label="Scroll Right"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
+          <div className="w-[1.5px] h-[250px] bg-[var(--fg)]/10 relative rounded-full overflow-hidden">
+            <motion.div 
+              style={{ height: rulerHeight }}
+              className="absolute top-0 left-0 w-full bg-[var(--gold)]" 
+            />
           </div>
+
+          <span className="text-[10px] font-mono tracking-widest text-[var(--fg)]/30">
+            {String(services.length).padStart(2, "0")}
+          </span>
         </div>
 
-        {/* Services Horizontal Scroll Wrapper */}
-        <div 
-          ref={scrollRef}
-          className="flex overflow-x-auto snap-x snap-mandatory flex-nowrap scrollbar-none gap-6 md:gap-8 pb-12 pt-2 scroll-smooth"
-        >
-          {services.map((service, index) => (
-            <motion.div
-              key={service.index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="w-[85vw] sm:w-[450px] shrink-0 snap-start p-8 md:p-10 border border-[var(--gold-border)] rounded-[2rem]  backdrop-blur-sm  transition-colors duration-500 flex flex-col justify-between min-h-[520px] group relative overflow-hidden" style={{ background: "var(--bg-alt)" }}
-            >
-              {/* Top Row: Index & Dot */}
-              <div className="flex justify-between items-center mb-6">
-                <span className="font-serif text-sm text-[var(--gold)] select-none font-medium">
-                  {service.index}
-                </span>
-                <span className="w-1.5 h-1.5 bg-[var(--fg)]/25 group-hover:bg-[var(--gold)] group-hover:scale-150 rounded-full transition-all duration-500" />
-              </div>
+        {/* 2. Page Title Header (Floating Top-Left) */}
+        <div className="absolute left-6 md:left-32 top-8 md:top-14 z-30">
+          <span className="text-[9px] tracking-[0.35em] uppercase font-light text-[var(--gold)] mb-1 block">
+            Capabilities
+          </span>
+          <h2 className="font-serif text-xl md:text-3xl font-light tracking-wide text-[var(--fg)]">
+            Spatial Architecture
+          </h2>
+        </div>
 
-              {/* Service Image */}
-              <div className="relative w-full h-[60vw] sm:h-56 mb-6 overflow-hidden rounded-[1.5rem] bg-[var(--gold-muted)]">
-                <Image
-                  src={service.image}
-                  alt={service.title}
-                  fill
-                  className="object-cover transition-transform duration-1000 scale-100 group-hover:scale-105 filter brightness-[0.8] hover:brightness-[0.9]"
-                  sizes="(max-width: 768px) 100vw, 450px"
-                />
-                <div className="absolute inset-0 border border-[var(--gold-border)] group-hover:border-[var(--gold-border)] transition-colors duration-500 rounded-[1.5rem]" />
-              </div>
+        {/* 3. The 3D Spatial Walkthrough Stack */}
+        <div className="relative w-full h-full flex items-center justify-center">
+          {services.map((service, i) => {
+            const step = 1 / services.length;
+            const focus = i * step;
 
-              {/* Service Info */}
-              <div className="flex-grow flex flex-col justify-end space-y-4">
-                <h3 className="font-serif text-xl md:text-2xl font-light tracking-wide text-[var(--fg)] group-hover:text-[var(--gold)] transition-colors duration-300">
-                  {service.title}
-                </h3>
-                <p className="text-xs font-light text-[var(--fg-muted)] leading-relaxed tracking-wide">
-                  {service.description}
-                </p>
-                
-                {/* Details pill tags */}
-                <div className="flex flex-wrap gap-1.5 pt-2">
-                  {service.details.map((detail, dIdx) => (
-                    <span 
-                      key={dIdx} 
-                      className="text-[9px] tracking-wider uppercase font-sans font-medium px-2 py-0.5 rounded-full border border-[var(--gold-border)]/40 bg-[var(--bg)]/40 text-[var(--fg-muted)] group-hover:border-[var(--gold-border)] transition-all duration-500"
-                    >
-                      {detail}
-                    </span>
-                  ))}
+            // Framer Motion transforms for 3D walkthrough depth
+            // Entry -> Focus -> Exit (passes through screen)
+            const scale = useTransform(
+              scrollYProgress,
+              [focus - step * 1.5, focus - step * 0.4, focus, focus + step * 0.6, focus + step * 1.2],
+              [0.35, 0.7, 1.0, 1.5, 2.5]
+            );
+
+            const opacity = useTransform(
+              scrollYProgress,
+              [focus - step * 1.5, focus - step * 0.4, focus, focus + step * 0.5, focus + step * 1.0],
+              [0, 0.9, 1.0, 0.9, 0]
+            );
+
+            const zIndex = activeIdx === i ? 20 : i < activeIdx ? 10 : 5;
+
+            // Parallax 3D tilt movement on translation
+            const rotateY = useTransform(
+              scrollYProgress,
+              [focus - step * 1.5, focus, focus + step * 1.2],
+              [10, 0, -10]
+            );
+
+            return (
+              <motion.div
+                key={service.index}
+                style={{
+                  scale,
+                  opacity,
+                  zIndex,
+                  rotateY,
+                  transformStyle: "preserve-3d",
+                  perspective: "1200px",
+                }}
+                className="absolute w-[90vw] sm:w-[650px] md:w-[850px] h-[65svh] sm:h-[480px] rounded-[2rem] border border-[var(--gold-border)]/35 bg-[var(--bg-alt)]/90 backdrop-blur-xl flex flex-col sm:flex-row overflow-hidden shadow-2xl pointer-events-auto"
+              >
+                {/* Left side: Content details */}
+                <div className="w-full sm:w-1/2 p-6 md:p-10 flex flex-col justify-between h-[50%] sm:h-full relative z-10">
+                  <div>
+                    {/* Index row */}
+                    <div className="flex justify-between items-center mb-4 sm:mb-6">
+                      <span className="font-mono text-xs text-[var(--gold)] font-medium">
+                        {service.index} / {String(services.length).padStart(2, "0")}
+                      </span>
+                      <span className="w-2 h-2 bg-[var(--gold)] rounded-full animate-pulse" />
+                    </div>
+
+                    <h3 className="font-serif text-xl sm:text-2xl md:text-3xl font-light tracking-wide text-[var(--fg)] mb-3 sm:mb-4">
+                      {service.title}
+                    </h3>
+                    <p className="text-xs font-light text-[var(--fg-muted)] leading-relaxed tracking-wide">
+                      {service.description}
+                    </p>
+                  </div>
+
+                  {/* Details pill tags */}
+                  <div className="flex flex-wrap gap-2 pt-4">
+                    {service.details.map((detail, dIdx) => (
+                      <span
+                        key={dIdx}
+                        className="text-[9px] tracking-wider uppercase font-sans font-medium px-3 py-1 rounded-full border border-[var(--gold-border)]/45 bg-[var(--bg)]/50 text-[var(--fg-muted)]"
+                      >
+                        {detail}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* Hover bottom line accent */}
-              <div className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#c9a86a] transition-all duration-500 group-hover:w-full" />
-            </motion.div>
-          ))}
+                {/* Right side: High-res image */}
+                <div className="w-full sm:w-1/2 h-[50%] sm:h-full relative overflow-hidden bg-[var(--gold-muted)]">
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    fill
+                    priority={i < 3}
+                    className="object-cover filter brightness-[0.85] hover:brightness-[0.95] transition-all duration-700"
+                    sizes="(max-width: 640px) 100vw, 425px"
+                  />
+                  {/* Subtle inner overlay border accent */}
+                  <div className="absolute inset-0 border-l border-[var(--gold-border)]/20 pointer-events-none hidden sm:block" />
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
+
+        {/* 4. Highlighted "Scroll / Swipe to Explore" Guide indicator */}
+        <motion.div
+          style={{ opacity: indicatorOpacity, y: indicatorY }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2.5 pointer-events-none"
+        >
+          <div className="px-5 py-2.5 rounded-full border border-[var(--gold-border)] bg-[var(--bg-alt)]/80 backdrop-blur-md shadow-lg flex items-center gap-2.5 animate-pulse">
+            {/* Pulsing Dot */}
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />
+            <span className="text-[10px] tracking-[0.25em] uppercase font-semibold text-[var(--gold)]">
+              Scroll to Explore
+            </span>
+          </div>
+
+          <motion.div
+            animate={{ y: [0, 6, 0] }}
+            transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+          >
+            <ChevronDown className="w-4 h-4 text-[var(--gold)] opacity-75" />
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
