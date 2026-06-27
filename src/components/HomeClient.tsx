@@ -7,6 +7,7 @@ import Hero from '@/components/Hero';
 import StudioIntro from '@/components/StudioIntro';
 import WhyChooseUs from '@/components/WhyChooseUs';
 import DesignProcess from '@/components/DesignProcess';
+import ScrollReveal from '@/components/ScrollReveal';
 import Footer from '@/components/Footer';
 
 export default function HomeClient() {
@@ -24,11 +25,20 @@ export default function HomeClient() {
       */}
       <div className={isLoading ? 'invisible h-screen overflow-hidden' : 'visible'}>
         <Navbar />
-        <main>
+        <main className="overflow-x-hidden">
           <Hero />
-          <StudioIntro />
-          <WhyChooseUs />
-          <DesignProcess />
+          
+          <ScrollReveal>
+            <StudioIntro />
+          </ScrollReveal>
+          
+          <ScrollReveal>
+            <WhyChooseUs />
+          </ScrollReveal>
+          
+          <ScrollReveal>
+            <DesignProcess />
+          </ScrollReveal>
         </main>
         <Footer />
       </div>
