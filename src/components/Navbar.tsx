@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/set-state-in-effect, @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable react-hooks/set-state-in-effect, @typescript-eslint/no-unused-vars */
 "use client"
 
 import React, { useEffect, useState } from "react"
@@ -30,7 +30,7 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ─── DESKTOP NAV PILL ─── */}
+      {/* â”€â”€â”€ DESKTOP NAV PILL â”€â”€â”€ */}
       <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 hidden md:block">
         <div
           style={{ background: 'var(--nav-bg)', borderColor: 'var(--nav-border)' }}
@@ -85,7 +85,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ─── MOBILE HEADER — theme-aware glassmorphism ─── */}
+      {/* â”€â”€â”€ MOBILE HEADER â€” theme-aware glassmorphism â”€â”€â”€ */}
       <header
         style={{
           background: theme === 'light'
@@ -117,7 +117,7 @@ export default function Navbar() {
         </button>
       </header>
 
-      {/* ─── MOBILE DRAWER — glassmorphism overlay ─── */}
+      {/* â”€â”€â”€ MOBILE DRAWER â€” glassmorphism overlay â”€â”€â”€ */}
       <AnimatePresence>
         {isOpen && (
           <motion.div

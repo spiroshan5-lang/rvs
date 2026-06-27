@@ -1,14 +1,12 @@
-import { MetadataRoute } from 'next';
+﻿import { MetadataRoute } from 'next';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://rvscraftinteriors.com';
-  
-  const routes = ['', '/services', '/gallery', '/contact'].map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: route === '' ? 1.0 : 0.8,
-  }));
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rvs-wheat.vercel.app';
 
-  return routes;
+  return [
+    { url: baseUrl,               lastModified: new Date(), changeFrequency: 'weekly',  priority: 1.0 },
+    { url: `/services`,  lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    { url: `/gallery`,   lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.8 },
+    { url: `/contact`,   lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+  ];
 }

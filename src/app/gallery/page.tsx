@@ -1,13 +1,21 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import GalleryClient from '@/components/GalleryClient';
 import { GALLERY_CARDS } from '@/data/gallery';
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://rvs-wheat.vercel.app';
+
 export const metadata: Metadata = {
-  title: 'Gallery | RVS Craft Interiors | Luxury Spatial Architecture Studio',
-  description: 'Step into the spatial anthology of RVS Craft Interiors. Explore our luxury interior portfolio featuring rich material details, custom layout compositions, and lighting design.',
-  keywords: ['interior design portfolio', 'luxury spatial architecture gallery', 'RVS portfolio', 'residential design photos'],
+  title: 'Gallery | Our Portfolio of Luxury Interiors',
+  description: 'Step into the spatial anthology of RVS Craft Interiors. Explore our luxury interior portfolio featuring rich material details, custom layout compositions, and bespoke lighting design in Bengaluru.',
+  keywords: ['interior design portfolio Bengaluru', 'luxury spatial architecture gallery', 'RVS Craft Interiors portfolio', 'residential design photos'],
+  alternates: { canonical: `/gallery` },
+  openGraph: {
+    title: 'Gallery | RVS Craft Interiors Portfolio',
+    description: 'Explore our curated portfolio of luxury residential and hospitality interiors.',
+    images: [{ url: 'https://res.cloudinary.com/dbxbpvn8j/image/upload/v1782543002/rvs_cms/hero_kitchen.jpg', width: 1200, height: 630, alt: 'RVS Craft Interiors Gallery' }],
+  },
 };
 
 export default function GalleryPage() {
