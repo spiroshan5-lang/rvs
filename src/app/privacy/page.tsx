@@ -76,7 +76,7 @@ export default function PrivacyPage() {
                 For data access requests, corrections, or general questions regarding our privacy integrations, please contact us at:
               </p>
               <div className="font-mono text-xs p-4 bg-[var(--bg-alt)] border border-[var(--gold-border)]/35 rounded-lg space-y-1">
-                <p>**Email**: queriesrvs@gmail.com</p>
+                <p>**Email**: rvsqueries@gmail.com</p>
                 <p>**Call**: +91 9591685465</p>
                 <p>**Address**: Bengaluru, Karnataka, India</p>
               </div>
