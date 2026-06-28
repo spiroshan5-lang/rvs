@@ -1,9 +1,10 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 // Removed next/image import
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
+import { useLenis } from 'lenis/react';
 
 interface Service {
   index: string;
@@ -110,6 +111,24 @@ const services: Service[] = [
 export default function Services() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIdx, setActiveIdx] = useState(0);
+  const activeIdxRef = useRef(0);
+  const isTransitioningRef = useRef(false);
+  const isScrollingTo = useRef(false);
+  const lenisRef = useRef<any>(null);
+
+  // Sync state to ref
+  useEffect(() => {
+    activeIdxRef.current = activeIdx;
+  }, [activeIdx]);
+
+  // Capture lenis instance without triggering state updates on scroll
+  const lenis = useLenis((instance) => {
+    lenisRef.current = instance;
+  });
+
+  if (lenis && !lenisRef.current) {
+    lenisRef.current = lenis;
+  }
 
   // Track parent scroll
   const { scrollYProgress } = useScroll({
@@ -119,12 +138,115 @@ export default function Services() {
 
   // Dynamic index tracker using type-safe useMotionValueEvent
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
+    if (isScrollingTo.current) return;
     const current = Math.min(Math.floor(v * services.length), services.length - 1);
     const safeIndex = current >= 0 ? current : 0;
-    if (safeIndex !== activeIdx) {
+    if (safeIndex !== activeIdxRef.current) {
       setActiveIdx(safeIndex);
     }
   });
+
+  // Snapped page-by-page scrolling interceptor bound once on mount
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    let touchStartY = 0;
+
+    const handleScrollAttempt = (direction: 1 | -1) => {
+      const currentIdx = activeIdxRef.current;
+      const nextIdx = currentIdx + direction;
+      const lenisInstance = lenisRef.current;
+
+      if (nextIdx >= 0 && nextIdx < services.length && lenisInstance) {
+        isTransitioningRef.current = true;
+        isScrollingTo.current = true;
+        setActiveIdx(nextIdx);
+
+        const containerTop = container.offsetTop;
+        const containerHeight = container.offsetHeight;
+        const viewportHeight = window.innerHeight;
+        const scrollRange = containerHeight - viewportHeight;
+        
+        // Calculate target scroll corresponding to the exact progress of nextIdx card
+        const targetScroll = containerTop + (nextIdx / (services.length - 1)) * scrollRange;
+
+        lenisInstance.scrollTo(targetScroll, {
+          lock: true,
+          duration: 0.8,
+          onComplete: () => {
+            isTransitioningRef.current = false;
+            isScrollingTo.current = false;
+          }
+        });
+
+        return true;
+      }
+      return false;
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      const rect = container.getBoundingClientRect();
+      const isStickyActive = rect.top <= 5 && rect.bottom >= window.innerHeight - 5;
+
+      if (!isStickyActive) return;
+
+      const direction = e.deltaY > 0 ? 1 : -1;
+      
+      if (isTransitioningRef.current) {
+        e.preventDefault();
+        return;
+      }
+
+      const currentIdx = activeIdxRef.current;
+      if (currentIdx === 0 && direction === -1) return;
+      if (currentIdx === services.length - 1 && direction === 1) return;
+
+      e.preventDefault();
+      handleScrollAttempt(direction);
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const rect = container.getBoundingClientRect();
+      const isStickyActive = rect.top <= 5 && rect.bottom >= window.innerHeight - 5;
+
+      if (!isStickyActive) return;
+
+      const touchEndY = e.touches[0].clientY;
+      const deltaY = touchStartY - touchEndY;
+      
+      if (Math.abs(deltaY) < 40) return; // 40px swipe threshold
+
+      const direction = deltaY > 0 ? 1 : -1;
+
+      if (isTransitioningRef.current) {
+        e.preventDefault();
+        return;
+      }
+
+      const currentIdx = activeIdxRef.current;
+      if (currentIdx === 0 && direction === -1) return;
+      if (currentIdx === services.length - 1 && direction === 1) return;
+
+      e.preventDefault();
+      touchStartY = touchEndY; 
+      handleScrollAttempt(direction);
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+    };
+  }, []);
 
   // Fade out scroll indicator as user scrolls down
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
