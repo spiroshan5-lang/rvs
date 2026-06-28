@@ -25,45 +25,50 @@ export default function TermsPage() {
             <section className="space-y-3">
               <h2 className="font-serif text-lg text-[var(--fg)] tracking-wide font-medium">1. Agreement to Terms</h2>
               <p>
-                Welcome to RVS Craft Interiors. By accessing our website and engaging with our spatial design, space planning, modular kitchen, or turnkey project execution capabilities, you agree to comply with and be bound by the following Terms &amp; Conditions.
+                Welcome to RVS Craft Interiors. These Terms govern your use of our website and our professional services, including residential interior design, space planning layout curation, custom modular kitchens, and turnkey project executions.
               </p>
             </section>
 
             <section className="space-y-3">
-              <h2 className="font-serif text-lg text-[var(--fg)] tracking-wide font-medium">2. Professional Services &amp; Consultations</h2>
+              <h2 className="font-serif text-lg text-[var(--fg)] tracking-wide font-medium">2. Consultations &amp; Submissions</h2>
               <p>
-                Our studio provides architectural interior design consultations, 2D/3D layout drafting, and turnkey execution management. While we make every attempt to ensure timelines and deliverables align perfectly with proposal agreements, schedules may occasionally fluctuate due to vendor procurements, site conditions, or design adjustments requested during site supervisions.
+                By submitting inquiries through our contact forms, you agree to provide accurate and active email and phone contact details. Submission details are processed server-side via Firebase RTDB to initialize your design consultation file.
               </p>
             </section>
 
             <section className="space-y-3">
-              <h2 className="font-serif text-lg text-[var(--fg)] tracking-wide font-medium">3. Intellectual Property Rights</h2>
+              <h2 className="font-serif text-lg text-[var(--fg)] tracking-wide font-medium">3. Intellectual Property of Designs</h2>
               <p>
-                All content on this site (including images, spatial text layouts, and project names) and all design deliverables (including false ceiling blueprints, furniture sketches, space zoning plans, and technical layouts) created by RVS Craft Interiors remain our exclusive intellectual property. 
+                All materials, including website content, layout images served via Cloudinary, and spatial blueprints, are owned by RVS Craft Interiors. 
               </p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>
+                  Any custom 2D layouts, false ceiling diagrams, lighting systems, or 3D furniture renders supplied during your project remain our intellectual property.
+                </li>
+                <li>
+                  You are granted a license to use these files solely for execution at the contracted project site. You may not distribute, replicate, or resell our designs for external projects without our written authorization.
+                </li>
+              </ul>
+            </section>
+
+            <section className="space-y-3">
+              <h2 className="font-serif text-lg text-[var(--fg)] tracking-wide font-medium">4. Execution Milestones &amp; Payments</h2>
               <p>
-                You are granted a limited license to implement the designs at the specific project site contracted. You may not reproduce, resell, or distribute these drawings or visual assets for other residential or commercial purposes without our explicit written consent.
+                Turnkey project supervision is structured around phased milestones. Payments are non-refundable once site execution steps or factory wood/materials production stages have been initiated. Timelines discussed are estimations and may adapt to material supplies or site conditions in Bengaluru.
               </p>
             </section>
 
             <section className="space-y-3">
-              <h2 className="font-serif text-lg text-[var(--fg)] tracking-wide font-medium">4. Payment &amp; Procurement Terms</h2>
+              <h2 className="font-serif text-lg text-[var(--fg)] tracking-wide font-medium">5. Third-Party Integrations Liability</h2>
               <p>
-                All payments for consultations, design phases, and material procurements must be completed in accordance with the milestones outlined in your custom project proposal. Materials will only be procured and dispatched to sites after the corresponding milestone payments are received. Payments are non-refundable once design and material production has commenced.
+                We use secure integrations like Cloudinary, Firebase, and WhatsApp to optimize your experience. While we select reliable providers, we are not responsible for global network outages or API faults in these external services.
               </p>
             </section>
 
             <section className="space-y-3">
-              <h2 className="font-serif text-lg text-[var(--fg)] tracking-wide font-medium">5. Liability Limitations</h2>
+              <h2 className="font-serif text-lg text-[var(--fg)] tracking-wide font-medium">6. Governing Law</h2>
               <p>
-                RVS Craft Interiors coordinates with premium third-party vendor agencies, structural contractors, and materials suppliers. While we supervise all site executions to ensure standard specifications are met, we are not directly liable for defects, delays, or structural damage caused directly by external vendor builders or forces outside our immediate operational control.
-              </p>
-            </section>
-
-            <section className="space-y-3">
-              <h2 className="font-serif text-lg text-[var(--fg)] tracking-wide font-medium">6. Jurisdiction &amp; Governing Law</h2>
-              <p>
-                These Terms &amp; Conditions are governed by and construed in accordance with the laws of India. Any disputes, grievances, or legal claims arising from our design agreements or web services will be subject exclusively to the jurisdiction of the courts located in Bengaluru, Karnataka, India.
+                These Terms are governed by the laws of India. Any claims, disagreements, or legal proceedings regarding our web assets or physical executions will be subject exclusively to the courts of Bengaluru, Karnataka, India.
               </p>
             </section>
           </div>
