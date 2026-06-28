@@ -97,7 +97,11 @@ export default function Footer({ showCTA = true }: FooterProps) {
 
         <div className="flex flex-col md:flex-row items-center md:items-start justify-between pt-8 border-t text-[10px] tracking-widest uppercase font-light text-center md:text-left" style={{ borderColor: 'var(--section-divider)', color: 'var(--fg-muted)' }}>
           <span className="mb-4 md:mb-0">RVS Craft Interiors &copy; 2026. All rights reserved.</span>
-          <span className="mt-2 md:mt-0 hover:opacity-70 transition-opacity duration-300 cursor-pointer">Privacy Policy &amp; Terms</span>
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mt-2 md:mt-0">
+            <Link href="/privacy" className="hover:text-[var(--gold)] transition-colors duration-300">Privacy Policy</Link>
+            <span className="hidden sm:inline opacity-30">|</span>
+            <Link href="/terms" className="hover:text-[var(--gold)] transition-colors duration-300">Terms &amp; Conditions</Link>
+          </div>
         </div>
       </div>
     </footer>
