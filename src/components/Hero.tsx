@@ -49,7 +49,7 @@ export default function Hero() {
   const backgroundLayer = (
     <div className="absolute inset-0 w-full h-full z-0" style={{ background: 'var(--bg)' }}>
       <AnimatePresence mode="popLayout">
-        {images.length > 0 ? (
+        {images.length > 0 && (
           <motion.img
             key={`${currentIndex}-${isMobile}`}
             src={(isMobile && images[currentIndex]?.mobileUrl) ? images[currentIndex].mobileUrl : images[currentIndex]?.url}
@@ -60,10 +60,6 @@ export default function Hero() {
             transition={{ duration: 1.5, ease: 'easeInOut' }}
             className="absolute inset-0 w-full h-full object-cover"
           />
-        ) : (
-          <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
-            <source src="/hero-video.mp4" type="video/mp4" />
-          </video>
         )}
       </AnimatePresence>
     </div>
