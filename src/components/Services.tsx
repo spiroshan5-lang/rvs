@@ -68,7 +68,7 @@ const services: Service[] = [
     title: 'Space Planning & Layouts',
     description: 'Precision zoning and traffic flow optimization. We draft comprehensive layout blueprints and conceptual floor plans.',
     details: ['Zoning Blueprints', 'Traffic Flow Analysis', 'Conceptual Floor Plans', 'Space Optimization'],
-    image: 'https://images.unsplash.com/photo-1503387762-592dec583e72?q=80&w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?q=80&w=800&auto=format&fit=crop',
   },
   {
     index: '09',
@@ -103,7 +103,7 @@ const services: Service[] = [
     title: 'Modular Wardrobes & Closets',
     description: 'Bespoke bedroom wardrobes, walk-in closets, and innovative storage configurations engineered for style and utility.',
     details: ['Walk-in Closets', 'Sliding Wardrobes', 'Smart Drawers', 'Glass Doors'],
-    image: 'https://images.unsplash.com/photo-1558882224-cca166733360?q=80&w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?q=80&w=800&auto=format&fit=crop',
   },
 ];
 
