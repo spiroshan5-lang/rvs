@@ -156,10 +156,10 @@ export default function GalleryClient({ initialCards }: GalleryClientProps) {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3">
-              <a href="https://www.instagram.com/rvs_crafted_interiors?igsh=eHRwcWtzNms4dmw5" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full border text-[10px] sm:text-[11px] tracking-[0.2em] uppercase font-light transition-all duration-300 hover:opacity-80 w-full sm:w-auto" style={{ borderColor: 'var(--gold-border)', color: 'var(--fg)', background: 'transparent' }}>
+              <a href="https://www.instagram.com/rvs_craftedinteriors/?utm_source=ig_web_button_share_sheet" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full border text-[10px] sm:text-[11px] tracking-[0.2em] uppercase font-light transition-all duration-300 hover:opacity-80 w-full sm:w-auto" style={{ borderColor: 'var(--gold-border)', color: 'var(--fg)', background: 'transparent' }}>
                 <InstagramIcon className="w-3.5 h-3.5 text-[var(--gold)]" />Instagram
               </a>
-              <a href="https://www.facebook.com/share/1JbpJqQkmm/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full border text-[10px] sm:text-[11px] tracking-[0.2em] uppercase font-light transition-all duration-300 hover:opacity-80 w-full sm:w-auto" style={{ borderColor: 'var(--gold-border)', color: 'var(--fg)', background: 'transparent' }}>
+              <a href="https://www.facebook.com/share/1Gqkm9RypS/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full border text-[10px] sm:text-[11px] tracking-[0.2em] uppercase font-light transition-all duration-300 hover:opacity-80 w-full sm:w-auto" style={{ borderColor: 'var(--gold-border)', color: 'var(--fg)', background: 'transparent' }}>
                 <FacebookIcon className="w-3.5 h-3.5 text-[var(--gold)]" />Facebook
               </a>
               <a href="https://wa.me/919591685465" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-[10px] sm:text-[11px] tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:opacity-90 w-full sm:w-auto" style={{ background: 'var(--gold)', color: '#0B0B0B' }}>

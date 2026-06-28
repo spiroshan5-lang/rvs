@@ -85,7 +85,7 @@ export default function Footer({ showCTA = true }: FooterProps) {
           <div className="flex flex-col space-y-4">
             <span className="text-[10px] tracking-[0.2em] uppercase font-medium" style={{ color: 'var(--gold)' }}>Connect</span>
             <div className="flex flex-col space-y-2 text-xs font-light">
-              {[{ label: 'WhatsApp', href: 'https://wa.me/919591685465' }, { label: 'Instagram', href: 'https://www.instagram.com/rvs_crafted_interiors?igsh=eHRwcWtzNms4dmw5' }, { label: 'Facebook', href: 'https://www.facebook.com/share/1JbpJqQkmm/' }].map(s => (
+              {[{ label: 'WhatsApp', href: 'https://wa.me/919591685465' }, { label: 'Instagram', href: 'https://www.instagram.com/rvs_craftedinteriors/?utm_source=ig_web_button_share_sheet' }, { label: 'Facebook', href: 'https://www.facebook.com/share/1Gqkm9RypS/' }].map(s => (
                 <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" className="transition-colors duration-300 py-0.5 flex items-center justify-between group hover:opacity-70" style={{ color: 'var(--fg)' }}>
                   <span>{s.label}</span>
                   <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ color: 'var(--gold)' }} />

@@ -78,7 +78,7 @@ export default function ContactPage() {
                 </a>
 
                 {/* Instagram */}
-                <a href="https://www.instagram.com/rvs_crafted_interiors?igsh=eHRwcWtzNms4dmw5" target="_blank" rel="noopener noreferrer" className="flex items-start space-x-4 group">
+                <a href="https://www.instagram.com/rvs_craftedinteriors/?utm_source=ig_web_button_share_sheet" target="_blank" rel="noopener noreferrer" className="flex items-start space-x-4 group">
                   <div className="w-10 h-10 rounded-full border border-[var(--gold-border)] flex items-center justify-center flex-shrink-0 mt-1 group-hover:border-[var(--gold)] transition-colors duration-300">
                     <svg className="w-4 h-4 text-[var(--gold)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
@@ -90,13 +90,13 @@ export default function ContactPage() {
                     <h3 className="text-[10px] tracking-[0.2em] uppercase font-medium text-[var(--gold)] mb-0.5">Instagram</h3>
                     <span className="text-[9px] text-[var(--fg)]/40 block mb-1 font-mono uppercase tracking-wider">Click to follow us</span>
                     <span className="text-base font-light group-hover:text-[var(--gold)] transition-colors duration-300">
-                      @rvs_crafted_interiors
+                      @rvs_craftedinteriors
                     </span>
                   </div>
                 </a>
 
                 {/* Facebook */}
-                <a href="https://www.facebook.com/share/1JbpJqQkmm/" target="_blank" rel="noopener noreferrer" className="flex items-start space-x-4 group">
+                <a href="https://www.facebook.com/share/1Gqkm9RypS/" target="_blank" rel="noopener noreferrer" className="flex items-start space-x-4 group">
                   <div className="w-10 h-10 rounded-full border border-[var(--gold-border)] flex items-center justify-center flex-shrink-0 mt-1 group-hover:border-[var(--gold)] transition-colors duration-300">
                     <svg className="w-4 h-4 text-[var(--gold)]" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z"/>
