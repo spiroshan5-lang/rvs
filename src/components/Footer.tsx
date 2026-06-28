@@ -60,9 +60,9 @@ export default function Footer({ showCTA = true }: FooterProps) {
           <div className="flex flex-col space-y-4">
             <span className="text-[10px] tracking-[0.2em] uppercase font-medium" style={{ color: 'var(--gold)' }}>Contact Us</span>
             <div className="flex flex-col space-y-3">
-              <a href="mailto:rvsqueries@gmail.com" className="flex items-center space-x-3 text-xs font-light transition-colors duration-300 hover:opacity-80" style={{ color: 'var(--fg)' }}>
+              <a href="mailto:queriesrvs@gmail.com" className="flex items-center space-x-3 text-xs font-light transition-colors duration-300 hover:opacity-80" style={{ color: 'var(--fg)' }}>
                 <Mail className="w-3.5 h-3.5" style={{ color: 'var(--gold)' }} />
-                <span>rvsqueries@gmail.com</span>
+                <span>queriesrvs@gmail.com</span>
               </a>
               <a href="tel:+919591685465" className="flex items-center space-x-3 text-xs font-light transition-colors duration-300 hover:opacity-80" style={{ color: 'var(--fg)' }}>
                 <Phone className="w-3.5 h-3.5" style={{ color: 'var(--gold)' }} />

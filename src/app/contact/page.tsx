@@ -34,14 +34,14 @@ export default function ContactPage() {
 
               <div className="flex flex-col space-y-6 pt-8 border-t border-[var(--gold-border)]">
                 {/* Email Us */}
-                <a href="mailto:rvsqueries@gmail.com" className="flex items-start space-x-4 group">
+                <a href="mailto:queriesrvs@gmail.com" className="flex items-start space-x-4 group">
                   <div className="w-10 h-10 rounded-full border border-[var(--gold-border)] flex items-center justify-center flex-shrink-0 mt-1 group-hover:border-[var(--gold)] transition-colors duration-300">
                     <Mail className="w-4 h-4 text-[var(--gold)]" />
                   </div>
                   <div>
                     <h3 className="text-[10px] tracking-[0.2em] uppercase font-medium text-[var(--gold)] mb-0.5">Email Us</h3>
                     <span className="text-base font-light group-hover:text-[var(--gold)] transition-colors duration-300">
-                      rvsqueries@gmail.com
+                      queriesrvs@gmail.com
                     </span>
                   </div>
                 </a>

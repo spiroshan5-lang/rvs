@@ -75,7 +75,7 @@ const jsonLd = {
     'Luxury interior design studio in Bengaluru crafting atmospheric homes, premium hospitality spaces, and immersive spatial experiences.',
   url: BASE_URL,
   telephone: '+91-9591685465',
-  email: 'rvsqueries@gmail.com',
+  email: 'queriesrvs@gmail.com',
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Bengaluru',
