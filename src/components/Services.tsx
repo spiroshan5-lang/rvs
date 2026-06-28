@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import Image from 'next/image';
+// Removed next/image import
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 
@@ -268,13 +268,11 @@ export default function Services() {
 
                 {/* Right side: High-res image */}
                 <div className="w-full sm:w-1/2 h-[50%] sm:h-full relative overflow-hidden bg-[var(--gold-muted)]">
-                  <Image
+                  <img
                     src={service.image}
                     alt={service.title}
-                    fill
-                    priority={i < 3}
-                    className="object-cover filter brightness-[0.85] hover:brightness-[0.95] transition-all duration-700"
-                    sizes="(max-width: 640px) 100vw, 425px"
+                    className="absolute inset-0 w-full h-full object-cover filter brightness-[0.85] hover:brightness-[0.95] transition-all duration-700"
+                    loading={i < 3 ? "eager" : "lazy"}
                   />
                   {/* Subtle inner overlay border accent */}
                   <div className="absolute inset-0 border-l border-[var(--gold-border)]/20 pointer-events-none hidden sm:block" />
