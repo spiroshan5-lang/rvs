@@ -25,7 +25,7 @@ export default function TermsPage() {
             <section className="space-y-3">
               <h2 className="font-serif text-lg text-[var(--fg)] tracking-wide font-medium">1. Agreement to Terms</h2>
               <p>
-                Welcome to RVS Craft Interiors. These Terms govern your use of our website and our professional services, including residential interior design, space planning layout curation, custom modular kitchens, and turnkey project executions.
+                Welcome to RVS Craft Interiors. These Terms govern your use of our website and our professional services, including residential interior design, space planning layout curation, and custom modular kitchens.
               </p>
             </section>
 
@@ -54,7 +54,7 @@ export default function TermsPage() {
             <section className="space-y-3">
               <h2 className="font-serif text-lg text-[var(--fg)] tracking-wide font-medium">4. Execution Milestones &amp; Payments</h2>
               <p>
-                Turnkey project supervision is structured around phased milestones. Payments are non-refundable once site execution steps or factory wood/materials production stages have been initiated. Timelines discussed are estimations and may adapt to material supplies or site conditions in Bengaluru.
+                Project supervision is structured around phased design milestones. Payments are non-refundable once site design drafts, layout selections, or custom procurement files have been finalized. Timelines discussed are estimations and may adapt to site conditions in Bengaluru.
               </p>
             </section>
 

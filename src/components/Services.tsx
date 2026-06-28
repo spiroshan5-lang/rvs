@@ -87,20 +87,13 @@ const services: Service[] = [
   },
   {
     index: '11',
-    title: 'Turnkey Project Execution',
-    description: 'End-to-end execution with meticulous timeline management, site coordination, and structural oversight for complete peace of mind.',
-    details: ['Vendor Procurement', 'Site Supervision', 'Quality Control', 'Timeline Management'],
-    image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800&auto=format&fit=crop',
-  },
-  {
-    index: '12',
     title: 'Material & Finish Curation',
     description: 'Selecting premium surface finishes, stone patterns, exotic veneers, and wallpaper textiles that establish spatial character.',
     details: ['Stone & Marble', 'Exotic Veneers', 'Wall Coverings', 'Texture Palettes'],
     image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800&auto=format&fit=crop',
   },
   {
-    index: '13',
+    index: '12',
     title: 'Modular Wardrobes & Closets',
     description: 'Bespoke bedroom wardrobes, walk-in closets, and innovative storage configurations engineered for style and utility.',
     details: ['Walk-in Closets', 'Sliding Wardrobes', 'Smart Drawers', 'Glass Doors'],

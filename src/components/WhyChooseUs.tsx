@@ -32,7 +32,7 @@ const reasons: ChoiceReason[] = [
   {
     num: '04',
     title: 'Client-Centric Process',
-    description: 'We orchestrate full turnkey processes with professional timeline audits, regular budget reports, and direct oversight, safeguarding your financial and aesthetic investment.',
+    description: 'We coordinate end-to-end design reviews with professional timeline audits, regular progress updates, and direct oversight, safeguarding your financial and aesthetic investment.',
     icon: Award,
   },
 ];

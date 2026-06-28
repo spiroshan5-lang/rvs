@@ -143,7 +143,7 @@ ${formState.message || '(Not specified)'}`;
           <div className="flex flex-col space-y-3">
             <label className={labelCls}>Service Interested In</label>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-              {['Residential', 'Commercial', 'Modular Kitchen', 'Turnkey Design', 'Other'].map((serviceOption) => (
+              {['Residential', 'Commercial', 'Modular Kitchen', 'Other'].map((serviceOption) => (
                 <button key={serviceOption} type="button"
                   onClick={() => setFormState({...formState, service: serviceOption})}
                   className={`py-3 px-2 rounded-xl text-[10px] text-center tracking-wider border transition-all cursor-pointer ${
