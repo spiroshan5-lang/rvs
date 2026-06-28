@@ -117,10 +117,10 @@ export default function InquiriesPanel({ initialInquiries, initialHeroSlides, in
       <div className="max-w-5xl mx-auto">
 
         {/* Header */}
-        <div className="flex items-center justify-between mb-8 border-b border-[var(--gold-border)] pb-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 border-b border-[var(--gold-border)] pb-6 gap-4">
           <div>
-            <h1 className="font-serif text-4xl tracking-wide text-[var(--gold)]">Admin Dashboard</h1>
-            <p className="text-sm text-[var(--fg)]/50 mt-1 font-light tracking-wider">RVS Craft Interiors — Control Panel</p>
+            <h1 className="font-serif text-3xl md:text-4xl tracking-wide text-[var(--gold)]">Admin Dashboard</h1>
+            <p className="text-xs md:text-sm text-[var(--fg)]/50 mt-1 font-light tracking-wider">RVS Craft Interiors — Control Panel</p>
           </div>
           <div className="flex items-center gap-3">
             <button
@@ -207,7 +207,7 @@ export default function InquiriesPanel({ initialInquiries, initialHeroSlides, in
                     >
                       {/* Row */}
                       <div
-                        className="flex items-center gap-4 px-5 py-4 cursor-pointer hover:bg-[#c9a86a]/5 transition-colors"
+                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-5 py-4 cursor-pointer hover:bg-[#c9a86a]/5 transition-colors"
                         onClick={() => setExpanded(expanded === inq.id ? null : inq.id)}
                       >
                         <div className="flex-1 min-w-0">
@@ -233,11 +233,13 @@ export default function InquiriesPanel({ initialInquiries, initialHeroSlides, in
                             </span>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 flex-shrink-0">
-                          <IndianRupee className="w-3 h-3 text-[var(--gold)]/50" />
-                          <span className="text-xs text-[var(--gold)] font-mono">{inq.service}</span>
+                        <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto border-t sm:border-t-0 border-[var(--gold-border)]/10 pt-3 sm:pt-0">
+                          <div className="flex items-center gap-2">
+                            <IndianRupee className="w-3 h-3 text-[var(--gold)]/50" />
+                            <span className="text-xs text-[var(--gold)] font-mono">{inq.service}</span>
                             <span className="text-[var(--fg)]/20 font-mono">&middot;</span>
                             <span className="text-xs text-[var(--fg)]/50 font-mono">{inq.budget}</span>
+                          </div>
                           {expanded === inq.id ? <ChevronUp className="w-4 h-4 text-[var(--fg)]/30" /> : <ChevronDown className="w-4 h-4 text-[var(--fg)]/30" />}
                         </div>
                       </div>
@@ -394,7 +396,7 @@ export default function InquiriesPanel({ initialInquiries, initialHeroSlides, in
                           </div>
 
                           {/* Actions */}
-                          <div className="flex items-center gap-2 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="flex items-center gap-2 flex-shrink-0 md:opacity-0 group-hover:opacity-100 transition-opacity">
                             <a
                               href={`mailto:${inq.email}?subject=Re: Your Interior Design Inquiry - RVS Craft Interiors`}
                               className="p-2 rounded-lg border border-[var(--gold-border)] hover:bg-[#c9a86a]/10 text-[var(--gold)] transition-colors"
