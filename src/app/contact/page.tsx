@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Mail, Phone, Instagram, Facebook } from 'lucide-react';
+import { Mail, Phone } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ContactForm from '@/components/ContactForm';
@@ -77,7 +77,11 @@ export default function ContactPage() {
                 {/* Instagram */}
                 <a href="https://www.instagram.com/rvs_crafted_interiors?igsh=eHRwcWtzNms4dmw5" target="_blank" rel="noopener noreferrer" className="flex items-start space-x-4 group">
                   <div className="w-10 h-10 rounded-full border border-[var(--gold-border)] flex items-center justify-center flex-shrink-0 mt-1 group-hover:border-[var(--gold)] transition-colors duration-300">
-                    <Instagram className="w-4 h-4 text-[var(--gold)]" />
+                    <svg className="w-4 h-4 text-[var(--gold)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                    </svg>
                   </div>
                   <div>
                     <h3 className="text-[10px] tracking-[0.2em] uppercase font-medium text-[var(--gold)] mb-0.5">Instagram</h3>
@@ -90,7 +94,9 @@ export default function ContactPage() {
                 {/* Facebook */}
                 <a href="https://www.facebook.com/share/1JbpJqQkmm/" target="_blank" rel="noopener noreferrer" className="flex items-start space-x-4 group">
                   <div className="w-10 h-10 rounded-full border border-[var(--gold-border)] flex items-center justify-center flex-shrink-0 mt-1 group-hover:border-[var(--gold)] transition-colors duration-300">
-                    <Facebook className="w-4 h-4 text-[var(--gold)]" />
+                    <svg className="w-4 h-4 text-[var(--gold)]" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z"/>
+                    </svg>
                   </div>
                   <div>
                     <h3 className="text-[10px] tracking-[0.2em] uppercase font-medium text-[var(--gold)] mb-0.5">Facebook</h3>
