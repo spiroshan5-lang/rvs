@@ -1,11 +1,11 @@
-﻿import type { Metadata } from 'next';
+import type { Metadata } from 'next';
 import Script from 'next/script';
 import './globals.css';
 import SmoothScroll from '@/components/SmoothScroll';
 import WhatsAppButton from '@/components/WhatsAppButton';
 
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://rvs-wheat.vercel.app';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.rvscraftedinteriors.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -93,7 +93,7 @@ const jsonLd = {
     opens: '09:00',
     closes: '18:00',
   },
-  priceRange: '₹₹₹',
+  priceRange: '???',
   image: 'https://res.cloudinary.com/dbxbpvn8j/image/upload/v1782543002/rvs_cms/hero_kitchen.jpg',
   sameAs: [],
   hasOfferCatalog: {

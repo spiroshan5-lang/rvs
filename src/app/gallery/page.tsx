@@ -1,10 +1,10 @@
-﻿import type { Metadata } from 'next';
+import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import GalleryClient from '@/components/GalleryClient';
 import { GALLERY_CARDS } from '@/data/gallery';
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://rvs-wheat.vercel.app';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.rvscraftedinteriors.com';
 
 export const metadata: Metadata = {
   title: 'Gallery | Our Portfolio of Luxury Interiors',
