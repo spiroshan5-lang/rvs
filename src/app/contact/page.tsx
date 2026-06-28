@@ -40,6 +40,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-[10px] tracking-[0.2em] uppercase font-medium text-[var(--gold)] mb-0.5">Email Us</h3>
+                    <span className="text-[9px] text-[var(--fg)]/40 block mb-1 font-mono uppercase tracking-wider">Click to email us</span>
                     <span className="text-base font-light group-hover:text-[var(--gold)] transition-colors duration-300">
                       queriesrvs@gmail.com
                     </span>
@@ -53,6 +54,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-[10px] tracking-[0.2em] uppercase font-medium text-[var(--gold)] mb-0.5">Call Us</h3>
+                    <span className="text-[9px] text-[var(--fg)]/40 block mb-1 font-mono uppercase tracking-wider">Click to call us</span>
                     <span className="text-base font-light group-hover:text-[var(--gold)] transition-colors duration-300">
                       +91 9591685465
                     </span>
@@ -68,6 +70,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-[10px] tracking-[0.2em] uppercase font-medium text-[var(--gold)] mb-0.5">WhatsApp</h3>
+                    <span className="text-[9px] text-[var(--fg)]/40 block mb-1 font-mono uppercase tracking-wider">Click to chat with us</span>
                     <span className="text-base font-light group-hover:text-[var(--gold)] transition-colors duration-300">
                       +91 9591685465
                     </span>
@@ -85,6 +88,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-[10px] tracking-[0.2em] uppercase font-medium text-[var(--gold)] mb-0.5">Instagram</h3>
+                    <span className="text-[9px] text-[var(--fg)]/40 block mb-1 font-mono uppercase tracking-wider">Click to follow us</span>
                     <span className="text-base font-light group-hover:text-[var(--gold)] transition-colors duration-300">
                       @rvs_crafted_interiors
                     </span>
@@ -100,6 +104,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-[10px] tracking-[0.2em] uppercase font-medium text-[var(--gold)] mb-0.5">Facebook</h3>
+                    <span className="text-[9px] text-[var(--fg)]/40 block mb-1 font-mono uppercase tracking-wider">Click to connect with us</span>
                     <span className="text-base font-light group-hover:text-[var(--gold)] transition-colors duration-300">
                       RVS Crafted Interiors
                     </span>
