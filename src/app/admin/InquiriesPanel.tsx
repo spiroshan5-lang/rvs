@@ -252,7 +252,7 @@ export default function InquiriesPanel({ initialInquiries, initialHeroSlides, in
                             className="overflow-hidden border-t border-[var(--gold-border)]/30"
                           >
                             <div className="px-5 py-4 space-y-4">
-                              <p className="text-sm text-[var(--fg)]/70 leading-relaxed italic">"{inq.message}"</p>
+                              <p className="text-sm text-[var(--fg)]/70 leading-relaxed italic">&quot;{inq.message}&quot;</p>
                               <div className="text-xs text-[var(--fg)]/40 font-mono">
                                 Submitted: {formatDateTime(inq.submittedAt)} · ID: {inq.id}
                               </div>

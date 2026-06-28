@@ -15,7 +15,9 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('rvs-theme') as Theme | null;
       if (stored === 'light' || stored === 'dark') {
-        setTheme(stored);
+        setTimeout(() => {
+          setTheme(stored);
+        }, 0);
       }
     }
   }, []);

@@ -114,6 +114,7 @@ export default function Services() {
   const activeIdxRef = useRef(0);
   const isTransitioningRef = useRef(false);
   const isScrollingTo = useRef(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const lenisRef = useRef<any>(null);
 
   // Sync state to ref
@@ -122,13 +123,11 @@ export default function Services() {
   }, [activeIdx]);
 
   // Capture lenis instance without triggering state updates on scroll
-  const lenis = useLenis((instance) => {
+  useLenis((instance) => {
     lenisRef.current = instance;
   });
 
-  if (lenis && !lenisRef.current) {
-    lenisRef.current = lenis;
-  }
+
 
   // Track parent scroll
   const { scrollYProgress } = useScroll({
@@ -263,7 +262,7 @@ export default function Services() {
       rotateY: 0,
       y: 0,
       z: 0,
-      transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] as any }
+      transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }
     },
     scrolledPast: {
       scale: 2.2,
@@ -271,7 +270,7 @@ export default function Services() {
       rotateY: -10,
       y: -120,
       z: 50,
-      transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] as any }
+      transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }
     },
     upcoming: {
       scale: 0.7,
@@ -279,7 +278,7 @@ export default function Services() {
       rotateY: 6,
       y: 35,
       z: -50,
-      transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] as any }
+      transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }
     },
     hidden: {
       scale: 0.35,
@@ -287,7 +286,7 @@ export default function Services() {
       rotateY: 12,
       y: 100,
       z: -100,
-      transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] as any }
+      transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }
     }
   };
 

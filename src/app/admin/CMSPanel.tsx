@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useState, useTransition, useEffect } from 'react';
+import { useState, useTransition } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -54,10 +54,12 @@ function Toast({ msg, type }: { msg: string; type: 'ok' | 'err' }) {
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function ImagePreview({ url, alt }: { url: string; alt: string }) {
   const [error, setError] = useState(false);
+  const [prevUrl, setPrevUrl] = useState(url);
 
-  useEffect(() => {
+  if (url !== prevUrl) {
+    setPrevUrl(url);
     setError(false);
-  }, [url]);
+  }
 
   if (!url || error) {
     return (
