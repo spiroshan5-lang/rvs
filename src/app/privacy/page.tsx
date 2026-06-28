@@ -45,7 +45,7 @@ export default function PrivacyPage() {
                   <strong>Visual Media Delivery (Cloudinary)</strong>: All portfolio images, false ceiling models, and interior design materials rendered on this site are hosted and served dynamically through <strong>Cloudinary CDN</strong> for high-resolution performance.
                 </li>
                 <li>
-                  <strong>User Analytics (Google Analytics)</strong>: We use <strong>Google Analytics (gtag.js)</strong> with Measurement ID <code>G-SZT1M6TJ6T</code> to capture anonymous browser behavior, page views, and traffic trends. No personally identifiable details are linked to these analytics reports.
+                  <strong>User Analytics (Google Analytics)</strong>: We use <strong>Google Analytics (gtag.js)</strong> with Measurement ID <code>G-V2SX8DH9SY</code> to capture anonymous browser behavior, page views, and traffic trends. No personally identifiable details are linked to these analytics reports.
                 </li>
                 <li>
                   <strong>Personalization &amp; Theme Caching (Local Storage)</strong>: We save your website appearance choice (Light/Dark mode) locally on your device via <strong>HTML5 Local Storage</strong> so it is remembered on subsequent visits.
