@@ -33,7 +33,7 @@ export default function StudioIntro() {
             className="relative w-full aspect-[3/4] rounded-[1.5rem] overflow-hidden border border-[var(--gold-border)] shadow-2xl mt-2"
           >
             <Image 
-              src="/philosophy.jpg" 
+              src="https://res.cloudinary.com/dbxbpvn8j/image/upload/v1782724463/rvs_cms/philosophy.jpg" 
               alt="Our Philosophy" 
               fill 
               className="object-cover hover:scale-105 transition-transform duration-700 ease-out" 
