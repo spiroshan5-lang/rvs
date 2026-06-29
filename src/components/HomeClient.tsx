@@ -7,6 +7,7 @@ import Hero from '@/components/Hero';
 import StudioIntro from '@/components/StudioIntro';
 import WhyChooseUs from '@/components/WhyChooseUs';
 import DesignProcess from '@/components/DesignProcess';
+
 import ScrollReveal from '@/components/ScrollReveal';
 import Footer from '@/components/Footer';
 
@@ -39,9 +40,12 @@ export default function HomeClient() {
           <ScrollReveal>
             <DesignProcess />
           </ScrollReveal>
+
+          
         </main>
         <Footer />
       </div>
     </>
   );
 }
+

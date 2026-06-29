@@ -296,19 +296,46 @@ export default function Services() {
         <div className="absolute inset-0 bg-radial-gradient opacity-10 pointer-events-none" style={{ background: "radial-gradient(circle, var(--gold) 0%, transparent 70%)" }} />
 
         {/* 1. Left-Side Architectural Progress Ruler (Hidden on Mobile) */}
-        <div className="absolute left-10 lg:left-16 top-1/2 -translate-y-1/2 hidden md:flex flex-col items-center gap-4 z-30">
-          <span className="text-[10px] font-mono tracking-widest text-[var(--gold)]">01</span>
-          
-          <div className="w-[1.5px] h-[250px] bg-[var(--fg)]/10 relative rounded-full overflow-hidden">
-            <motion.div 
-              style={{ scaleY: rulerScaleY, originY: 0 }}
-              className="absolute inset-0 w-full h-full bg-[var(--gold)]" 
-            />
-          </div>
+        <div className="absolute left-6 lg:left-12 top-1/2 -translate-y-1/2 hidden md:flex flex-col items-center gap-2.5 z-30 font-mono text-[9px]">
+          {services.map((service, idx) => {
+            const isActive = idx === activeIdx;
+            return (
+              <button
+                key={service.index}
+                onClick={() => {
+                  const container = containerRef.current;
+                  const lenisInstance = lenisRef.current;
+                  if (!container || !lenisInstance) return;
+                  
+                  isTransitioningRef.current = true;
+                  isScrollingTo.current = true;
+                  setActiveIdx(idx);
 
-          <span className="text-[10px] font-mono tracking-widest text-[var(--fg)]/30">
-            {String(services.length).padStart(2, "0")}
-          </span>
+                  const containerTop = container.offsetTop;
+                  const containerHeight = container.offsetHeight;
+                  const viewportHeight = window.innerHeight;
+                  const scrollRange = containerHeight - viewportHeight;
+                  const targetScroll = containerTop + (idx / (services.length - 1)) * scrollRange;
+
+                  lenisInstance.scrollTo(targetScroll, {
+                    lock: true,
+                    duration: 1.0,
+                    onComplete: () => {
+                      isTransitioningRef.current = false;
+                      isScrollingTo.current = false;
+                    }
+                  });
+                }}
+                className={`py-1 px-2 transition-all duration-300 hover:text-[var(--gold)] cursor-pointer ${
+                  isActive 
+                    ? 'text-[var(--gold)] scale-125 font-bold' 
+                    : 'text-[var(--fg)]/30'
+                }`}
+              >
+                {service.index}
+              </button>
+            );
+          })}
         </div>
 
         {/* 2. Page Title Header (Floating Top-Left) */}

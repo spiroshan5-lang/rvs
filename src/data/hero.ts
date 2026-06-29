@@ -7,9 +7,9 @@ export interface HeroSlide {
 }
 
 export const HERO_SLIDES: HeroSlide[] = [
-  { id: 'h1', url: 'https://res.cloudinary.com/dbxbpvn8j/image/upload/v1782543000/rvs_cms/hero_living_room.jpg', alt: 'Luxury Modern Living Room' },
-  { id: 'h2', url: 'https://res.cloudinary.com/dbxbpvn8j/image/upload/v1782543002/rvs_cms/hero_kitchen.jpg', alt: 'Premium Kitchen Design' },
-  { id: 'h3', url: 'https://res.cloudinary.com/dbxbpvn8j/image/upload/v1782543002/rvs_cms/hero_bedroom.jpg', alt: 'Elegant Master Bedroom' }
+  { id: 'h1', url: '/hero_living_room.jpg', alt: 'Luxury Modern Living Room with Bespoke Wood Detailing' },
+  { id: 'h2', url: '/hero_kitchen.jpg', alt: 'Premium Italian-Style Kitchen with Breakfast Counter' },
+  { id: 'h3', url: '/hero_study.jpg', alt: 'Lit Executive Study Desk and Custom Shelf Lighting' }
 ];
 
 // Slideshow interval in seconds

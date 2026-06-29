@@ -15,6 +15,8 @@ export default function ContactForm() {
     location: '',
     message: '',
   });
+
+
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState('');
